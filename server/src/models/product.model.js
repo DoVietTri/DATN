@@ -15,12 +15,12 @@ const ProductSchema = mongoose.Schema({
     p_description: { type: String, default: null },
     p_author: String,
     p_page_number: { type: Number, default: 100 },
-    cate_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' }
+    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' }
 });
 
 ProductSchema.statics = {
     getAllProducts() {
-        return this.find({}).exec();
+        return this.find({}).populate('category').exec();
     },
 
     getByIdProduct(id) {

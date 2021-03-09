@@ -23,6 +23,10 @@ CategorySchema.statics = {
         return this.findById(id).exec();
     },
 
+    getCateByName(name) {
+        return this.findOne({ c_name: name }).exec();
+    },
+
     deleteByIdCategory (id) {
         return this.findByIdAndRemove(id).exec();
     },

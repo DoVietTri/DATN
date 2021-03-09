@@ -39,7 +39,7 @@ let getAllUsers = async () => {
     return { message: 'SUCCESS', data: allUser };
 } 
 
-let getUserById = async(id) => {
+let getUserById = async (id) => {
     let user = await userModel.findUserById(id);
 
     if (!user) {
@@ -68,9 +68,22 @@ let deleteUser = async (data) => {
     return { message: 'SUCCESS' };
 }
 
+let updateUserInfo = async (id, data) => {
+    let currentUser = await userModel.findUserById(id);
+
+    if (!currentUser) {
+        return { message: 'USER_NOT_FOUND' };
+    }
+
+    await userModel.updateUserInfo(id, data);
+
+    return { message: 'SUCCESS' };
+}
+
 module.exports = {
     updatePassword,
     getAllUsers,
     getUserById,
-    deleteUser
+    deleteUser,
+    updateUserInfo
 }

@@ -9,7 +9,7 @@ const UserSchema = mongoose.Schema({
     role: { type: String, default: 'user' },
     address: { type: String, default: null },
     phone: { type: String, default: null },
-    dateOfBirth: { type: Date, default: null },
+    dateOfBirth: { type: String, default: null },
     createdAt: { type: Number, default: Date.now },
     deletedAt: { type: Number, default: null }
 });
@@ -37,6 +37,10 @@ UserSchema.statics = {
 
     deleteUser (id) {
         return this.findByIdAndRemove(id).exec();
+    },
+
+    updateUserInfo(id, data) {
+        return this.findByIdAndUpdate(id, data).exec();
     }
 }
 

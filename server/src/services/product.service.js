@@ -35,7 +35,11 @@ let addNewProduct = async (productItem) => {
             return { message: 'UPLOAD_FAILED' };
         }
 
-        url_detail.push({ public_id: responseUploadDetail.public_id , url: responseUploadDetail.secure_url });
+        let responseData = {
+            public_id: responseUploadDetail.public_id,
+            url: responseUploadDetail.secure_url
+        }
+        url_detail = [...url_detail, responseData];
     }
 
     delete productItem.p_image_detail;
