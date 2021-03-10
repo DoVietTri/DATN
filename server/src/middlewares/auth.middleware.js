@@ -2,7 +2,8 @@ const JWT = require('./../helpers/jwt');
 const userModel = require('./../models/user.model');
 
 let isAdmin = async (req, res, next) => {
-    let tokenFromClient = req.body.token || req.headers['Authorization'];
+    let tokenFromClient = req.body.token || req.headers['authorization'];
+   
     if (tokenFromClient) {
         try {
             //Verify token

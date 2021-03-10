@@ -20,7 +20,7 @@ let login = async (dataLogin) => {
 
     let token = await JWT.generateToken(user._id);
     
-    return { message: 'LOGIN_SUCCESS', token: token };
+    return { message: 'SUCCESS', token: token, userId: user._id };
 }
 
 let register = async (dataUser) => {
@@ -48,7 +48,7 @@ let register = async (dataUser) => {
 
     let token = await JWT.generateToken(createNewUser._id);
     
-    return { message: 'REGISTER_SUCCESS', token: token};
+    return { message: 'SUCCESS', token: token};
 }
 
 module.exports = {

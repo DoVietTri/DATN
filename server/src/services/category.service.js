@@ -52,12 +52,17 @@ let getByIdCategory = async (id) => {
  */
 let updateCategory = async (id, itemCate) => {
     let cate = await categoryModel.getByIdCategory(id);
+    let currCate = await categoryModel.getCateByName(itemCate.c_name);
+
+    if (currCate && (currCate.c_name !== cate.c_name)) {
+        return { message: 'CATEGORY_EXISTS' };
+    }
 
     if (!cate) {
         return { message: 'CATEGORY_NOT_FOUND' };
     }
 
-    let updateCate = await categoryModel.updateCategory(id, itemCate);
+    await categoryModel.updateCategory(id, itemCate);
 
     return { message: 'SUCCESS' };
 }
