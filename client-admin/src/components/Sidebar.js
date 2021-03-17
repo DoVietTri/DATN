@@ -35,7 +35,7 @@ const Sidebar = () => {
           </div>
           <div className="info">
             <Link to="/profile">
-              { currUser.username }
+              {currUser.username}
             </Link>
           </div>
         </div>
@@ -56,6 +56,8 @@ const Sidebar = () => {
         <nav className="mt-2">
           <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
+            <li className="nav-header">Danh mục chính</li>
+
             <li className="nav-item">
               <NavLink to="/dashboard" className="nav-link" activeClassName="active">
                 <i className="nav-icon fas fa-tachometer-alt"></i>
@@ -67,7 +69,7 @@ const Sidebar = () => {
               <a href="#!" className="nav-link">
                 <i className="nav-icon fab fa-product-hunt"></i>
                 <p>
-                  Sản phẩm
+                  Quản lý sản phẩm
                   <i className="right fas fa-angle-left"></i>
                 </p>
               </a>
@@ -89,8 +91,43 @@ const Sidebar = () => {
 
             <li className="nav-item">
               <NavLink to="/authors" className="nav-link" activeClassName="active">
-              <i className="nav-icon fas fa-users"></i>
-              <p>Tác giả</p>
+                <i className="nav-icon fas fa-users"></i>
+                <p>Tác giả</p>
+              </NavLink>
+            </li>
+
+            <li className="nav-item">
+              <NavLink to="/companies" className="nav-link" activeClassName="active">
+                <i className="nav-icon fas fa-warehouse"></i>
+                <p> Nhà xuất bản </p>
+              </NavLink>
+            </li>
+
+            <li className="nav-item">
+              <a href="#!" className="nav-link">
+                <i className="nav-icon fas fa-hands-helping"></i>
+                <p>
+                  Đối tác
+                  <i className="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul className="nav nav-treeview">
+                <li className="nav-item">
+                  <NavLink to="/customers" className="nav-link" activeClassName="active">
+                    <i className="nav-icon far fa-circle nav-icon"></i>
+                    <p>Khách hàng</p>
+                  </NavLink>
+                </li>
+
+              </ul>
+            </li>
+
+            <li className="nav-header">Hệ thống</li>
+
+            <li className="nav-item">
+              <NavLink to="/staffs" className="nav-link" activeClassName="active">
+                <i className="nav-icon fas fa-users"></i>
+                <p> Quản lý nhân viên </p>
               </NavLink>
             </li>
 

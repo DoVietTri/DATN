@@ -20,31 +20,24 @@ let addNewAuthor = async (data) => {
         return { message: 'AUTHOR_EXISTS' };
     }
 
-    let url_detail = [];
+    let responseUploadImage = await cloudinary.uploader.upload(formatBufferToBase64(data.a_image).content, {
+        upload_preset: 'dev_setups'
+    });
 
+    if (!responseUploadImage) {
+        return { message: 'UPLOAD_FAILED' };
+    }
 
-    for (let i = 0; i < data.a_image.length; i++) {
-
-        let responseUploadImage = await cloudinary.uploader.upload(formatBufferToBase64(data.a_image[i]).content, {
-            upload_preset: 'dev_setups'
-        });
-        
-        if(!responseUploadImage) {
-            return { message: 'UPLOAD_FAILED' };
-        }
-
-        let responseData = {
-            public_id: responseUploadImage.public_id,
-            url: responseUploadImage.secure_url
-        }
-        url_detail = [...url_detail, responseData];
+    let responseData = {
+        public_id: responseUploadImage.public_id,
+        url: responseUploadImage.secure_url
     }
 
     delete data.a_image;
 
     data = {
         ...data,
-        a_image: [...url_detail]
+        a_image: responseData
     }
 
     let itemAuthor = await authorModel.addNewAuthor(data);
@@ -61,8 +54,29 @@ let getAuthorById = async (id) => {
     return { message: 'SUCCESS', data: currAuthor };
 }
 
+let deleteAuthorById = async (id) => {
+    let author = await authorModel.getAuthorById(id);
+    if (!author) {
+        return { message: 'AUTHOR_NOT_FOUND' };
+    }
+
+    for (let i = 0; i < author.a_image.length; i++) {
+        let responseDestroyImage = await cloudinary.uploader.destroy(author.a_image[i].public_id);
+
+        if (!responseDestroyImage) {
+            return { message: 'DESTROY_IMAGE_FAILED' };
+        }
+
+    }
+
+    await authorModel.deleteAuthorById(id);
+
+    return { message: 'SUCCESS' };
+}
+
 module.exports = {
     getAllAuthors,
     addNewAuthor,
-    getAuthorById
+    getAuthorById,
+    deleteAuthorById
 }

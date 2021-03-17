@@ -1,29 +1,41 @@
-import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import * as Yup from 'yup';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
+import { errorToast } from '../../components/Toasts/Toasts';
 import authorAPI from './../../apis/authorAPI';
-import { errorToast, successToast } from '../../components/Toasts/Toasts';
 import { FILE_SIZE, SUPPORTED_FORMATS } from './../../constants/constants';
 
-const AuthorAdd = () => {
+const AuthorEdit = (props) => {
 
-  const history = useHistory();
+  const [itemAuthor, setItemAuthor] = useState({});
+  const [currImage, setCurrImage] = useState({});
 
-  let authorFormik = useFormik({
+  useEffect(() => {
+    let id = props.match.params.id;
+    authorAPI.getAuthorById(id).then((res) => {
+      setItemAuthor(res.data.data);
+      setCurrImage(res.data.data.a_image);
+    }).catch((err) => {
+      errorToast("Có lỗi xảy ra, vui lòng thử lại");
+    });
+
+  }, [props.match.params.id]);
+
+  let updateAuthorFormik = useFormik({
     initialValues: {
-      inputAuthorName: '',
+      inputAuthorName: itemAuthor.a_name,
       inputAuthorImage: '',
-      inputAuthorInfo: ''
+      inputAuthorInfo: itemAuthor.a_info
     },
+    enableReinitialize: true,
     validationSchema: Yup.object({
       inputAuthorName: Yup.string()
         .required("Bắt buộc nhập tên tác giả !")
         .max(100, "Tên quá dài, nhỏ hơn 100 kí tự"),
       inputAuthorImage: Yup.mixed()
-        .required("Chưa có file ảnh")
         .test(
           "fileSize",
           "Kích thước file lớn, vui lòng chọn file khác nhỏ hơn 200 KB có định dạng là ảnh",
@@ -40,28 +52,9 @@ const AuthorAdd = () => {
         )
     }),
     onSubmit: (values) => {
-
-      let formData = new FormData();
-      formData.append("a_name", values.inputAuthorName);
-      formData.append("a_info", values.inputAuthorInfo);
-      formData.append("a_image", values.inputAuthorImage)
-
-      authorAPI.addNewAuthor(formData).then((res) => {
-        if (res.data.message === 'AUTHOR_EXISTS') {
-          errorToast("Tác giả đã tồn tại");
-        }
-        if (res.data.message === 'UPLOAD_FAILED') {
-          errorToast("Lỗi upload ảnh");
-        }
-        if (res.data.message === 'SUCCESS') {
-          successToast("Thêm tác giả thành công");
-          history.push({ pathname: '/authors' });
-        }
-      }).catch(err => {
-        errorToast("Có lỗi xảy ra, vui lòng thử lại");
-      })
+      console.log(values);
     }
-  });
+  })
 
   return (
     <div className="content-wrapper">
@@ -70,21 +63,21 @@ const AuthorAdd = () => {
         <div className="container-fluid">
           <div className="row mb-2">
             <div className="col-sm-6">
-              <h1>Thêm tác giả</h1>
+              <h1>Cập nhật tác giả</h1>
             </div>
             <div className="col-sm-6">
               <ol className="breadcrumb float-sm-right">
                 <li className="breadcrumb-item">
                   <Link to="/dashboard">
                     Trang chủ
-                            </Link>
+                              </Link>
                 </li>
                 <li className="breadcrumb-item">
                   <Link to="/authors" >
                     Tác giả
-                            </Link>
+                              </Link>
                 </li>
-                <li className="breadcrumb-item active">Thêm tác giả</li>
+                <li className="breadcrumb-item active">Cập nhật tác giả</li>
               </ol>
             </div>
           </div>
@@ -96,24 +89,22 @@ const AuthorAdd = () => {
           <div className="row">
             <div className="col-12">
               <div className="card card-primary">
-
                 <div className="card-header">
-                  <h3 className="card-title">Thêm</h3>
+                  <h3 className="card-title">Cập nhật</h3>
                 </div>
 
-                <form onSubmit={authorFormik.handleSubmit}>
+                <form onSubmit={updateAuthorFormik.handleSubmit}>
                   <div className="card-body">
                     <div className="row">
-                      <div className="col-6 col-sm-6">
-
+                      <div className="col-6">
                         <div className="form-group">
                           <label htmlFor="inputAuthorName">Tên tác giả (*)</label>
                           <input type="text" className="form-control" name="inputAuthorName" placeholder="Nhập tên tác giả..."
-                            value={authorFormik.values.inputAuthorName}
-                            onChange={authorFormik.handleChange}
+                            value={updateAuthorFormik.values.inputAuthorName || ''}
+                            onChange={updateAuthorFormik.handleChange}
                           />
-                          {authorFormik.errors.inputAuthorName && authorFormik.touched.inputAuthorName && (
-                            <small>{authorFormik.errors.inputAuthorName}</small>
+                          {updateAuthorFormik.errors.inputAuthorName && updateAuthorFormik.touched.inputAuthorName && (
+                            <small>{updateAuthorFormik.errors.inputAuthorName}</small>
                           )}
                         </div>
 
@@ -122,9 +113,7 @@ const AuthorAdd = () => {
                           <div className="input-group">
                             <div className="custom-file">
                               <input type="file" className="custom-file-input" name="inputAuthorImage"
-                                onChange={(e) => {
-                                  authorFormik.setFieldValue('inputAuthorImage', e.target.files[0])
-                                }}
+                                onChange={(e) => updateAuthorFormik.setFieldValue('inputAuthorImage', e.target.files[0])}
                               />
                               <label className="custom-file-label" htmlFor="inputAuthorImage">Chọn file</label>
                             </div>
@@ -132,35 +121,47 @@ const AuthorAdd = () => {
                               <span className="input-group-text">Tải lên</span>
                             </div>
                           </div>
-                          {authorFormik.errors.inputAuthorImage && authorFormik.touched.inputAuthorImage && (
-                            <small>{authorFormik.errors.inputAuthorImage}</small>
+
+                          {updateAuthorFormik.errors.inputAuthorImage && updateAuthorFormik.touched.inputAuthorImage && (
+                            <small>{updateAuthorFormik.errors.inputAuthorImage}</small>
                           )}
                         </div>
 
                       </div>
 
-                      <div className="col-6 col-sm-6">
+                      <div className="col-6">
                         <div className="form-group">
                           <label htmlFor="inputAuthorInfo">Thông tin thêm</label>
                           <CKEditor
                             name="inputAuthorInfo"
                             editor={ClassicEditor}
-                            data={authorFormik.values.inputAuthorInfo}
+                            data={updateAuthorFormik.values.inputAuthorInfo}
                             onChange={(e, editor) => {
 
-                              authorFormik.setFieldValue("inputAuthorInfo", editor.getData())
+                              updateAuthorFormik.setFieldValue("inputAuthorInfo", editor.getData())
                             }}
                           />
-                          {authorFormik.errors.inputAuthorInfo && authorFormik.touched.inputAuthorInfo && (
-                            <small>{authorFormik.errors.inputAuthorInfo}</small>
+                          {updateAuthorFormik.errors.inputAuthorInfo && updateAuthorFormik.touched.inputAuthorInfo && (
+                            <small>{updateAuthorFormik.errors.inputAuthorInfo}</small>
                           )}
                         </div>
+
+                        <div className="form-group">
+                          <label htmlFor="image">Hình ảnh hiện tại (*)</label>
+                          <div className="row">
+                            <div className="col-4">
+                              <img src={currImage.url} alt="User" className="img-thumbnail" style={{ height: '100px' }} />
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
+
                   </div>
 
                   <div className="card-footer">
-                    <button type="submit" className="btn btn-primary">Thêm</button>
+                    <button type="submit" className="btn btn-primary">Cập nhật</button>
                     <button type="reset" className="btn btn-warning">Làm mới</button>
                   </div>
                 </form>
@@ -169,8 +170,9 @@ const AuthorAdd = () => {
           </div>
         </div>
       </section>
+
     </div>
   )
 }
 
-export default AuthorAdd;
+export default AuthorEdit;

@@ -119,8 +119,8 @@ const Navbar = () => {
         </li>
 
         <li className="nav-item">
-          <a className="nav-link" data-widget="fullscreen" href="/" role="button">
-            <i className="fas fa-expand-arrows-alt"></i>
+          <a className="nav-link" href="/">
+            <i className="fas fa-sign-out-alt"></i>
           </a>
         </li>
       </ul>

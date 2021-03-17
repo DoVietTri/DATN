@@ -13,6 +13,8 @@ const userRouter = require('./routes/user.route');
 const categoryRouter = require('./routes/category.route');
 const productRouter = require('./routes/product.route');
 const authorRouter = require('./routes/author.route');
+const companyRouter = require('./routes/company.route');
+const staffRouter = require('./routes/staff.route');
 
 //Define database
 const ConnectDB = require('./configs/db');
@@ -40,6 +42,8 @@ app.use('/api/users', authUser.isAdmin, userRouter);
 app.use('/api/categories', authUser.isAdmin, categoryRouter);
 app.use('/api/products', authUser.isAdmin, productRouter);
 app.use('/api/authors', authUser.isAdmin, authorRouter);
+app.use('/api/companies', authUser.isAdmin, companyRouter);
+app.use('/api/staffs', authUser.isAdmin, staffRouter);
 
 //Listen port
 app.listen(process.env.APP_PORT, () => {

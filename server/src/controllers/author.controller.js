@@ -11,12 +11,10 @@ let getAllAuthors = async (req, res) => {
 }
 
 let addNewAuthor = async (req, res) => {
-
     try {
         let data = {
-            a_name: req.body.a_name,
-            a_info: req.body.a_info,
-            a_image: req.files
+           ...req.body,
+            a_image: req.file
         }
         let addNewAuthor = await authorService.addNewAuthor(data);
 
@@ -37,9 +35,21 @@ let getAuthorById = async (req, res) => {
     }
 }
 
+let deleteAuthorById = async (req, res) => {
+    try {
+        let id = req.params.id;
+        let resDelete = await authorService.deleteAuthorById(id);
+
+        return res.status(200).json(resDelete);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
 
 module.exports = {
     getAllAuthors,
     addNewAuthor,
-    getAuthorById
+    getAuthorById,
+    deleteAuthorById
 }

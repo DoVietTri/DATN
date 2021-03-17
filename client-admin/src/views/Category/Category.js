@@ -25,6 +25,9 @@ const Category = () => {
         let newDataCate = dataCate.filter(value => value._id !== id);
         setDataCate([...newDataCate]);
       }
+      if (res.data.message === 'PARENT_EXISTS') {
+        errorToast("Xóa danh mục con trước !");
+      }
     }).catch((err) => {
       errorToast('Có lỗi xảy ra, vui lòng thử lại');
     })
@@ -75,7 +78,7 @@ const Category = () => {
                       <tr>
                         <th>Số thứ tự</th>
                         <th>Tên danh mục</th>
-                        <th>Trạng thái</th>
+                        <th>Danh mục cha</th>
                         <th>Hành động</th>
                       </tr>
                     </thead>
@@ -89,7 +92,9 @@ const Category = () => {
                               <td>{i}</td>
                               <td>{v.c_name}</td>
                               <td>
-                                <span className="badge badge-primary">Còn bán</span>
+                                {
+                                  v.c_parent ? v.c_parent.c_name : ''
+                                }
                               </td>
                               <td>
                                 <button className="btn btn-danger" onClick={() => handleDeleteCate(v._id)}>
@@ -111,7 +116,7 @@ const Category = () => {
                       <tr>
                         <th>Số thứ tự</th>
                         <th>Tên danh mục</th>
-                        <th>Trạng thái</th>
+                        <th>Danh mục cha</th>
                         <th>Hành động</th>
                       </tr>
                     </tfoot>

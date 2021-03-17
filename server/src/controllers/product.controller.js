@@ -11,9 +11,13 @@ let getAllProducts = async (req, res) => {
 }
 
 let addNewProduct = async (req, res) => {
+
     try {
         let productItem = req.body;
-        console.log(productItem);
+        productItem = {
+            ...productItem,
+            p_image_detail: req.file
+        }
         let product = await productService.addNewProduct(productItem);
 
         return res.status(200).json(product);

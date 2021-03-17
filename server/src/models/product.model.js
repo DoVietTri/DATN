@@ -3,40 +3,54 @@ const mongoose = require('mongoose');
 const ProductSchema = mongoose.Schema({
     p_name: String,
     p_code: String,
-    p_slug: String,
     p_price: Number,
     p_quantity: Number,
-    p_image_detail: [
-        {
-            public_id: String,
-            url: String
-        }
-    ],
+    p_status: { type: String, default: "Còn hàng" },
+    p_datepublic: { type: String, default: null },
+    p_image_detail: { public_id: String, url: String },
     p_description: { type: String, default: null },
-    p_author: String,
-    p_page_number: { type: Number, default: 100 },
-    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' }
+    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
+    author: [
+        { type: mongoose.Schema.Types.ObjectId, ref: 'Author' }
+    ],
+    company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
+    createdAt: { type: Number, default: Date.now }
 });
 
 ProductSchema.statics = {
     getAllProducts() {
-        return this.find({}).populate('category').exec();
+        return this.find({})
+        .populate('category')
+        .populate('author')
+        .populate('company')
+        .sort({ createdAt: -1 }).exec();
     },
 
     getByIdProduct(id) {
-        return this.findById(id).exec();
+        return this.findById(id)
+        .populate('category')
+        .populate('author')
+        .populate('company').exec();
     },
 
     addNewProduct(product) {
         return this.create(product);
     },
 
-    getProductByCode (code) {
-        return this.findOne({ p_code: code }).exec();
+    getProductByCode(code) {
+        return this.findOne({ p_code: { $regex: new RegExp(code, 'i') } }).exec();
     },
-    
-    deleteByIdProduct (productId) {
+
+    deleteByIdProduct(productId) {
         return this.findByIdAndRemove(productId).exec();
+    },
+
+    findProductByCateId(id) {
+        return this.find({ category: id }).exec();
+    },
+
+    findProductByCateIdAndDelete(id) {
+        return this.deleteMany({ category: id }).exec();
     }
 }
 

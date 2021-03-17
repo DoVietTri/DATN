@@ -6,7 +6,8 @@ const upload = multer();
 const authorController = require('./../controllers/author.controller');
 
 router.get('/', authorController.getAllAuthors);
-router.post('/', upload.array("a_image", 10), authorController.addNewAuthor);
+router.post('/', upload.single("a_image"), authorController.addNewAuthor);
 router.get('/:id', authorController.getAuthorById);
+router.delete('/:id', authorController.deleteAuthorById);
 
 module.exports = router;

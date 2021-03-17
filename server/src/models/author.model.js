@@ -3,17 +3,15 @@ const mongoose = require('mongoose');
 const AuthorSchema = mongoose.Schema({
     a_name: String,
     a_info: { type: String, default: null },
-    a_image: [
-        {
-            public_id: String,
-            url: String
-        }
-    ]
+    a_image: { public_id: String, url: String },
+    createdAt: { type: Number, default: Date.now }
 });
 
 AuthorSchema.statics = {
     getAllAuthors() {
-        return this.find({}).exec();
+        return this.find({})
+        .sort({ createdAt: -1 })
+        .exec();
     },
 
     findAuthorByName (name) {
@@ -26,6 +24,10 @@ AuthorSchema.statics = {
 
     addNewAuthor (data) {
         return this.create(data);
+    },
+
+    deleteAuthorById(id) {
+        return this.findByIdAndRemove(id).exec();
     }
 }
 

@@ -1,6 +1,7 @@
 const categoryService = require('./../services/category.service');
 
 let addNewCategory = async (req, res) => {
+
     try {
         let dataCategory = req.body;
         let addNewCate = await categoryService.addNewCategory(dataCategory);

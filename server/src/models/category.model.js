@@ -2,13 +2,14 @@ const mongoose = require('mongoose');
 
 const CategorySchema = mongoose.Schema({
     c_name: String,
-    c_slug: String,
-    c_description: { type: String, default: null }
+    c_parent: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
+    c_description: { type: String, default: null },
+    createdAt: { type: Number, default: Date.now }
 });
 
 CategorySchema.statics = {
     findByName(c_name) {
-        return this.findOne({ c_name: c_name }).exec();
+        return this.findOne({ c_name: { $regex: new RegExp(c_name, 'i') } }).exec();
     },
 
     addNewCategory(dataCate) {
@@ -16,15 +17,11 @@ CategorySchema.statics = {
     },
 
     getAllCategory() {
-        return this.find({}).exec();
+        return this.find({}).populate('c_parent').exec();
     },
 
     getByIdCategory (id) {
-        return this.findById(id).exec();
-    },
-
-    getCateByName(name) {
-        return this.findOne({ c_name: name }).exec();
+        return this.findById(id).populate('c_parent').exec();
     },
 
     deleteByIdCategory (id) {
@@ -33,6 +30,10 @@ CategorySchema.statics = {
 
     updateCategory (id, itemCate) {
         return this.findByIdAndUpdate(id, itemCate).exec();
+    },
+
+    countCateChildByParentId(id) {
+        return this.countDocuments({ c_parent: id });
     }
 };
 

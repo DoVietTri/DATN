@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import productAPI from './../../apis/productAPI';
-import { errorToast } from './../../components/Toasts/Toasts';
+import { errorToast, successToast } from './../../components/Toasts/Toasts';
 
 const Product = () => {
 
@@ -9,14 +9,29 @@ const Product = () => {
 
   useEffect(() => {
     productAPI.getAllProduct().then((res) => {
-     if (res.data.message === 'SUCCESS') {
-      setAllProducts(res.data.data);
-      console.log(res.data.data);
-     }
+      if (res.data.message === 'SUCCESS') {
+        setAllProducts(res.data.data);
+      }
     }).catch((err) => {
       errorToast("Có lỗi xảy ra, vui lòng thử lại !");
     })
   }, []);
+
+  let handleDeleteProduct = (id) => {
+    productAPI.deleteProductById(id).then((res) => {
+      if (res.data.message === 'PRODUCT_NOT_FOUND') {
+        errorToast("Sản phẩm không tồn tại");
+      }
+      if (res.data.message === 'DESTROY_IMAGE_FAILED') {
+        errorToast("Xóa hình ảnh không thành công, vui lòng thử lại");
+      }
+      if (res.data.message === 'SUCCESS') {
+        successToast("Xóa sản phẩm thành công");
+        let newAllProducts = allProducts.filter(product => product._id !== id);
+        setAllProducts([...newAllProducts]);
+      }
+    })
+  }
 
   return (
     <div className="content-wrapper">
@@ -72,35 +87,37 @@ const Product = () => {
                       </tr>
                     </thead>
 
-                    <tbody> 
+                    <tbody>
 
-                     {
-                       allProducts.map((v, i) => {
-                         return (
-                           <tr key={i}>
-                             <td>{ i }</td>
-                             <td>{ v.p_name }</td>
-                             <td>
-                               <img src={v.p_image_detail[0].url} alt="Product" />
-                             </td>
-                             <td>{ v.p_code }</td>
-                             <td>{ v.p_price } VND</td>
-                             <td>{ v.p_quantity }</td>
-                             <td> { v.category.c_name }</td>
-                             <td>
-                                <button className="btn btn-danger">
-                                  <i className="fas fa-trash-alt"></i>  
+                      {
+                        allProducts.map((v, i) => {
+                          return (
+                            <tr key={i}>
+                              <td>{i}</td>
+                              <td>{v.p_name}</td>
+                              <td>
+                                <img src={v.p_image_detail.url} alt="Product" className="img-thumbnail" style={{ height: '100px' }} />
+                              </td>
+                              <td>{v.p_code}</td>
+                              <td>{v.p_price} VND</td>
+                              <td>{v.p_quantity}</td>
+                              <td>
+                                <span className="badge badge-info">{v.category.c_name}</span>
+                              </td>
+                              <td>
+                                <button className="btn btn-danger" onClick={() => handleDeleteProduct(v._id)}>
+                                  <i className="fas fa-trash-alt"></i>
                                 </button>
-                                <Link to="" >
+                                <Link to={`/products/edit/${v._id}`} >
                                   <button className="btn btn-warning">
                                     <i className="fas fa-edit"></i>
                                   </button>
                                 </Link>
                               </td>
-                           </tr>
-                         )
-                       })
-                     }
+                            </tr>
+                          )
+                        })
+                      }
 
                     </tbody>
                     <tfoot>

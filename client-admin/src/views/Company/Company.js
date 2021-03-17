@@ -1,31 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import authorAPI from './../../apis/authorAPI';
-import { errorToast, successToast } from './../../components/Toasts/Toasts';
+import companyAPI from '../../apis/companyAPI';
+import { errorToast, successToast } from '../../components/Toasts/Toasts';
 
-const Author = () => {
-  const [dataAuthor, setDataAuthor] = useState([]);
+const Company = () => {
+  const [dataCompany, setDataCompany] = useState([]);
 
   useEffect(() => {
-    authorAPI.getAllAuthors().then((res) => {
-      setDataAuthor(res.data.data);
+    companyAPI.getAllCompanies().then((res) => {
+      setDataCompany(res.data.data);
     }).catch((err) => {
       errorToast("Có lỗi xảy ra, vui lòng thử lại !");
     })
   }, []);
 
-  let handleDeleteAuthor = (id) => {
-    authorAPI.deleteAuthorById(id).then((res) => {
-      if (res.data.message === 'AUTHOR_NOT_FOUND') {
-        errorToast("Tác giả không tồn tại !");
-      }
-      if (res.data.message === 'DESTROY_IMAGE_FAILED') {
-        errorToast("Xóa ảnh thất bại");
+  let handleDelete = (id) => {
+    companyAPI.deleteCompanyById(id).then((res) => {
+      if (res.data.message === 'COMPANY_NOT_FOUND') {
+        errorToast("Công ty không tồn tại");
       }
       if (res.data.message === 'SUCCESS') {
-        successToast("Xóa tác giả thành công");
-        let newDataAuthor = dataAuthor.filter(value => value._id !== id);
-        setDataAuthor([...newDataAuthor]);
+        successToast("Xóa nhà  xuất bản thành công");
+        let newDataCom = dataCompany.filter(value => value._id !== id);
+        setDataCompany([...newDataCom]);
       }
     }).catch((err) => {
       errorToast("Có lỗi xảy ra, vui lòng thử lại sau !");
@@ -39,7 +36,7 @@ const Author = () => {
         <div className="container-fluid">
           <div className="row mb-2">
             <div className="col-sm-6">
-              <h1>Quản lý tác giả</h1>
+              <h1>Nhà xuất bản</h1>
             </div>
             <div className="col-sm-6">
               <ol className="breadcrumb float-sm-right">
@@ -48,7 +45,7 @@ const Author = () => {
                     Trang chủ
                   </Link>
                 </li>
-                <li className="breadcrumb-item active">Tác giả</li>
+                <li className="breadcrumb-item active">Nhà xuất bản</li>
               </ol>
             </div>
           </div>
@@ -59,13 +56,13 @@ const Author = () => {
         <div className="container-fluid">
           <div className="row">
             <div className="col-12">
-
               <div className="card">
+
                 <div className="card-header">
                   <h3 className="card-title">
-                    <Link to="/authors/add">
+                    <Link to="/companies/add">
                       <button className="btn btn-primary">
-                        <i className="fas fa-plus-circle"></i> Thêm tác giả
+                        <i className="fas fa-plus-circle"></i> Thêm nhà xuất bản
                       </button>
                     </Link>
                   </h3>
@@ -76,27 +73,24 @@ const Author = () => {
                     <thead>
                       <tr>
                         <th>Số thứ tự</th>
-                        <th>Hình ảnh</th>
-                        <th>Tên tác giả</th>
+                        <th>Tên nhà xuất bản</th>
+                        <th>Mã nhà xuất bản</th>
                         <th>Hành động</th>
                       </tr>
                     </thead>
                     <tbody>
-
                       {
-                        dataAuthor.map((value, index) => {
+                        dataCompany.map((value, index) => {
                           return (
                             <tr key={index}>
                               <td>{index}</td>
+                              <td>{value.c_name}</td>
+                              <td>{value.c_code}</td>
                               <td>
-                                <img src={value.a_image.url} alt="Author" className="img-thumbnail" style={{ height: '100px'}} />
-                              </td>
-                              <td>{value.a_name}</td>
-                              <td>
-                                <button className="btn btn-danger" onClick={() => handleDeleteAuthor(value._id)}>
+                                <button className="btn btn-danger" onClick={() => handleDelete(value._id)}>
                                   <i className="fas fa-trash-alt"></i>
                                 </button>
-                                <Link to={`/authors/edit/${value._id}`}>
+                                <Link to={`/companies/edit/${value._id}`}>
                                   <button className="btn btn-warning">
                                     <i className="fas fa-edit"></i>
                                   </button>
@@ -106,19 +100,17 @@ const Author = () => {
                           )
                         })
                       }
-
                     </tbody>
                     <tfoot>
                       <tr>
                         <th>Số thứ tự</th>
-                        <th>Hình ảnh</th>
-                        <th>Tên tác giả</th>
+                        <th>Tên nhà xuất bản</th>
+                        <th>Mã nhà xuất bản</th>
                         <th>Hành động</th>
                       </tr>
                     </tfoot>
                   </table>
                 </div>
-
               </div>
             </div>
           </div>
@@ -128,4 +120,4 @@ const Author = () => {
   )
 }
 
-export default Author;
+export default Company;

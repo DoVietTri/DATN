@@ -10,13 +10,12 @@ const UserSchema = mongoose.Schema({
     address: { type: String, default: null },
     phone: { type: String, default: null },
     dateOfBirth: { type: String, default: null },
-    createdAt: { type: Number, default: Date.now },
-    deletedAt: { type: Number, default: null }
+    createdAt: { type: Number, default: Date.now }
 });
 
 UserSchema.statics = {
     findUserById (id) {
-        return this.findById(id).exec();
+        return this.findById(id, { password: 0 }).exec();
     },
 
     findByEmail(email) {
@@ -32,7 +31,7 @@ UserSchema.statics = {
     },
 
     getAllUsers () {
-        return this.find({});
+        return this.find({ role: 'user' }, { password: 0 }).sort({ createdAt: -1 }).exec();
     },
 
     deleteUser (id) {
@@ -41,6 +40,15 @@ UserSchema.statics = {
 
     updateUserInfo(id, data) {
         return this.findByIdAndUpdate(id, data).exec();
+    },
+
+    getAllStaffs () {
+        return this.find({
+            $or: [
+                {role: 'admin'},
+                {role: 'staff'}
+            ]
+        }, { password: 0 }).sort({ createdAt: -1 }).exec();
     }
 }
 

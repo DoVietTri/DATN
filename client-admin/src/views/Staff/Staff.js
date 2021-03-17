@@ -1,54 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import authorAPI from './../../apis/authorAPI';
-import { errorToast, successToast } from './../../components/Toasts/Toasts';
+import staffAPI from '../../apis/staffAPI';
+import { errorToast, successToast } from '../../components/Toasts/Toasts';
 
-const Author = () => {
-  const [dataAuthor, setDataAuthor] = useState([]);
+const Staff = () => {
+  const [staffs, setStaffs] = useState([]);
 
   useEffect(() => {
-    authorAPI.getAllAuthors().then((res) => {
-      setDataAuthor(res.data.data);
+    staffAPI.getAllStaffs().then((res) => {
+      setStaffs(res.data.data);
     }).catch((err) => {
-      errorToast("Có lỗi xảy ra, vui lòng thử lại !");
+      console.log(err);
     })
   }, []);
 
-  let handleDeleteAuthor = (id) => {
-    authorAPI.deleteAuthorById(id).then((res) => {
-      if (res.data.message === 'AUTHOR_NOT_FOUND') {
-        errorToast("Tác giả không tồn tại !");
+  let handleDeleteStaff = (id) => {
+    staffAPI.deleteStaffById(id).then((res) => {
+      if (res.data.message === 'NOT_PERMISSION') {
+        errorToast("Bạn không có quyền xóa nhân viên !");
       }
-      if (res.data.message === 'DESTROY_IMAGE_FAILED') {
-        errorToast("Xóa ảnh thất bại");
+      if (res.data.message === 'USER_NOT_FOUND') {
+        errorToast("Không tồn tại nhân viên, thử lại !");
       }
       if (res.data.message === 'SUCCESS') {
-        successToast("Xóa tác giả thành công");
-        let newDataAuthor = dataAuthor.filter(value => value._id !== id);
-        setDataAuthor([...newDataAuthor]);
+        successToast("Xóa nhân viên thành công");
+        let newStaffs = staffs.filter(staff => staff._id !== id);
+        setStaffs([...newStaffs]);
       }
     }).catch((err) => {
-      errorToast("Có lỗi xảy ra, vui lòng thử lại sau !");
+      errorToast("Có lỗi xảy ra, vui lòng thử lại !");
     })
   }
 
   return (
     <div className="content-wrapper">
-      {/* Content Header (Page header) */}
       <section className="content-header">
         <div className="container-fluid">
           <div className="row mb-2">
             <div className="col-sm-6">
-              <h1>Quản lý tác giả</h1>
+              <h1>Quản lý nhân viên</h1>
             </div>
             <div className="col-sm-6">
               <ol className="breadcrumb float-sm-right">
                 <li className="breadcrumb-item">
                   <Link to="/dashboard">
                     Trang chủ
-                  </Link>
+                        </Link>
                 </li>
-                <li className="breadcrumb-item active">Tác giả</li>
+                <li className="breadcrumb-item active">Nhân viên</li>
               </ol>
             </div>
           </div>
@@ -59,13 +58,13 @@ const Author = () => {
         <div className="container-fluid">
           <div className="row">
             <div className="col-12">
-
               <div className="card">
+
                 <div className="card-header">
                   <h3 className="card-title">
-                    <Link to="/authors/add">
+                    <Link to="/staffs/add">
                       <button className="btn btn-primary">
-                        <i className="fas fa-plus-circle"></i> Thêm tác giả
+                        <i className="fas fa-plus-circle"></i> Thêm nhân viên
                       </button>
                     </Link>
                   </h3>
@@ -75,28 +74,40 @@ const Author = () => {
                   <table id="example1" className="table table-bordered table-hover">
                     <thead>
                       <tr>
-                        <th>Số thứ tự</th>
-                        <th>Hình ảnh</th>
-                        <th>Tên tác giả</th>
+                        <th>STT</th>
+                        <th>Tên nhân viên</th>
+                        <th>Thông tin</th>
+        
+                        <th>Chức vụ</th>
                         <th>Hành động</th>
                       </tr>
                     </thead>
                     <tbody>
-
                       {
-                        dataAuthor.map((value, index) => {
+                        staffs.map((v, i) => {
                           return (
-                            <tr key={index}>
-                              <td>{index}</td>
+                            <tr key={i}>
+                              <td>{i}</td>
+                              <td>{v.username}</td>
                               <td>
-                                <img src={value.a_image.url} alt="Author" className="img-thumbnail" style={{ height: '100px'}} />
+                                <ul>
+                                  <li>Email : { v.email }</li>
+                                  <li>Giới tính: { v.gender === 'male' ? 'Nam' : 'Nữ' }</li>
+                                  <li>Ngày sinh: { v.dateOfBirth } </li>
+                                  <li>Địa chỉ: { v.address }</li>
+                                </ul>
                               </td>
-                              <td>{value.a_name}</td>
                               <td>
-                                <button className="btn btn-danger" onClick={() => handleDeleteAuthor(value._id)}>
+                                {
+                                  v.role === 'admin' ? (<span className="badge badge-primary"> Quản trị viên </span>) :
+                                    (<span className="badge badge-secondary"> Nhân viên </span>)
+                                }
+                              </td>
+                              <td>
+                                <button className="btn btn-danger" onClick={() => handleDeleteStaff(v._id)}>
                                   <i className="fas fa-trash-alt"></i>
                                 </button>
-                                <Link to={`/authors/edit/${value._id}`}>
+                                <Link to={`/staffs/edit/${v._id}`} >
                                   <button className="btn btn-warning">
                                     <i className="fas fa-edit"></i>
                                   </button>
@@ -106,13 +117,13 @@ const Author = () => {
                           )
                         })
                       }
-
                     </tbody>
                     <tfoot>
                       <tr>
-                        <th>Số thứ tự</th>
-                        <th>Hình ảnh</th>
-                        <th>Tên tác giả</th>
+                        <th>STT</th>
+                        <th>Tên nhân viên</th>
+                        <th>Thông tin</th>
+                        <th>Chức vụ</th>
                         <th>Hành động</th>
                       </tr>
                     </tfoot>
@@ -124,8 +135,9 @@ const Author = () => {
           </div>
         </div>
       </section>
+
     </div>
   )
 }
 
-export default Author;
+export default Staff;

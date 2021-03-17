@@ -1,5 +1,6 @@
-const slugify = require('slugify');
 const categoryModel = require('./../models/category.model');
+const productModel = require('./../models/product.model');
+const productService = require('./../services/product.service');
 
 /**
  * Store new one category into database
@@ -11,13 +12,13 @@ let addNewCategory = async (dataCategory) => {
     if (category) {
        return { message: 'CATEGORY_EXISTS' };
     }
-
-    dataCategory = {
-        ...dataCategory,
-        c_slug: slugify(dataCategory.c_name)
+    
+    if (dataCategory.c_parent === '') {
+        delete dataCategory.c_parent;
     }
-
+    
     let addNewCate = await categoryModel.addNewCategory(dataCategory);
+   
 
     return { message: 'SUCCESS', data: addNewCate };
 }
@@ -52,7 +53,7 @@ let getByIdCategory = async (id) => {
  */
 let updateCategory = async (id, itemCate) => {
     let cate = await categoryModel.getByIdCategory(id);
-    let currCate = await categoryModel.getCateByName(itemCate.c_name);
+    let currCate = await categoryModel.findByName(itemCate.c_name);
 
     if (currCate && (currCate.c_name !== cate.c_name)) {
         return { message: 'CATEGORY_EXISTS' };
@@ -60,6 +61,10 @@ let updateCategory = async (id, itemCate) => {
 
     if (!cate) {
         return { message: 'CATEGORY_NOT_FOUND' };
+    }
+
+    if (itemCate.c_parent === '') {
+        delete itemCate.c_parent;
     }
 
     await categoryModel.updateCategory(id, itemCate);
@@ -72,14 +77,30 @@ let updateCategory = async (id, itemCate) => {
  * @param {string} id 
  */
 let deleteByIdCategory = async (id) => {
-    let cate = await categoryModel.deleteByIdCategory(id);
+
+    let cate = await categoryModel.getByIdCategory(id);
 
     if (!cate) {
         return { message: 'CATEGORY_NOT_FOUND' };
     }
+
+    let childCate = await categoryModel.countCateChildByParentId(id);
     
+    if (childCate > 0) {
+        return { message: 'PARENT_EXISTS' };
+    }
+
+    let products = await productModel.findProductByCateId(id);
+
+    for (let i = 0; i < products.length; i++) {
+        await productService.deleteByIdProduct(products[i]._id);
+    }
+
+    await categoryModel.deleteByIdCategory(id);
+       
     return { message: 'SUCCESS' };
 }
+
 
 module.exports = {
     addNewCategory,

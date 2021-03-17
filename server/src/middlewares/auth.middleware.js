@@ -12,9 +12,12 @@ let isAdmin = async (req, res, next) => {
             //Get user from token
             let user = await userModel.findUserById(decoded.data);
 
-            if (user.role !== 'admin') {
+            if (user.role === 'user') {
                 return res.status(401).json({ message: 'You have not permission' });
             }
+
+            req.user = user;
+            req.token = tokenFromClient;
             next();
         } catch (error) {
             return res.status(401).json({ message: 'Unauthorized' });

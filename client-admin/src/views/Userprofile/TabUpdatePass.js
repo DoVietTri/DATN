@@ -19,14 +19,17 @@ const TabUpdatePass = () => {
         validationSchema: Yup.object({
           oldPassword: Yup.string()
             .min(6, "Mật khẩu ít nhất 6 kí tự")
+            .max(20, "Mật khẩu dài nhất là 20 kí tự")
             .required("Bắt buộc nhập mật khẩu"),
           newPassword: Yup.string()
             .min(6, "Mật khẩu ít nhất 6 kí tự")
+            .max(20, "Mật khẩu dài nhất là 20 kí tự")
             .required("Bắt buộc nhập mật khẩu"),
           reNewPassword: Yup.string()
             .min(6, "Mật khẩu ít nhất 6 kí tự")
+            .max(20, "Mật khẩu dài nhất là 20 kí tự")
             .required("Bắt buộc nhập mật khẩu")
-            .oneOf([Yup.ref("newPassword")], "Password is not match")
+            .oneOf([Yup.ref("newPassword")], "Mật khẩu phải trùng nhau")
         }),
         onSubmit: (values, { resetForm }) => {
           values = {

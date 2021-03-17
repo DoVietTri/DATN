@@ -1,26 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
 import categoryAPI from '../../apis/categoryAPI';
 import { successToast, errorToast } from '../../components/Toasts/Toasts';
 
 const CategoryAdd = () => {
 
   const history = useHistory();
+  const [dataCate, setDataCate] = useState([]);
+
+  useEffect(() => {
+    categoryAPI.getAllCategories().then((res) => {
+      setDataCate(res.data.data);
+    }).catch((err) => {
+      console.log(err);
+    })
+  }, []);
 
   const cateFormik = useFormik({
     initialValues: {
       inputCateName: '',
+      inputParentCate: '',
       inputCateDescription: ''
     },
     validationSchema: Yup.object({
       inputCateName: Yup.string()
         .required("Bắt buộc nhập tên danh mục")
-        .max(100, "Tên danh mục quá dài, bé hơn 100 kí tự")
+        .max(100, "Tên danh mục quá dài, bé hơn 100 kí tự"),
     }),
     onSubmit: (values) => {
       let data = {
+        c_parent: values.inputParentCate,
         c_name: values.inputCateName,
         c_description: values.inputCateDescription
       }
@@ -79,20 +92,54 @@ const CategoryAdd = () => {
                 {/* form start */}
                 <form onSubmit={cateFormik.handleSubmit}>
                   <div className="card-body">
+
+                    <div className="form-group">
+                      <label htmlFor="inputParentCate">Danh mục (*)</label>
+                      <select className="form-control" name="inputParentCate"
+                        value={cateFormik.values.inputParentCate}
+                        onChange={cateFormik.handleChange}
+                      >
+                        <option value="">Chọn danh mục cha.......</option>
+                        {
+                          dataCate.map((value, index) => {
+                            return (
+                              <option key={index} value={value._id} > { value.c_name } </option>
+                            )
+                          } )
+                        }
+                      </select>
+
+                      {cateFormik.errors.inputParentCate && cateFormik.touched.inputParentCate && (
+                        <small>{cateFormik.errors.inputParentCate}</small>
+                      )}
+                    </div>
                     <div className="form-group">
                       <label htmlFor="inputCateName">Tên danh mục (*)</label>
-                      <input type="text" className="form-control" name="inputCateName" placeholder="Nhập tên danh mục...." value={cateFormik.values.inputCateName} onChange={cateFormik.handleChange} />
-                      { cateFormik.errors.inputCateName && cateFormik.touched.inputCateName && (
-                        <small>{ cateFormik.errors.inputCateName }</small>
+                      <input type="text" className="form-control" name="inputCateName" placeholder="Nhập tên danh mục...."
+                        value={cateFormik.values.inputCateName}
+                        onChange={cateFormik.handleChange} />
+
+                      {cateFormik.errors.inputCateName && cateFormik.touched.inputCateName && (
+                        <small>{cateFormik.errors.inputCateName}</small>
                       )}
                     </div>
+
                     <div className="form-group">
                       <label htmlFor="inputCateDescription">Mô tả</label>
-                      <textarea className="form-control" name="inputCateDescription" placeholder="Mô tả..." value={cateFormik.values.inputCateDescription} onChange={cateFormik.handleChange} />
-                      { cateFormik.errors.inputCateDescription && cateFormik.touched.inputCateDescription && (
-                        <small>{ cateFormik.errors.inputCateDescription }</small>
+                      <CKEditor
+                        name="inputCateDescription"
+                        editor={ClassicEditor}
+                        data={cateFormik.values.inputCateDescription}
+                        onChange={(e, editor) => {
+
+                          cateFormik.setFieldValue("inputCateDescription", editor.getData())
+                        }}
+                      />
+                      {cateFormik.errors.inputCateDescription && cateFormik.touched.inputCateDescription && (
+                        <small>{cateFormik.errors.inputCateDescription}</small>
                       )}
                     </div>
+
                   </div>
                   {/* /.card-body */}
                   <div className="card-footer">

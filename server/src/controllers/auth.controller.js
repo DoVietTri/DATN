@@ -22,10 +22,6 @@ let register = async (req, res) => {
     }
 }
 
-// let login = (req, res) => {
-//    return res.status(200).json({code: 200, message: 'Success', data: 'user data'});
-// }
-
 module.exports = {
     login,
     register

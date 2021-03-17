@@ -1,26 +1,131 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-// import * as Yup from 'yup';
-// import { useFormik } from 'formik';
+import { Link, useHistory } from 'react-router-dom';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
 import categoryAPI from './../../apis/categoryAPI';
+import authorAPI from './../../apis/authorAPI';
+import companyAPI from './../../apis/companyAPI';
+import productAPI from './../../apis/productAPI';
+import { FILE_SIZE, SUPPORTED_FORMATS } from './../../constants/constants';
+import { errorToast, successToast } from '../../components/Toasts/Toasts';
 
 const ProductAdd = () => {
+
+  const history = useHistory();
+
   const [cate, setCate] = useState([]);
+  const [author, setAuthor] = useState([]);
+  const [company, setCompany] = useState([]);
 
   useEffect(() => {
     categoryAPI.getAllCategories().then((res) => {
       setCate(res.data.data);
-      console.log(res.data.data);
     }).catch((err) => {
+      console.log(err);
+    });
 
+    authorAPI.getAllAuthors().then((res) => {
+      setAuthor(res.data.data);
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    companyAPI.getAllCompanies().then((res) => {
+      setCompany(res.data.data);
+    }).catch((err) => {
+      console.log(err);
     })
+
+
   }, []);
 
-  // let addProductFormik = useFormik({
-  //   initialValues: {
-      
-  //   }
-  // });
+  let addProductFormik = useFormik({
+    initialValues: {
+      inputCateName: '',
+      inputProductName: '',
+      inputProductCode: '',
+      inputProductPrice: '',
+      inputProductQuantity: '',
+      inputProductImage: '',
+      inputAuthorName: [],
+      inputCompanyName: '',
+      inputProductDescription: '',
+      inputProductDatePublic: ''
+    },
+    validationSchema: Yup.object({
+      inputCateName: Yup.string()
+        .required("Bắt buộc chọn danh mục !"),
+      inputProductName: Yup.string()
+        .required("Bắt buộc nhập tên sản phẩm !")
+        .max(255, "Tên sản phẩm quá dài, nhỏ hơn 255 kí tự !"),
+      inputProductCode: Yup.string()
+        .required("Bắt buộc nhập mã sản phẩm !")
+        .max(100, "Mã sản phẩm quá dài, nhỏ hơn 100 kí tự"),
+      inputProductPrice: Yup.number()
+        .required("Bắt buộc  nhập giá sản phẩm !")
+        .min(0, "Giá tiền lớn hơn 0"),
+      inputProductQuantity: Yup.number()
+        .required("Bắt buộc nhập số lượng sản phẩm !")
+        .min(0, "Giá tiền lớn hơn 0"),
+      inputProductImage: Yup.mixed()
+        .required("Bắt buộc chọn hình ảnh sản phẩm")
+        .test(
+          "fileSize",
+          "Kích thước file lớn, vui lòng chọn file khác nhỏ hơn 200 KB có định dạng là ảnh",
+          value => {
+            return value && value.size <= FILE_SIZE
+          }
+        )
+        .test(
+          "fileFormat",
+          "Không hỗ trợ loại file này, lòng chọn file ảnh",
+          value => {
+            return value && SUPPORTED_FORMATS.includes(value.type)
+          }
+        ),
+      inputAuthorName: Yup.array()
+        .min(1, "Bắt buộc chọn tác giả"),
+      inputCompanyName: Yup.string()
+        .required("Bắt buộc chọn nhà  xuất bản !"),
+      inputProductDatePublic: Yup.string()
+        .required("Bắt buộc chọn ngày phát hành !")
+    }),
+    onSubmit: (values) => {
+      // console.log(values);
+      let formData = new FormData();
+      formData.append("p_name", values.inputProductName);
+      formData.append("p_code", values.inputProductCode);
+      formData.append("p_price", values.inputProductPrice);
+      formData.append("p_quantity", values.inputProductQuantity);
+      formData.append("p_image_detail", values.inputProductImage);
+      formData.append("p_description", values.inputProductDescription);
+      formData.append("category", values.inputCateName);
+
+      for (let i = 0; i < values.inputAuthorName.length; i++) {
+        formData.append("author[]", values.inputAuthorName[i]);
+      }
+
+      formData.append("company", values.inputCompanyName);
+      formData.append("p_datepublic", values.inputProductDatePublic);
+
+      productAPI.addNewProduct(formData).then((res) => {
+        if (res.data.message === 'PRODUCT_EXISTS') {
+          errorToast("Mã sản phẩm là duy nhất, đã tồn tại sản phẩm !");
+        }
+        if (res.data.message === 'UPLOAD_FAILED') {
+          errorToast("Lỗi upload ảnh, vui lòng kiểm tra lại đường truyền mạng !");
+        }
+        if (res.data.message === 'SUCCESS') {
+          successToast("Thêm sản phẩm thành công !");
+          history.push({ pathname: '/products' });
+        }
+      }).catch((err) => {
+        errorToast("Có lỗi xảy ra, vui lòng thử lại");
+      })
+    }
+  });
 
   return (
     <div className="content-wrapper">
@@ -60,37 +165,84 @@ const ProductAdd = () => {
                 </div>
                 {/* /.card-header */}
 
-                <form>
+                <form onSubmit={addProductFormik.handleSubmit}>
                   <div className="card-body">
                     <div className="row">
                       <div className="col-6 col-sm-6">
                         <div className="form-group">
                           <label htmlFor="inputCateName">Danh mục (*)</label>
-                          <select className="form-control select2">
-                            {/* <option selected="selected">{ cate[0].c_name }</option> */}
+                          <select className="form-control" name="inputCateName"
+                            value={addProductFormik.values.inputCateName}
+                            onChange={addProductFormik.handleChange}
+                          >
+                            <option value="">Chọn danh mục...</option>
                             {cate.map((value, index) => {
                               return (
-                                <option key={index}>{value.c_name}</option>
+                                <option key={index} value={value._id}>{value.c_name}</option>
                               )
                             })}
                           </select>
+
+                          {addProductFormik.errors.inputCateName && addProductFormik.touched.inputCateName && (
+                            <small>{addProductFormik.errors.inputCateName}</small>
+                          )}
                         </div>
                         <div className="form-group">
                           <label htmlFor="inputProductName">Tên sản phẩm (*)</label>
-                          <input type="text" className="form-control" name="inputProductName" placeholder="Nhập tên sản phẩm...." />
+                          <input type="text" className="form-control" name="inputProductName" placeholder="Nhập tên sản phẩm...."
+                            value={addProductFormik.values.inputProductName}
+                            onChange={addProductFormik.handleChange}
+                          />
+
+                          {addProductFormik.errors.inputProductName && addProductFormik.touched.inputProductName && (
+                            <small>{addProductFormik.errors.inputProductName}</small>
+                          )}
                         </div>
                         <div className="form-group">
                           <label htmlFor="inputProductCode">Mã sản phẩm (*)</label>
-                          <input type="text" className="form-control" name="inputProductCode" placeholder="Nhập mã sản phẩm...." />
+                          <input type="text" className="form-control" name="inputProductCode" placeholder="Nhập mã sản phẩm...."
+                            value={addProductFormik.values.inputProductCode}
+                            onChange={addProductFormik.handleChange}
+                          />
+
+                          {addProductFormik.errors.inputProductCode && addProductFormik.touched.inputProductCode && (
+                            <small>{addProductFormik.errors.inputProductCode}</small>
+                          )}
                         </div>
                         <div className="form-group">
-                          <label htmlFor="inputProductName">Giá sản phẩm (*)</label>
-                          <input type="number" className="form-control" name="inputProductName" placeholder="Nhập tên sản phẩm...." />
+                          <label htmlFor="inputProductPrice">Giá sản phẩm (*)</label>
+                          <input type="number" className="form-control" name="inputProductPrice" placeholder="Nhập tên sản phẩm...."
+                            value={addProductFormik.values.inputProductPrice}
+                            onChange={addProductFormik.handleChange}
+                          />
+
+                          {addProductFormik.errors.inputProductPrice && addProductFormik.touched.inputProductPrice && (
+                            <small>{addProductFormik.errors.inputProductPrice}</small>
+                          )}
                         </div>
                         <div className="form-group">
                           <label htmlFor="inputProductQuantity">Số lượng sản phẩm (*)</label>
-                          <input type="number" className="form-control" name="inputProductQuantity" placeholder="Số lượng sản phẩm...." />
+                          <input type="number" className="form-control" name="inputProductQuantity" placeholder="Số lượng sản phẩm...."
+                            value={addProductFormik.values.inputProductQuantity}
+                            onChange={addProductFormik.handleChange}
+                          />
+
+                          {addProductFormik.errors.inputProductQuantity && addProductFormik.touched.inputProductQuantity && (
+                            <small>{addProductFormik.errors.inputProductQuantity}</small>
+                          )}
                         </div>
+
+                        <div className="form-group">
+                          <label htmlFor="inputProductDatePublic" className="col-form-label">Ngày phát hành (*)</label>
+                          <input type="date" className="form-control" name="inputProductDatePublic" placeholder="Ngày phát hành..."
+                            value={addProductFormik.values.inputProductDatePublic || ''}
+                            onChange={addProductFormik.handleChange} />
+
+                          {addProductFormik.errors.inputProductDatePublic && addProductFormik.touched.inputProductDatePublic && (
+                            <small>{addProductFormik.errors.inputProductDatePublic}</small>
+                          )}
+                        </div>
+
                       </div>
 
                       <div className="col-6 col-sm-6">
@@ -98,25 +250,78 @@ const ProductAdd = () => {
                           <label htmlFor="inputFile">Hình ảnh (*)</label>
                           <div className="input-group">
                             <div className="custom-file">
-                              <input type="file" className="custom-file-input" name="inputFile" multiple />
+                              <input type="file" className="custom-file-input" name="inputProductImage"
+                                onChange={(e) => {
+                                  addProductFormik.setFieldValue('inputProductImage', e.target.files[0])
+                                }}
+                              />
                               <label className="custom-file-label" htmlFor="inputFile">Chọn file</label>
                             </div>
                             <div className="input-group-append">
                               <span className="input-group-text">Upload</span>
                             </div>
                           </div>
-                        </div>
 
-                        <div className="form-group">
-                          <label htmlFor="inputProductDescription">Mô tả sản phẩm</label>
-                          <textarea className="form-control" name="inputProductDescription" rows={6} placeholder="Nhập mô tả sản phẩm..." />
+                          {addProductFormik.errors.inputProductImage && addProductFormik.touched.inputProductImage && (
+                            <small>{addProductFormik.errors.inputProductImage}</small>
+                          )}
                         </div>
 
                         <div className="form-group">
                           <label htmlFor="inputProductAuthor">Tên tác giả (*)</label>
-                          <input type="text" className="form-control" name="inputProductAuthor" placeholder="Nhập tên tác giả..." />
+                          <select className="form-control" name="inputAuthorName" multiple
+                            value={addProductFormik.values.inputAuthorName}
+                            onChange={addProductFormik.handleChange}
+                          >
+                            {
+                              author.map((value, index) => {
+                                return (
+                                  <option key={index} value={value._id} >{value.a_name}</option>
+                                )
+                              })
+                            }
+                          </select>
+
+                          {addProductFormik.errors.inputAuthorName && addProductFormik.touched.inputAuthorName && (
+                            <small>{addProductFormik.errors.inputAuthorName}</small>
+                          )}
+                        </div>
+
+                        <div className="form-group">
+                          <label htmlFor="inputCompanyName">Nhà xuất bản (*)</label>
+                          <select className="form-control" name="inputCompanyName"
+                            value={addProductFormik.values.inputCompanyName}
+                            onChange={addProductFormik.handleChange}
+                          >
+                            <option value="">Chọn nhà xuất bản....</option>
+                            {company.map((value, index) => {
+                              return (
+                                <option key={index} value={value._id}>{value.c_name}</option>
+                              )
+                            })}
+                          </select>
+
+                          {addProductFormik.errors.inputCompanyName && addProductFormik.touched.inputCompanyName && (
+                            <small>{addProductFormik.errors.inputCompanyName}</small>
+                          )}
+                        </div>
+
+                        <div className="form-group">
+                          <label htmlFor="inputProductDescription">Mô tả sản phẩm</label>
+                          <CKEditor
+                            name="inputProductDescription"
+                            editor={ClassicEditor}
+                            data={addProductFormik.values.inputProductDescription}
+                            onChange={(e, editor) => {
+                              addProductFormik.setFieldValue("inputProductDescription", editor.getData())
+                            }}
+                          />
+                          {addProductFormik.errors.inputProductDescription && addProductFormik.touched.inputProductDescription && (
+                            <small>{addProductFormik.errors.inputProductDescription}</small>
+                          )}
                         </div>
                       </div>
+
                     </div>
                   </div>
 

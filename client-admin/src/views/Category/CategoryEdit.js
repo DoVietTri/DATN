@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
 import categoryAPI from './../../apis/categoryAPI';
 import { successToast, errorToast } from './../../components/Toasts/Toasts';
 
@@ -11,11 +13,18 @@ const CategoryEdit = (props) => {
   const history = useHistory();
 
   const [itemCate, setItemCate] = useState({});
+  const [allCate, setAllCate] = useState([]);
 
   useEffect(() => {
     let id = props.match.params.id;
     categoryAPI.getCateById(id).then((res) => {
       setItemCate(res.data.data);
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    categoryAPI.getAllCategories().then((res) => {
+      setAllCate((res.data.data).filter (v => v._id !== id));
     }).catch((err) => {
       console.log(err);
     })
@@ -24,7 +33,8 @@ const CategoryEdit = (props) => {
   let updateCateFormik = useFormik({
     initialValues: {
       inputCateName: itemCate.c_name,
-      inputCateDescription: itemCate.c_description
+      inputCateDescription: itemCate.c_description,
+      inputParentCate: itemCate.c_parent ? itemCate.c_parent._id : ''
     },
     enableReinitialize: true,
     validationSchema: Yup.object({
@@ -35,7 +45,8 @@ const CategoryEdit = (props) => {
     onSubmit: (values) => {
       let data = {
         c_name: values.inputCateName,
-        c_description: values.inputCateDescription
+        c_description: values.inputCateDescription,
+        c_parent: values.inputParentCate
       };
       categoryAPI.updateCateById(props.match.params.id, data).then((res) => {
         if (res.data.message === 'CATEGORY_NOT_FOUND') {
@@ -96,6 +107,41 @@ const CategoryEdit = (props) => {
                 {/* form start */}
                 <form onSubmit={updateCateFormik.handleSubmit}>
                   <div className="card-body">
+
+                    <div className="form-group">
+                      <label htmlFor="inputParentCate">Danh mục cha (*)</label>
+                      <select className="form-control" name="inputParentCate"
+                        value={updateCateFormik.values.inputParentCate || ''}
+                        onChange={updateCateFormik.handleChange}
+                      >
+                      
+                        {
+                          itemCate.c_parent === undefined ? (<option value="">Chọn danh mục cha....</option>) : (
+                            allCate.map((v, i) => {
+                              return (
+                                <option key={i} value={ v._id }
+                                selected={ itemCate.c_parent._id === v._id ? true : false } > { v.c_name } </option>
+                              )
+                            })
+                          )
+                        }
+
+                        {
+                          itemCate.c_parent === undefined ? (
+                            allCate.map((v, i) => {
+                              return (
+                                <option key={i} value={ v._id } > { v.c_name } </option>
+                              )
+                            })
+                          ) : ''
+                        }
+                      </select>
+
+                      {updateCateFormik.errors.inputParentCate && updateCateFormik.touched.inputParentCate && (
+                        <small>{updateCateFormik.errors.inputParentCate}</small>
+                      )}
+                    </div>
+
                     <div className="form-group">
                       <label htmlFor="inputCateName">Tên danh mục (*)</label>
                       <input type="text" className="form-control" name="inputCateName" placeholder="Nhập tên danh mục...."
@@ -106,11 +152,16 @@ const CategoryEdit = (props) => {
                         <small>{updateCateFormik.errors.inputCateName}</small>
                       )}
                     </div>
+
                     <div className="form-group">
-                      <label htmlFor="inputCateDescription">Mô tả</label>
-                      <textarea className="form-control" name="inputCateDescription" placeholder="Mô tả..."
-                        value={updateCateFormik.values.inputCateDescription || ''}
-                        onChange={updateCateFormik.handleChange}
+                      <label htmlFor="inputCateDescription">Mô tả </label>
+                      <CKEditor
+                        name="inputCateDescription"
+                        editor={ClassicEditor}
+                        data={updateCateFormik.values.inputCateDescription || ''}
+                        onChange={(e, editor) => {
+                          updateCateFormik.setFieldValue("inputCateDescription", editor.getData())
+                        }}
                       />
 
                       {updateCateFormik.errors.inputCateDescription && updateCateFormik.touched.inputCateDescription && (
