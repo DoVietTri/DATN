@@ -2,15 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import productAPI from './../../apis/productAPI';
 import { errorToast, successToast } from './../../components/Toasts/Toasts';
+import useFullPageLoader from './../../hooks/useFullPageLoader';
 
 const Product = () => {
-
+  const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [allProducts, setAllProducts] = useState([]);
 
   useEffect(() => {
+    showLoader();
     productAPI.getAllProduct().then((res) => {
       if (res.data.message === 'SUCCESS') {
         setAllProducts(res.data.data);
+        hideLoader();
       }
     }).catch((err) => {
       errorToast("Có lỗi xảy ra, vui lòng thử lại !");
@@ -18,14 +21,18 @@ const Product = () => {
   }, []);
 
   let handleDeleteProduct = (id) => {
+    showLoader();
     productAPI.deleteProductById(id).then((res) => {
       if (res.data.message === 'PRODUCT_NOT_FOUND') {
+        hideLoader();
         errorToast("Sản phẩm không tồn tại");
       }
       if (res.data.message === 'DESTROY_IMAGE_FAILED') {
+        hideLoader();
         errorToast("Xóa hình ảnh không thành công, vui lòng thử lại");
       }
       if (res.data.message === 'SUCCESS') {
+        hideLoader();
         successToast("Xóa sản phẩm thành công");
         let newAllProducts = allProducts.filter(product => product._id !== id);
         setAllProducts([...newAllProducts]);
@@ -139,7 +146,7 @@ const Product = () => {
           </div>
         </div>
       </section>
-
+      { loader }
     </div>
   )
 }

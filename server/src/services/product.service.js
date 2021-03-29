@@ -1,3 +1,4 @@
+const { default: slugify } = require('slugify');
 const productModel = require('./../models/product.model');
 const { cloudinary } = require('./../utils/cloudinary');
 const formatBufferToBase64 = require('./../utils/formatBufferToBase64');
@@ -29,6 +30,10 @@ let addNewProduct = async (productItem) => {
         upload_preset: 'dev_setups'
     });
 
+    if (!responseUploadDetail) {
+        return { message: 'UPLOAD_FAILED' };
+    }
+
     let responseData = {
         public_id: responseUploadDetail.public_id,
         url: responseUploadDetail.secure_url
@@ -38,7 +43,8 @@ let addNewProduct = async (productItem) => {
 
     productItem = {
         ...productItem,
-        p_image_detail: responseData
+        p_image_detail: responseData,
+        p_slug: slugify(productItem.p_name)
     }
 
     let newProduct = await productModel.addNewProduct(productItem);
@@ -65,9 +71,58 @@ let deleteByIdProduct = async (productId) => {
     return { message: 'SUCCESS' };
 }
 
+let updateProductById = async (id, data) => {
+    let product = await productModel.getByIdProduct(id);
+    if (!product) {
+        return { message: 'PRODUCT_NOT_FOUND' };
+    }
+
+    if (!data.p_image_detail) {
+        delete data.p_image_detail;
+        data = {
+            ...data,
+            p_slug: slugify(data.p_name)
+        }
+        await productModel.updateProductById(id, data);
+        return { message: 'SUCCESS' };
+    }
+
+    let responseDestroyAvatar = await cloudinary.uploader.destroy(product.p_image_detail.public_id);
+
+    if (!responseDestroyAvatar) {
+        return { message: 'DESTROY_IMAGE_FAILED' };
+    }
+
+    let responseUploadDetail = await cloudinary.uploader.upload(formatBufferToBase64(data.p_image_detail).content, {
+        upload_preset: 'dev_setups'
+    });
+
+    if (!responseUploadDetail) {
+        return { message: 'UPLOAD_FAILED' };
+    }
+
+    let responseData = {
+        public_id: responseUploadDetail.public_id,
+        url: responseUploadDetail.secure_url
+    }
+
+    delete data.p_image_detail;
+
+    data = {
+        ...data,
+        p_image_detail: responseData,
+        p_slug: slugify(data.p_name)
+    }
+
+    await productModel.updateProductById(id, data);
+
+    return { message: 'SUCCESS' };
+}
+
 module.exports = {
     getAllProducts,
     getByIdProduct,
     addNewProduct,
-    deleteByIdProduct
+    deleteByIdProduct,
+    updateProductById
 }

@@ -12,11 +12,8 @@ let getAllAuthors = async (req, res) => {
 
 let addNewAuthor = async (req, res) => {
     try {
-        let data = {
-           ...req.body,
-            a_image: req.file
-        }
-        let addNewAuthor = await authorService.addNewAuthor(data);
+
+        let addNewAuthor = await authorService.addNewAuthor(req.body);
 
         return res.status(200).json(addNewAuthor);
     } catch (error) {

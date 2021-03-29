@@ -20,10 +20,10 @@ const Sidebar = () => {
   return (
     <aside className="main-sidebar sidebar-dark-primary elevation-4">
       {/* Brand Logo  */}
-      <a href="index3.html" className="brand-link">
+      <Link to="/dashboard" className="brand-link">
         <img src={logo} alt="AdminLTE Logo" className="brand-image img-circle elevation-3" style={{ opacity: '.8' }} />
-        <span className="brand-text font-weight-light">AdminLTE 3</span>
-      </a>
+        <span className="brand-text font-weight-light">DealBook.xyz</span>
+      </Link>
 
       {/* Sidebar */}
       <div className="sidebar">
@@ -86,7 +86,20 @@ const Sidebar = () => {
                     <p>Sản phẩm</p>
                   </NavLink>
                 </li>
+                <li className="nav-item">
+                  <NavLink to="/comments" className="nav-link" activeClassName="active">
+                    <i className="far fa-circle nav-icon"></i>
+                    <p>Bình luận</p>
+                  </NavLink>
+                </li>
               </ul>
+            </li>
+
+            <li className="nav-item">
+              <NavLink to="/banners" className="nav-link" activeClassName="active">
+                <i className="nav-icon fas fa-database"></i>
+                <p>Banner</p>
+              </NavLink>
             </li>
 
             <li className="nav-item">
@@ -116,6 +129,25 @@ const Sidebar = () => {
                   <NavLink to="/customers" className="nav-link" activeClassName="active">
                     <i className="nav-icon far fa-circle nav-icon"></i>
                     <p>Khách hàng</p>
+                  </NavLink>
+                </li>
+
+              </ul>
+            </li>
+
+            <li className="nav-item">
+              <a href="#!" className="nav-link">
+                <i className="nav-icon fas fa-shopping-cart"></i>
+                <p>
+                  Đơn hàng
+                  <i className="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul className="nav nav-treeview">
+                <li className="nav-item">
+                  <NavLink to="" className="nav-link" activeClassName="active">
+                    <i className="nav-icon far fa-circle nav-icon"></i>
+                    <p>Danh sách</p>
                   </NavLink>
                 </li>
 

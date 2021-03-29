@@ -19,6 +19,11 @@ const productAPI = {
     getProductById: (id) => {
         let url = `/products/${id}`;
         return axiosClient.get(url);
+    },
+
+    updateProductById: (id, data) => {
+        let url = `/products/${id}`;
+        return axiosClient.put(url, data);
     }
 }
 

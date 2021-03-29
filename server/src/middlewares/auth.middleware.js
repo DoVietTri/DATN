@@ -13,7 +13,7 @@ let isAdmin = async (req, res, next) => {
             let user = await userModel.findUserById(decoded.data);
 
             if (user.role === 'user') {
-                return res.status(401).json({ message: 'You have not permission' });
+                return res.status(401).json({ message: 'NOT_PERMISSION' });
             }
 
             req.user = user;
@@ -27,6 +27,29 @@ let isAdmin = async (req, res, next) => {
     }
 }
 
+let isLogin = async (req, res, next) => {
+    let tokenFromClient = req.body.token || req.headers['authorization'];
+   
+    if (tokenFromClient) {
+        try {
+            //Verify token
+            let decoded = await JWT.verifyToken(tokenFromClient);
+
+            //Get user from token
+            let user = await userModel.findUserById(decoded.data);
+
+            req.user = user;
+            req.token = tokenFromClient;
+            next();
+        } catch (error) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+    } else {
+        return res.status(401).json({ message: 'No_token' });
+    }
+}
+
 module.exports = {
-    isAdmin
+    isAdmin,
+    isLogin
 }

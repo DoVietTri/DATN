@@ -6,10 +6,10 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import categoryAPI from './../../apis/categoryAPI';
 import { successToast, errorToast } from './../../components/Toasts/Toasts';
-
+import useFullPageLoader from './../../hooks/useFullPageLoader';
 
 const CategoryEdit = (props) => {
-
+  const [loader, showLoader, hideLoader] = useFullPageLoader();
   const history = useHistory();
 
   const [itemCate, setItemCate] = useState({});
@@ -17,15 +17,20 @@ const CategoryEdit = (props) => {
 
   useEffect(() => {
     let id = props.match.params.id;
+    showLoader();
     categoryAPI.getCateById(id).then((res) => {
       setItemCate(res.data.data);
+      hideLoader();
     }).catch((err) => {
+      hideLoader();
       console.log(err);
     });
 
     categoryAPI.getAllCategories().then((res) => {
+      hideLoader();
       setAllCate((res.data.data).filter (v => v._id !== id));
     }).catch((err) => {
+      hideLoader();
       console.log(err);
     })
   }, [props.match.params.id]);
@@ -48,18 +53,23 @@ const CategoryEdit = (props) => {
         c_description: values.inputCateDescription,
         c_parent: values.inputParentCate
       };
+      showLoader();
       categoryAPI.updateCateById(props.match.params.id, data).then((res) => {
         if (res.data.message === 'CATEGORY_NOT_FOUND') {
+          hideLoader();
           errorToast("Danh mục không tồn tại !");
         }
         if (res.data.message === 'CATEGORY_EXISTS') {
+          hideLoader();
           errorToast("Danh mục đã tồn tại !");
         }
         if (res.data.message === 'SUCCESS') {
+          hideLoader();
           successToast("Cập nhật danh mục thành công !");
           history.push({ pathname: '/categories' });
         }
       }).catch((err) => {
+        hideLoader();
         errorToast("Có lỗi xảy ra, vui lòng thử lại !");
       })
     }

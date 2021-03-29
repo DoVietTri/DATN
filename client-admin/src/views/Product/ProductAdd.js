@@ -10,34 +10,40 @@ import companyAPI from './../../apis/companyAPI';
 import productAPI from './../../apis/productAPI';
 import { FILE_SIZE, SUPPORTED_FORMATS } from './../../constants/constants';
 import { errorToast, successToast } from '../../components/Toasts/Toasts';
+import useFullPageLoader from './../../hooks/useFullPageLoader';
 
 const ProductAdd = () => {
-
+  const [loader, showLoader, hideLoader] = useFullPageLoader();
+  
   const history = useHistory();
-
+  const [fileName, setFileName] = useState('Chọn ảnh');
+  const [previewSource, setPreviewSource] = useState('');
   const [cate, setCate] = useState([]);
   const [author, setAuthor] = useState([]);
   const [company, setCompany] = useState([]);
 
   useEffect(() => {
+    showLoader();
     categoryAPI.getAllCategories().then((res) => {
       setCate(res.data.data);
+      hideLoader();
     }).catch((err) => {
       console.log(err);
     });
 
     authorAPI.getAllAuthors().then((res) => {
       setAuthor(res.data.data);
+      hideLoader();
     }).catch((err) => {
       console.log(err);
     });
 
     companyAPI.getAllCompanies().then((res) => {
       setCompany(res.data.data);
+      hideLoader();
     }).catch((err) => {
       console.log(err);
     })
-
 
   }, []);
 
@@ -110,22 +116,38 @@ const ProductAdd = () => {
       formData.append("company", values.inputCompanyName);
       formData.append("p_datepublic", values.inputProductDatePublic);
 
+      showLoader();
       productAPI.addNewProduct(formData).then((res) => {
         if (res.data.message === 'PRODUCT_EXISTS') {
+          hideLoader();
           errorToast("Mã sản phẩm là duy nhất, đã tồn tại sản phẩm !");
         }
         if (res.data.message === 'UPLOAD_FAILED') {
+          hideLoader();
           errorToast("Lỗi upload ảnh, vui lòng kiểm tra lại đường truyền mạng !");
         }
         if (res.data.message === 'SUCCESS') {
+          hideLoader();
           successToast("Thêm sản phẩm thành công !");
           history.push({ pathname: '/products' });
         }
       }).catch((err) => {
+        hideLoader();
         errorToast("Có lỗi xảy ra, vui lòng thử lại");
       })
     }
   });
+
+  let previewFile = (file) => {
+    if (file) {
+      let reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      reader.onloadend = () => {
+        setPreviewSource(reader.result);
+      }
+    }
+  }
 
   return (
     <div className="content-wrapper">
@@ -247,27 +269,6 @@ const ProductAdd = () => {
 
                       <div className="col-6 col-sm-6">
                         <div className="form-group">
-                          <label htmlFor="inputFile">Hình ảnh (*)</label>
-                          <div className="input-group">
-                            <div className="custom-file">
-                              <input type="file" className="custom-file-input" name="inputProductImage"
-                                onChange={(e) => {
-                                  addProductFormik.setFieldValue('inputProductImage', e.target.files[0])
-                                }}
-                              />
-                              <label className="custom-file-label" htmlFor="inputFile">Chọn file</label>
-                            </div>
-                            <div className="input-group-append">
-                              <span className="input-group-text">Upload</span>
-                            </div>
-                          </div>
-
-                          {addProductFormik.errors.inputProductImage && addProductFormik.touched.inputProductImage && (
-                            <small>{addProductFormik.errors.inputProductImage}</small>
-                          )}
-                        </div>
-
-                        <div className="form-group">
                           <label htmlFor="inputProductAuthor">Tên tác giả (*)</label>
                           <select className="form-control" name="inputAuthorName" multiple
                             value={addProductFormik.values.inputAuthorName}
@@ -307,6 +308,40 @@ const ProductAdd = () => {
                         </div>
 
                         <div className="form-group">
+                          <label htmlFor="inputFile">Hình ảnh (*)</label>
+                          <div className="input-group">
+                            <div className="custom-file">
+                              <input type="file" className="custom-file-input" name="inputProductImage"
+                                onChange={(e) => {
+                                  addProductFormik.setFieldValue('inputProductImage', e.target.files[0])
+                                  setFileName(e.target.files[0] ? e.target.files[0].name : 'Chọn ảnh')
+                                  previewFile(e.target.files[0] ? e.target.files[0] : null);
+                                }}
+                              />
+                              <label className="custom-file-label" htmlFor="inputFile">{fileName}</label>
+                            </div>
+                            <div className="input-group-append">
+                              <span className="input-group-text">Upload</span>
+                            </div>
+                          </div>
+
+                          {addProductFormik.errors.inputProductImage && addProductFormik.touched.inputProductImage && (
+                            <small>{addProductFormik.errors.inputProductImage}</small>
+                          )}
+                        </div>
+
+                        <div>
+                          {previewSource && (
+                            <img src={previewSource} style={{ height: '150px' }} alt="previewImage" />
+                          )}
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col-12">
+                        <div className="form-group">
                           <label htmlFor="inputProductDescription">Mô tả sản phẩm</label>
                           <CKEditor
                             name="inputProductDescription"
@@ -321,7 +356,6 @@ const ProductAdd = () => {
                           )}
                         </div>
                       </div>
-
                     </div>
                   </div>
 
@@ -335,6 +369,8 @@ const ProductAdd = () => {
           </div>
         </div>
       </section>
+
+      { loader }
     </div>
   )
 }

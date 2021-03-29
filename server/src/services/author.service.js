@@ -20,29 +20,9 @@ let addNewAuthor = async (data) => {
         return { message: 'AUTHOR_EXISTS' };
     }
 
-    let responseUploadImage = await cloudinary.uploader.upload(formatBufferToBase64(data.a_image).content, {
-        upload_preset: 'dev_setups'
-    });
+    await authorModel.addNewAuthor(data);
 
-    if (!responseUploadImage) {
-        return { message: 'UPLOAD_FAILED' };
-    }
-
-    let responseData = {
-        public_id: responseUploadImage.public_id,
-        url: responseUploadImage.secure_url
-    }
-
-    delete data.a_image;
-
-    data = {
-        ...data,
-        a_image: responseData
-    }
-
-    let itemAuthor = await authorModel.addNewAuthor(data);
-
-    return { message: 'SUCCESS', data: itemAuthor };
+    return { message: 'SUCCESS' };
 }
 
 let getAuthorById = async (id) => {
@@ -58,15 +38,6 @@ let deleteAuthorById = async (id) => {
     let author = await authorModel.getAuthorById(id);
     if (!author) {
         return { message: 'AUTHOR_NOT_FOUND' };
-    }
-
-    for (let i = 0; i < author.a_image.length; i++) {
-        let responseDestroyImage = await cloudinary.uploader.destroy(author.a_image[i].public_id);
-
-        if (!responseDestroyImage) {
-            return { message: 'DESTROY_IMAGE_FAILED' };
-        }
-
     }
 
     await authorModel.deleteAuthorById(id);

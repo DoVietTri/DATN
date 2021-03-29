@@ -2,33 +2,43 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import categoryAPI from './../../apis/categoryAPI';
 import { successToast, errorToast } from './../../components/Toasts/Toasts';
+import useFullPageLoader from './../../hooks/useFullPageLoader';
 
 const Category = () => {
 
+  const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [dataCate, setDataCate] = useState([]);
 
   useEffect(() => {
+    showLoader();
     categoryAPI.getAllCategories().then((res) => {
       setDataCate(res.data.data);
+      hideLoader();
     }).catch((err) => {
+      hideLoader();
       console.log(err);
     })
   }, []);
 
   let handleDeleteCate = (id) => {
+    showLoader();
     categoryAPI.deleteById(id).then((res) => {
       if (res.data.message === 'CATEGORY_NOT_FOUND') {
+        hideLoader();
         errorToast('Danh mục không tồn tại !');
       }
       if (res.data.message === 'SUCCESS') {
-        successToast('Xóa danh mục thành công !');
         let newDataCate = dataCate.filter(value => value._id !== id);
         setDataCate([...newDataCate]);
+        hideLoader();
+        successToast('Xóa danh mục thành công !');
       }
       if (res.data.message === 'PARENT_EXISTS') {
+        hideLoader();
         errorToast("Xóa danh mục con trước !");
       }
     }).catch((err) => {
+      hideLoader();
       errorToast('Có lỗi xảy ra, vui lòng thử lại');
     })
   }
@@ -127,6 +137,7 @@ const Category = () => {
           </div>
         </div>
       </section>
+      { loader }
     </div>
   )
 }

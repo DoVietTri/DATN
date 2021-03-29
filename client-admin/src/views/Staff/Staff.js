@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import staffAPI from '../../apis/staffAPI';
 import { errorToast, successToast } from '../../components/Toasts/Toasts';
+import useFullPageLoader from './../../hooks/useFullPageLoader';
 
 const Staff = () => {
+  const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [staffs, setStaffs] = useState([]);
 
   useEffect(() => {
@@ -15,17 +17,25 @@ const Staff = () => {
   }, []);
 
   let handleDeleteStaff = (id) => {
+    showLoader();
     staffAPI.deleteStaffById(id).then((res) => {
       if (res.data.message === 'NOT_PERMISSION') {
+        hideLoader();
         errorToast("Bạn không có quyền xóa nhân viên !");
       }
+      if (res.data.message === 'ME') {
+        hideLoader();
+        errorToast("Bạn không thể xóa chính mình");
+      }
       if (res.data.message === 'USER_NOT_FOUND') {
+        hideLoader();
         errorToast("Không tồn tại nhân viên, thử lại !");
       }
       if (res.data.message === 'SUCCESS') {
-        successToast("Xóa nhân viên thành công");
         let newStaffs = staffs.filter(staff => staff._id !== id);
         setStaffs([...newStaffs]);
+        hideLoader();
+        successToast("Xóa nhân viên thành công");
       }
     }).catch((err) => {
       errorToast("Có lỗi xảy ra, vui lòng thử lại !");
@@ -135,7 +145,7 @@ const Staff = () => {
           </div>
         </div>
       </section>
-
+      { loader }
     </div>
   )
 }

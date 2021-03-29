@@ -23,6 +23,10 @@ import Staff from './views/Staff/Staff';
 import StaffAdd from './views/Staff/StaffAdd';
 import StaffEdit from './views/Staff/StaffEdit';
 import Customer from './views/Customer/Customer';
+import Comment from './views/Comment/Comment';
+import Banner from './views/Banner/Banner';
+import BannerAdd from './views/Banner/BannerAdd';
+import BannerEdit from './views/Banner/BannerEdit';
 
 const hist = createBrowserHistory();
 
@@ -48,6 +52,10 @@ const App = () => {
       <PrivateRoute exact path="/staffs/add" component={StaffAdd} layout={Admin} />
       <PrivateRoute exact path="/staffs/edit/:id" component={StaffEdit} layout={Admin} />
       <PrivateRoute exact path="/customers" component={Customer} layout={Admin} />
+      <PrivateRoute exact path="/comments" component={Comment} layout={Admin} />
+      <PrivateRoute exact path="/banners" component={Banner} layout={Admin} />
+      <PrivateRoute exact path="/banners/add" component={BannerAdd} layout={Admin} />
+      <PrivateRoute exact path="/banners/edit/:id" component={BannerEdit} layout={Admin} />
     </Router>
   );
 }

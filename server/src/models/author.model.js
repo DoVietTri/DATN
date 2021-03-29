@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const AuthorSchema = mongoose.Schema({
     a_name: String,
     a_info: { type: String, default: null },
-    a_image: { public_id: String, url: String },
     createdAt: { type: Number, default: Date.now }
 });
 

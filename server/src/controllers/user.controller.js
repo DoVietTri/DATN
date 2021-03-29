@@ -34,8 +34,9 @@ let getUserById = async (req, res) => {
 
 let deleteUser = async (req, res) => {
     try {
-        let data = req.body;
-        let deleteUser = await userService.deleteUser(data);
+        let id = req.params.id;
+        let currUser = req.user;
+        let deleteUser = await userService.deleteUser(currUser, id);
 
         return res.status(200).json(deleteUser);
     } catch (error) {

@@ -4,9 +4,10 @@ import  { useFormik } from 'formik';
 import  * as Yup from 'yup';
 import staffAPI from '../../apis/staffAPI';
 import  { errorToast, successToast } from './../../components/Toasts/Toasts';
+import useFullPageLoader from './../../hooks/useFullPageLoader';
 
 const StaffEdit = (props) => {
-
+  const [loader, showLoader, hideLoader] = useFullPageLoader();
   const history = useHistory();
   const [staff, setStaff] = useState({});
 
@@ -53,18 +54,23 @@ const StaffEdit = (props) => {
         phone: values.inputStaffPhone,
         dateOfBirth: values.inputStaffDateOfBirth
       }
+      showLoader();
       staffAPI.updateStaffById(props.match.params.id, data).then((res) => {
         if (res.data.message === 'NOT_PERMISSION') {
+          hideLoader();
           errorToast("Bạn không có quyền cập nhật thông tin nhân viên !");
         }
         if (res.data.message === 'USER_NOT_FOUND') {
+          hideLoader();
           errorToast("Nhân viên không tồn tại, vui lòng thử lại !");
         }
         if (res.data.message === 'SUCCESS') {
+          hideLoader();
           successToast("Cập nhật thông tin nhân viên thành công !");
           history.push({ pathname: '/staffs' });
         }
       }).catch((err) => {
+        hideLoader();
         errorToast("Có lỗi xảy ra, vui lòng thử lại !");
       })
     }
@@ -211,6 +217,7 @@ const StaffEdit = (props) => {
           </div>
         </div>
       </section>
+      { loader }
     </div>
   )
 }

@@ -62,6 +62,10 @@ let deleteStaffById = async (currUser, id) => {
         return { message: 'USER_NOT_FOUND' };
     }
 
+    if (currUser.role === staff.role) {
+        return { message: 'ME' };
+    }
+
     await userModel.deleteUser(id);
 
     return { message: 'SUCCESS' };

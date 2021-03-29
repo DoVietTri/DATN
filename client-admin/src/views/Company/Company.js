@@ -2,29 +2,37 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import companyAPI from '../../apis/companyAPI';
 import { errorToast, successToast } from '../../components/Toasts/Toasts';
-
+import useFullPageLoader from './../../hooks/useFullPageLoader';
 const Company = () => {
+  const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [dataCompany, setDataCompany] = useState([]);
 
   useEffect(() => {
+    showLoader();
     companyAPI.getAllCompanies().then((res) => {
       setDataCompany(res.data.data);
+      hideLoader();
     }).catch((err) => {
+      hideLoader();
       errorToast("Có lỗi xảy ra, vui lòng thử lại !");
     })
   }, []);
 
   let handleDelete = (id) => {
+    showLoader();
     companyAPI.deleteCompanyById(id).then((res) => {
       if (res.data.message === 'COMPANY_NOT_FOUND') {
+        hideLoader();
         errorToast("Công ty không tồn tại");
       }
       if (res.data.message === 'SUCCESS') {
-        successToast("Xóa nhà  xuất bản thành công");
         let newDataCom = dataCompany.filter(value => value._id !== id);
         setDataCompany([...newDataCom]);
+        hideLoader();
+        successToast("Xóa nhà  xuất bản thành công");
       }
     }).catch((err) => {
+      hideLoader();
       errorToast("Có lỗi xảy ra, vui lòng thử lại sau !");
     })
   }
@@ -116,6 +124,7 @@ const Company = () => {
           </div>
         </div>
       </section>
+      { loader }
     </div>
   )
 }

@@ -1,22 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import customerAPI from '../../apis/customerAPI';
-import { errorToast } from '../../components/Toasts/Toasts';
+import { errorToast, successToast } from '../../components/Toasts/Toasts';
+import useFullPageLoader from './../../hooks/useFullPageLoader';
 
 const Customer = () => {
+  const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [customers, setCustomers] = useState([]);
 
   useEffect(() => {
+    showLoader();
     customerAPI.getAllCustomers().then((res) => {
       setCustomers(res.data.data);
-      console.log(res.data.data);
+      hideLoader();
     }).catch((err) => {
+      hideLoader();
       errorToast("Có lỗi xảy ra, vui lòng thử lại !");
     })
   }, []);
 
   let handleDeleteCustomer = (id) => {
-
+    customerAPI.deleteCustomerById(id).then((res) => {
+      if (res.data.message === 'NOT_PERMISSION') {
+        errorToast("Bạn không có quyền xóa tài khoản khách hàng");
+      }
+      if (res.data.message === 'USER_NOT_FOUND') {
+        errorToast("Người dùng không tồn tại");
+      }
+      if (res.data.message === 'SUCCESS') {
+        successToast("Xóa tài khoản người dùng thành công");
+        let newCustomers =  customers.filter(customer => customer._id !== id);
+        setCustomers([...newCustomers]);
+      }
+    }).catch((err) => {
+      errorToast("Có lỗi xảy ra, vui lòng thử lại");
+    })
   }
 
   return (
@@ -101,8 +119,8 @@ const Customer = () => {
             </div>
           </div>
         </div>
-
       </section>
+      { loader }
     </div>
   )
 }

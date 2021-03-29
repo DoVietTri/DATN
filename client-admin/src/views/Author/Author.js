@@ -2,32 +2,38 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import authorAPI from './../../apis/authorAPI';
 import { errorToast, successToast } from './../../components/Toasts/Toasts';
+import useFullPageLoader from './../../hooks/useFullPageLoader';
 
 const Author = () => {
+  const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [dataAuthor, setDataAuthor] = useState([]);
 
   useEffect(() => {
+    showLoader();
     authorAPI.getAllAuthors().then((res) => {
       setDataAuthor(res.data.data);
+      hideLoader();
     }).catch((err) => {
+      hideLoader();
       errorToast("Có lỗi xảy ra, vui lòng thử lại !");
     })
   }, []);
 
   let handleDeleteAuthor = (id) => {
+    showLoader();
     authorAPI.deleteAuthorById(id).then((res) => {
       if (res.data.message === 'AUTHOR_NOT_FOUND') {
+        hideLoader();
         errorToast("Tác giả không tồn tại !");
-      }
-      if (res.data.message === 'DESTROY_IMAGE_FAILED') {
-        errorToast("Xóa ảnh thất bại");
       }
       if (res.data.message === 'SUCCESS') {
         successToast("Xóa tác giả thành công");
         let newDataAuthor = dataAuthor.filter(value => value._id !== id);
         setDataAuthor([...newDataAuthor]);
+        hideLoader();
       }
     }).catch((err) => {
+      hideLoader();
       errorToast("Có lỗi xảy ra, vui lòng thử lại sau !");
     })
   }
@@ -76,7 +82,6 @@ const Author = () => {
                     <thead>
                       <tr>
                         <th>Số thứ tự</th>
-                        <th>Hình ảnh</th>
                         <th>Tên tác giả</th>
                         <th>Hành động</th>
                       </tr>
@@ -88,9 +93,6 @@ const Author = () => {
                           return (
                             <tr key={index}>
                               <td>{index}</td>
-                              <td>
-                                <img src={value.a_image.url} alt="Author" className="img-thumbnail" style={{ height: '100px'}} />
-                              </td>
                               <td>{value.a_name}</td>
                               <td>
                                 <button className="btn btn-danger" onClick={() => handleDeleteAuthor(value._id)}>
@@ -111,7 +113,6 @@ const Author = () => {
                     <tfoot>
                       <tr>
                         <th>Số thứ tự</th>
-                        <th>Hình ảnh</th>
                         <th>Tên tác giả</th>
                         <th>Hành động</th>
                       </tr>
@@ -124,6 +125,7 @@ const Author = () => {
           </div>
         </div>
       </section>
+      { loader }
     </div>
   )
 }

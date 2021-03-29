@@ -1,6 +1,7 @@
 const categoryModel = require('./../models/category.model');
 const productModel = require('./../models/product.model');
 const productService = require('./../services/product.service');
+const slugify = require('slugify');
 
 /**
  * Store new one category into database
@@ -15,6 +16,11 @@ let addNewCategory = async (dataCategory) => {
     
     if (dataCategory.c_parent === '') {
         delete dataCategory.c_parent;
+    }
+
+    dataCategory = {
+        ...dataCategory,
+        c_slug: slugify(dataCategory.c_name)
     }
     
     let addNewCate = await categoryModel.addNewCategory(dataCategory);
@@ -65,6 +71,11 @@ let updateCategory = async (id, itemCate) => {
 
     if (itemCate.c_parent === '') {
         delete itemCate.c_parent;
+    }
+
+    itemCate = {
+        ...itemCate,
+        c_slug: slugify(itemCate.c_name)
     }
 
     await categoryModel.updateCategory(id, itemCate);

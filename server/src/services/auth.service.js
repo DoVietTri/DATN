@@ -12,6 +12,10 @@ let login = async (dataLogin) => {
         return { message: 'EMAIL_NOT_EXISTS' };
     }
 
+    if (user.role === 'user') {
+        return { message: 'NOT_PERMISSION' };
+    }
+
     //Check password
     let comparePassword = await user.comparePassword(dataLogin.password);
     if (!comparePassword) {

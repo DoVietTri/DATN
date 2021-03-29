@@ -48,14 +48,25 @@ let deleteByIdProduct = async (req, res) => {
     }
 }
 
-let updateByIdProduct = (req, res) => {
-   
+let updateProductById = async (req, res) => {
+    try {
+        let id = req.params.id;
+        let data = {
+            ...req.body,
+            p_image_detail: req.file
+        }
+        let product = await productService.updateProductById(id, data);
+
+        return res.status(200).json(product);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
 }
 
 module.exports = {
     getAllProducts,
     addNewProduct,
     getByIdProduct,
-    updateByIdProduct,
+    updateProductById,
     deleteByIdProduct
 }

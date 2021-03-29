@@ -6,9 +6,10 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { errorToast, successToast } from '../../components/Toasts/Toasts';
 import companyAPI from './../../apis/companyAPI';
-
+import useFullPageLoader from './../../hooks/useFullPageLoader';
 const CompanyAdd = () => {
 
+  const [loader, showLoader, hideLoader] = useFullPageLoader();
   const history = useHistory();
 
   let addCompanyFormik = useFormik({
@@ -31,16 +32,19 @@ const CompanyAdd = () => {
         c_code: values.inputCompanyCode,
         c_info: values.inputCompanyDescription
       }
-
+      showLoader();
       companyAPI.addNewCompany(data).then((res) => {
         if (res.data.message === 'COMPANY_EXISTS') {
+          hideLoader();
           errorToast("Nhà xuất bản đã tồn tại");
         }
         if (res.data.message === 'SUCCESS') {
+          hideLoader();
           successToast("Thêm nhà xuất bản thành công");
           history.push({ pathname: '/companies' });
         }
       }).catch((err) => {
+        hideLoader();
         errorToast("Có lỗi xảy ra, vui lòng thử lại sau !");
       })
     }
@@ -140,7 +144,7 @@ const CompanyAdd = () => {
           </div>
         </div>
       </section>
-
+      { loader }
     </div>
   )
 }

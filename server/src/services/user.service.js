@@ -49,23 +49,20 @@ let getUserById = async (id) => {
     return { message: 'SUCCESS', data: user };
 }
 
-let deleteUser = async (data) => {
-    let currentUser = await userModel.findUserById(data.currentUserId);
-    let user = await userModel.findUserById(data.userId);
+let deleteUser = async (currUser, id) => {
+   if (currUser.role === 'user') {
+       return { message: 'NOT_PERMISSION' };
+   }
 
-    if (!user) {
-        return { message: 'USER_NOT_FOUND' };
-    }
-    
-    if ( (currentUser.role === 'admin' && user.role === 'admin' ) ||
-        currentUser.role === 'user' && user.role === 'user' ||
-        currentUser.role === 'user' && user.role === 'admin' ) {
-            return { message: 'NOT_PERMISSION' };
-    }
+   let customer = await userModel.findUserById(id);
 
-    await userModel.deleteUser(data.userId);
+   if (!customer) {
+       return { message: 'USER_NOT_FOUND' };
+   }
 
-    return { message: 'SUCCESS' };
+   await userModel.deleteUser(id);
+
+   return { message: 'SUCCESS' };
 }
 
 let updateUserInfo = async (id, data) => {

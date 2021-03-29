@@ -6,18 +6,15 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { errorToast } from '../../components/Toasts/Toasts';
 import authorAPI from './../../apis/authorAPI';
-import { FILE_SIZE, SUPPORTED_FORMATS } from './../../constants/constants';
 
 const AuthorEdit = (props) => {
 
   const [itemAuthor, setItemAuthor] = useState({});
-  const [currImage, setCurrImage] = useState({});
 
   useEffect(() => {
     let id = props.match.params.id;
     authorAPI.getAuthorById(id).then((res) => {
       setItemAuthor(res.data.data);
-      setCurrImage(res.data.data.a_image);
     }).catch((err) => {
       errorToast("Có lỗi xảy ra, vui lòng thử lại");
     });
@@ -27,29 +24,13 @@ const AuthorEdit = (props) => {
   let updateAuthorFormik = useFormik({
     initialValues: {
       inputAuthorName: itemAuthor.a_name,
-      inputAuthorImage: '',
       inputAuthorInfo: itemAuthor.a_info
     },
     enableReinitialize: true,
     validationSchema: Yup.object({
       inputAuthorName: Yup.string()
         .required("Bắt buộc nhập tên tác giả !")
-        .max(100, "Tên quá dài, nhỏ hơn 100 kí tự"),
-      inputAuthorImage: Yup.mixed()
-        .test(
-          "fileSize",
-          "Kích thước file lớn, vui lòng chọn file khác nhỏ hơn 200 KB có định dạng là ảnh",
-          value => {
-            return value && value.size <= FILE_SIZE
-          }
-        )
-        .test(
-          "fileFormat",
-          "Không hỗ trợ loại file này, lòng chọn file ảnh",
-          value => {
-            return value && SUPPORTED_FORMATS.includes(value.type)
-          }
-        )
+        .max(100, "Tên quá dài, nhỏ hơn 100 kí tự")
     }),
     onSubmit: (values) => {
       console.log(values);
@@ -107,26 +88,6 @@ const AuthorEdit = (props) => {
                             <small>{updateAuthorFormik.errors.inputAuthorName}</small>
                           )}
                         </div>
-
-                        <div className="form-group">
-                          <label htmlFor="inputAuthorImage">Hình ảnh (*) </label>
-                          <div className="input-group">
-                            <div className="custom-file">
-                              <input type="file" className="custom-file-input" name="inputAuthorImage"
-                                onChange={(e) => updateAuthorFormik.setFieldValue('inputAuthorImage', e.target.files[0])}
-                              />
-                              <label className="custom-file-label" htmlFor="inputAuthorImage">Chọn file</label>
-                            </div>
-                            <div className="input-group-append">
-                              <span className="input-group-text">Tải lên</span>
-                            </div>
-                          </div>
-
-                          {updateAuthorFormik.errors.inputAuthorImage && updateAuthorFormik.touched.inputAuthorImage && (
-                            <small>{updateAuthorFormik.errors.inputAuthorImage}</small>
-                          )}
-                        </div>
-
                       </div>
 
                       <div className="col-6">
@@ -137,7 +98,6 @@ const AuthorEdit = (props) => {
                             editor={ClassicEditor}
                             data={updateAuthorFormik.values.inputAuthorInfo}
                             onChange={(e, editor) => {
-
                               updateAuthorFormik.setFieldValue("inputAuthorInfo", editor.getData())
                             }}
                           />
@@ -145,16 +105,6 @@ const AuthorEdit = (props) => {
                             <small>{updateAuthorFormik.errors.inputAuthorInfo}</small>
                           )}
                         </div>
-
-                        <div className="form-group">
-                          <label htmlFor="image">Hình ảnh hiện tại (*)</label>
-                          <div className="row">
-                            <div className="col-4">
-                              <img src={currImage.url} alt="User" className="img-thumbnail" style={{ height: '100px' }} />
-                            </div>
-                          </div>
-                        </div>
-
                       </div>
                     </div>
 

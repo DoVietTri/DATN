@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const CategorySchema = mongoose.Schema({
     c_name: String,
+    c_slug: String,
     c_parent: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
     c_description: { type: String, default: null },
     createdAt: { type: Number, default: Date.now }
@@ -17,7 +18,12 @@ CategorySchema.statics = {
     },
 
     getAllCategory() {
-        return this.find({}).populate('c_parent').exec();
+        return this.find({})
+        .populate('c_parent')
+        .sort({
+            createdAt: -1
+        })
+        .exec();
     },
 
     getByIdCategory (id) {

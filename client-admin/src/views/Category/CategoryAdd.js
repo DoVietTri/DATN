@@ -6,16 +6,20 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import categoryAPI from '../../apis/categoryAPI';
 import { successToast, errorToast } from '../../components/Toasts/Toasts';
+import useFullPageLoader from './../../hooks/useFullPageLoader';
 
 const CategoryAdd = () => {
-
+  const [loader, showLoader, hideLoader] = useFullPageLoader();
   const history = useHistory();
   const [dataCate, setDataCate] = useState([]);
 
   useEffect(() => {
+    showLoader();
     categoryAPI.getAllCategories().then((res) => {
       setDataCate(res.data.data);
+      hideLoader();
     }).catch((err) => {
+      hideLoader();
       console.log(err);
     })
   }, []);
@@ -37,15 +41,19 @@ const CategoryAdd = () => {
         c_name: values.inputCateName,
         c_description: values.inputCateDescription
       }
+      showLoader();
       categoryAPI.addNewCate(data).then((res) => {
         if (res.data.message === 'SUCCESS') {
+          hideLoader();
           successToast('Thêm danh mục thành công !');
           history.push({ pathname: '/categories' });
         }
         if (res.data.message === 'CATEGORY_EXISTS') {
+          hideLoader();
           errorToast('Danh mục đã tồn tại');
         }
       }).catch((err) => {
+        hideLoader();
         errorToast('Có lỗi xảy ra, vui lòng thử lại !');
       });
     }
@@ -152,6 +160,7 @@ const CategoryAdd = () => {
           </div>
         </div>
       </section>
+      { loader }
     </div>
   )
 }

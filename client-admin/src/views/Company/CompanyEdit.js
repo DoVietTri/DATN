@@ -6,16 +6,22 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { errorToast, successToast } from '../../components/Toasts/Toasts';
 import companyAPI from './../../apis/companyAPI';
 import * as Yup from 'yup';
+import useFullPageLoader from './../../hooks/useFullPageLoader';
 
 const CompanyEdit = (props) => {
+  const [loader, showLoader, hideLoader] = useFullPageLoader();
+  
   const history = useHistory();
   const [company, setCompany] = useState({});
 
   useEffect(() => {
     let id = props.match.params.id;
+    showLoader();
     companyAPI.getCompanyById(id).then((res) => {
       setCompany(res.data.data);
+      hideLoader();
     }).catch((err) => {
+      hideLoader();
       errorToast("Có lỗi xảy ra, vui lòng thử lại sau !");
     })
   }, [props.match.params.id]);
@@ -41,18 +47,23 @@ const CompanyEdit = (props) => {
         c_code: values.inputCompanyCode,
         c_info: values.inputCompanyDescription
       };
+      showLoader();
       companyAPI.updateCompanyById(props.match.params.id, data).then((res) => {
         if (res.data.message === 'COMPANY_NOT_FOUND') {
+          hideLoader();
           errorToast("Nhà xuất bản không tồn tại");
         }
         if (res.data.message === 'COMPANY_EXISTS') {
+          hideLoader();
           errorToast("Mã nhà xuất bản đã tồn tại");
         }
         if (res.data.message === 'SUCCESS') {
+          hideLoader();
           successToast("Cập nhật nhà xuất bản thành công");
           history.push({ pathname: '/companies' })
         }
       }).catch((err) => {
+        hideLoader();
         errorToast("Có lỗi xảy ra, vui lòng thử lại sau !");
       })
     }
@@ -152,6 +163,7 @@ const CompanyEdit = (props) => {
           </div>
         </div>
       </section>
+      { loader }
     </div>
   )
 }
