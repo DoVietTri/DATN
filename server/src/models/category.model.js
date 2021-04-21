@@ -5,7 +5,7 @@ const CategorySchema = mongoose.Schema({
     c_slug: String,
     c_parent: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
     c_description: { type: String, default: null },
-    createdAt: { type: Number, default: Date.now }
+    createdAt: { type: Date, default: new Date() }
 });
 
 CategorySchema.statics = {

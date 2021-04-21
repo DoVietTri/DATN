@@ -4,7 +4,7 @@ import { Route, Redirect } from 'react-router-dom';
 
 const PrivateRoute = ({ component: Component, layout: Layout, ...rest }) => {
 
-  const token = getCookie('auth');
+  const token = getCookie('authUser');
 
   return (
     <Route

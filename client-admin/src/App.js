@@ -27,6 +27,7 @@ import Comment from './views/Comment/Comment';
 import Banner from './views/Banner/Banner';
 import BannerAdd from './views/Banner/BannerAdd';
 import BannerEdit from './views/Banner/BannerEdit';
+import Order from './views/Order/Order';
 
 const hist = createBrowserHistory();
 
@@ -56,6 +57,7 @@ const App = () => {
       <PrivateRoute exact path="/banners" component={Banner} layout={Admin} />
       <PrivateRoute exact path="/banners/add" component={BannerAdd} layout={Admin} />
       <PrivateRoute exact path="/banners/edit/:id" component={BannerEdit} layout={Admin} />
+      <PrivateRoute exact path="/orders" component={Order} layout={Admin} />
     </Router>
   );
 }

@@ -10,7 +10,7 @@ const saltRounds = 10;
 let updatePassword = async (data) => {
     let userId = data.id;
 
-    let user = await userModel.findUserById(userId);
+    let user = await userModel.findUserByIdGetPass(userId);
 
     if (!user) {
         return { message: 'USER_NOT_FOUND' };
@@ -24,9 +24,9 @@ let updatePassword = async (data) => {
 
     let salt = bcrypt.genSaltSync(saltRounds);
 
-    let updatePass = await userModel.updatePasswordById(data.id, bcrypt.hashSync(data.newPassword, salt));
+    await userModel.updatePasswordById(data.id, bcrypt.hashSync(data.newPassword, salt));
 
-    return { message: 'SUCCESS', data: updatePass };
+    return { message: 'SUCCESS' };
 }
 
 /**

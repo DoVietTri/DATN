@@ -14,7 +14,7 @@ const BookDetail = (props) => {
   // const [booksWithAuthor, setBooksWithAuthor] = useState([]);
   const [booksWithPrice, setBookWithPrice] = useState([]);
   const [itemCart, setItemCart] = useState(1);
-
+  
   useEffect(() => {
     let bookId = queryString.parse(props.location.search).pid;
     homeAPI.getBookById(bookId).then((res) => {
@@ -33,7 +33,9 @@ const BookDetail = (props) => {
       setBookWithPrice(res.data.data);
     }).catch((err) => {
       console.log(err);
-    })
+    });
+
+    window.scrollTo(0,0);
 
   }, [props.location.search]);
 
@@ -174,7 +176,7 @@ const BookDetail = (props) => {
                 </div>
               </div>
               {/* decripstion của 1 sản phẩm: giới thiệu , đánh giá độc giả  */}
-              <div className="product-description col-md-9">
+              <div className="product-description col-md-12 col-12">
                 {/* 2 tab ở trên  */}
                 <nav>
                   <div className="nav nav-tabs" id="nav-tab" role="tablist">
@@ -190,10 +192,9 @@ const BookDetail = (props) => {
                     {parse(book.p_description ? book.p_description : "")}
                   </div>
 
-                  <TabEvaluate />
-                  <hr />
+                  <TabEvaluate book={book._id} />
+                  
                 </div>
-
               </div>
             </div>
           </div>
@@ -235,6 +236,7 @@ const BookDetail = (props) => {
           </div>
         </div>
       </section>
+      
     </>
   )
 }

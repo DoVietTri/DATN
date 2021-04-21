@@ -117,11 +117,11 @@ $(function () {
     })
 
     // nut btn-shopping-without-signup
-    $("#step1contentid").collapse('show');
-    $(".btn-shopping-without-signup").click(function (e) {
-        $("#step1contentid").collapse('hide');
-        $("#step2contentid").collapse('show');
-    });
+    // $("#step1contentid").collapse('show');
+    // $(".btn-shopping-without-signup").click(function (e) {
+    //     $("#step1contentid").collapse('hide');
+    //     $("#step2contentid").collapse('show');
+    // });
 
     // // add to cart 
     // let product =

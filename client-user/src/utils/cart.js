@@ -62,6 +62,19 @@ class Cart {
 
         delete this.products[id];
     }
+
+    updateCartById (id, quantity) {
+        this.totalQuantity -= this.products[id].quantity;;
+        this.totalPrice -= this.products[id].price;
+
+        this.products[id].quantity = quantity;
+        this.products[id].price = quantity * this.products[id].productInfo.p_price;
+
+        this.totalPrice += this.products[id].price;
+
+        this.totalQuantity += this.products[id].quantity;
+
+    }
 }
 
 module.exports = Cart;

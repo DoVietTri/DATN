@@ -3,6 +3,7 @@ const userService = require('./../services/user.service');
 let updatePassword = async (req, res) => {
     try {
         let data = req.body;
+
         let updatePassword = await userService.updatePassword(data);
 
         return res.status(200).json(updatePassword);

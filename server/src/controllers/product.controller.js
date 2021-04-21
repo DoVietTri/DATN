@@ -63,10 +63,23 @@ let updateProductById = async (req, res) => {
     }
 }
 
+let changeProductHotById = async (req, res) => {
+    try {
+        let id = req.params.id;
+        let data = req.body;
+        let change = await productService.changeProductHotById(id, data);
+        
+        return res.status(200).json(change);
+    } catch (error) {   
+        return res.status(500).json(error);
+    }
+}
+
 module.exports = {
     getAllProducts,
     addNewProduct,
     getByIdProduct,
     updateProductById,
-    deleteByIdProduct
+    deleteByIdProduct,
+    changeProductHotById
 }

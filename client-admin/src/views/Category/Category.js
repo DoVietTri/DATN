@@ -8,6 +8,7 @@ const Category = () => {
 
   const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [dataCate, setDataCate] = useState([]);
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     showLoader();
@@ -72,7 +73,7 @@ const Category = () => {
             <div className="col-12">
 
               <div className="card">
-                <div className="card-header">
+                <div className="card-header d-flex justify-content-between">
                   <h3 className="card-title">
                     <Link to="/categories/add">
                       <button className="btn btn-primary">
@@ -80,6 +81,16 @@ const Category = () => {
                       </button>
                     </Link>
                   </h3>
+
+                  <div>
+                    <form className="form-inline">
+                      <input className="form-control mr-sm-2" type="search" placeholder="Nhập tên cần tìm kiếm...." aria-label="Search"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                      />
+                      <button className="btn btn-outline-primary my-2 my-sm-0 p-1" type="button">Tìm kiếm</button>
+                    </form>
+                  </div>
                 </div>
 
                 <div className="card-body">
@@ -96,7 +107,12 @@ const Category = () => {
                     <tbody>
 
                       {
-                        dataCate.map((v, i) => {
+                        dataCate.filter(val => {
+                          if (query === '' || val.c_name.toLowerCase().indexOf(query.toLowerCase()) > -1 ) {
+                            return val;
+                          }
+                        })
+                        .map((v, i) => {
                           return (
                             <tr key={i}>
                               <td>{i}</td>
@@ -108,11 +124,11 @@ const Category = () => {
                               </td>
                               <td>
                                 <button className="btn btn-danger" onClick={() => handleDeleteCate(v._id)}>
-                                  <i className="fas fa-trash-alt"></i>  
+                                  <i className="fas fa-trash-alt mr-1"></i> Xóa
                                 </button>
                                 <Link to={`categories/edit/${v._id}`}>
                                   <button className="btn btn-warning">
-                                    <i className="fas fa-edit"></i>
+                                    <i className="fas fa-edit mr-1"></i> Sửa
                                   </button>
                                 </Link>
                               </td>

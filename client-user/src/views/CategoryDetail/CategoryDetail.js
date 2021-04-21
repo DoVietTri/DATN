@@ -5,9 +5,14 @@ import homeAPI from './../../apis/homeAPI';
 import skt from './../../assets/images/banner-sach-ktkn.jpg';
 import './CategoryDetail.css';
 import ItemBook from '../../components/ItemBook/ItemBook';
+import FilterPrice from './FilterPrice';
+import FilterRating from './FilterRating';
 
 const CategoryDetail = (props) => {
+
   const [cate, setCate] = useState({});
+
+  //all books
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
@@ -19,11 +24,18 @@ const CategoryDetail = (props) => {
     });
 
     homeAPI.getBooksByCateId(cateId).then((res) => {
-      setBooks(res.data.data);
+      let data = res.data.data;
+      setBooks(data);
     }).catch((err) => {
       console.log(err);
-    })
+    });
+
+    window.scrollTo(0, 0);
   }, [props.location.search]);
+
+
+  
+
   return (
     <>
       <section className="breadcrumbbar">
@@ -46,75 +58,59 @@ const CategoryDetail = (props) => {
           <div className="noidung bg-white" style={{ width: '100%' }}>
             {/* header của khối sản phẩm : tag(tác giả), bộ lọc và sắp xếp  */}
             <div className="header-khoi-sp d-flex">
-              <div className="tag">
-                <label>Tác giả nổi bật:</label>
-                <a href="# ">Tất cả</a>
-                <a href="# " data-tacgia=".MarieForleo">Marie Forleo</a>
-                <a href="# " data-tacgia=".DeanGraziosi">Dean Graziosi</a>
-                <a href="# " data-tacgia=".DavikClark">Davik Clark</a>
-                <a href="# " data-tacgia=".TSLêThẩmDương">TS Lê Thẩm Dương</a>
-                <a href="# " data-tacgia=".SimonSinek">Simon Sinek</a>
-              </div>
-              <div className="sort d-flex ml-auto">
-                <div className="hien-thi">
-                  <label htmlFor="hienthi-select" className="label-select">Hiển thị</label>
-                  <select className="hienthi-select">
-                    <option value={30}>30</option>
-                    <option value={60}>60</option>
-                  </select>
-                </div>
-                <div className="sap-xep">
-                  <label htmlFor="sapxep-select" className="label-select">Sắp xếp</label>
-                  <select className="sapxep-select">
-                    <option value="moinhat">Mới nhất</option>
-                    <option value="thap-cao">Giá: Thấp - Cao</option>
-                    <option value="cao-thap">Giá: Cao - Thấp</option>
-                  </select>
-                </div>
-              </div>
+              <h6>TẤT CẢ SÁCH</h6>
             </div>
             {/* các sản phẩm  */}
-            <div className="items">
-              <div className="row">
+            <div className="row">
+              <div className="col-12 col-md-3 col-sm-3">
+                <h5 style={{ paddingTop: '10px', textAlign: 'center' }} >CHẾ ĐỘ LỌC</h5>
 
-                {books.map((v, i) => {
-                  return (
-                    <div className="col-lg-3 col-md-4 col-xs-6 item DeanGraziosi" key={i}>
-                      <ItemBook info={v} />
+                <FilterPrice />
+
+                <FilterRating />
+
+                <div className="item-filter">
+                  <h6>TÁC GIẢ</h6>
+                  <hr />
+                </div>
+
+                <div className="item-filter">
+                  <h6>NHÀ XUẤT BẢN</h6>
+                  <div>
+                    <div className="form-check">
+                      <input className="form-check-input" type="checkbox" value="" />
+                      <label className="form-check-label" htmlFor="defaultCheck2"> Nhà XB Kim Đồng </label>
                     </div>
-                  )
-                })}
+                    <div className="form-check">
+                      <input className="form-check-input" type="checkbox" value="" />
+                      <label className="form-check-label" htmlFor="defaultCheck2"> Nhà XB Kim Đồng </label>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
 
+              </div>
+              <div className="col-12 col-md-9 col-sm-9">
+                <div className="items">
+                  <div className="row">
+
+                    {books.map((v, i) => {
+                      return (
+                        <div className="col-lg-3 col-md-4 col-xs-6 item DeanGraziosi" key={i}>
+                          <ItemBook info={v} />
+                        </div>
+                      )
+                    })}
+
+                  </div>
+                </div>
               </div>
             </div>
             {/* pagination bar */}
             <div className="pagination-bar my-3">
               <div className="row">
-                <div className="col-12">
-                  <nav>
-                    <ul className="pagination justify-content-center">
-                      <li className="page-item disabled">
-                        <a className="page-link" href="# " aria-label="Previous">
-                          <span aria-hidden="true">&laquo;</span>
-                          <span className="sr-only">Previous</span>
-                        </a>
-                      </li>
-                      <li className="page-item active"><a className="page-link" href="# ">1</a></li>
-                      <li className="page-item"><a className="page-link" href="# ">2</a></li>
-                      <li className="page-item">
-                        <a className="page-link" href="# " aria-label="Next">
-                          <span aria-hidden="true">›</span>
-                          <span className="sr-only">Next</span>
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a className="page-link" href="# " aria-label="Next">
-                          <span aria-hidden="true">»</span>
-                          <span className="sr-only">Next</span>
-                        </a>
-                      </li>
-                    </ul>
-                  </nav>
+                <div className="col-12 ">
+              
                 </div>
               </div>
             </div>

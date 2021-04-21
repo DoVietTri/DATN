@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+// import FilterName from '../../components/Filter/FilterName';
 import productAPI from './../../apis/productAPI';
 import { errorToast, successToast } from './../../components/Toasts/Toasts';
 import useFullPageLoader from './../../hooks/useFullPageLoader';
@@ -7,12 +8,14 @@ import useFullPageLoader from './../../hooks/useFullPageLoader';
 const Product = () => {
   const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [allProducts, setAllProducts] = useState([]);
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     showLoader();
     productAPI.getAllProduct().then((res) => {
       if (res.data.message === 'SUCCESS') {
         setAllProducts(res.data.data);
+        console.log(res.data.data);
         hideLoader();
       }
     }).catch((err) => {
@@ -37,8 +40,52 @@ const Product = () => {
         let newAllProducts = allProducts.filter(product => product._id !== id);
         setAllProducts([...newAllProducts]);
       }
-    })
+    });
+  };
+
+  let handleChangeProductHot = (id, data) => {
+    let json = {
+      status: data
+    }
+    showLoader();
+    productAPI.changeProductHotById(id, json).then(res => {
+      if (res.data.message === 'PRODUCT_NOT_FOUND') {
+        hideLoader();
+        errorToast("Sản phẩm không tồn tại, vui lòng thử lại sau !");
+
+      }
+      if (res.data.message === 'SUCCESS') {
+        let newAllProducts = [...allProducts];
+        let index = newAllProducts.findIndex(e => e._id === id);
+        let productIndex = { ...newAllProducts[index] };
+
+        if (productIndex.p_hot === "true") {
+          delete productIndex.p_hot;
+          productIndex = {
+            ...productIndex,
+            p_hot: "false"
+          }
+        }
+        if (newAllProducts[index].p_hot === "false") {
+          delete productIndex.p_hot;
+          productIndex = {
+            ...productIndex,
+            p_hot: "true"
+          }
+        }
+        delete newAllProducts[index];
+        newAllProducts.splice(index, 1, productIndex);
+        setAllProducts([...newAllProducts]);
+        hideLoader();
+        successToast("Thay đổi thành công !");
+      }
+    }).catch(err => {
+      hideLoader();
+      errorToast("Có lỗi xảy ra, vui lòng thử lại !");
+    });
   }
+
+
 
   return (
     <div className="content-wrapper">
@@ -69,7 +116,7 @@ const Product = () => {
             <div className="col-12">
 
               <div className="card">
-                <div className="card-header">
+                <div className="card-header d-flex justify-content-between">
                   <h3 className="card-title">
                     <Link to="/products/add">
                       <button className="btn btn-primary">
@@ -77,6 +124,17 @@ const Product = () => {
                       </button>
                     </Link>
                   </h3>
+
+                  <div>
+                    <form className="form-inline">
+                      <input className="form-control mr-sm-2" type="search" placeholder="Nhập tên cần tìm kiếm...." aria-label="Search"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                      />
+                      <button className="btn btn-outline-primary my-2 my-sm-0 p-1" type="button">Tìm kiếm</button>
+                    </form>
+                  </div>
+
                 </div>
 
                 <div className="card-body">
@@ -88,7 +146,7 @@ const Product = () => {
                         <th>Hình ảnh</th>
                         <th>Mã sản phẩm</th>
                         <th>Giá</th>
-                        <th>Số lượng</th>
+                        <th>Nổi bật</th>
                         <th>Danh mục</th>
                         <th>Hành động</th>
                       </tr>
@@ -96,34 +154,45 @@ const Product = () => {
 
                     <tbody>
 
-                      {
-                        allProducts.map((v, i) => {
-                          return (
-                            <tr key={i}>
-                              <td>{i}</td>
-                              <td>{v.p_name}</td>
-                              <td>
-                                <img src={v.p_image_detail.url} alt="Product" className="img-thumbnail" style={{ height: '100px' }} />
-                              </td>
-                              <td>{v.p_code}</td>
-                              <td>{v.p_price} VND</td>
-                              <td>{v.p_quantity}</td>
-                              <td>
-                                <span className="badge badge-info">{v.category.c_name}</span>
-                              </td>
-                              <td>
-                                <button className="btn btn-danger" onClick={() => handleDeleteProduct(v._id)}>
-                                  <i className="fas fa-trash-alt"></i>
+                      {allProducts.filter(val => {
+                        if (query === "" || val.p_name.toLowerCase().indexOf(query.toLowerCase()) > -1
+                          || val.category.c_name.toLowerCase().indexOf(query.toLowerCase()) > -1) {
+                          return val;
+                        }
+                      }).map((v, i) => {
+                        return (
+                          <tr key={i}>
+                            <td>{i}</td>
+                            <td>{v.p_name}</td>
+                            <td>
+                              <img src={v.p_image_detail.url} alt="Product" className="img-thumbnail" style={{ height: '100px' }} />
+                            </td>
+                            <td>{v.p_code}</td>
+                            <td>{v.p_price} VND</td>
+                            <td>
+                              {
+                                v.p_hot === "true" ? (<button className="badge rounded-pill bg-primary" onClick={() => handleChangeProductHot(v._id, "false")} >Hot</button>) : ''
+                              }
+                              {
+                                v.p_hot === "false" ? ((<button className="badge rounded-pill bg-secondary" onClick={() => handleChangeProductHot(v._id, "true")} >No Hot</button>)) : ''
+                              }
+                            </td>
+                            <td>
+                              <span className="badge badge-info">{v.category.c_name}</span>
+                            </td>
+                            <td className="d-flex border-left-0 border-right-0 border-bottom-0">
+                              <button className="btn btn-danger" onClick={() => handleDeleteProduct(v._id)}>
+                                <i className="fas fa-trash-alt"></i>
+                              </button>
+                              <Link to={`/products/edit/${v._id}`} >
+                                <button className="btn btn-warning">
+                                  <i className="fas fa-edit"></i>
                                 </button>
-                                <Link to={`/products/edit/${v._id}`} >
-                                  <button className="btn btn-warning">
-                                    <i className="fas fa-edit"></i>
-                                  </button>
-                                </Link>
-                              </td>
-                            </tr>
-                          )
-                        })
+                              </Link>
+                            </td>
+                          </tr>
+                        )
+                      })
                       }
 
                     </tbody>
@@ -146,7 +215,7 @@ const Product = () => {
           </div>
         </div>
       </section>
-      { loader }
+      {loader}
     </div>
   )
 }

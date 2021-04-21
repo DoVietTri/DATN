@@ -119,10 +119,22 @@ let updateProductById = async (id, data) => {
     return { message: 'SUCCESS' };
 }
 
+let changeProductHotById = async (id, data) => {
+    let product = await productModel.getByIdProduct(id);
+    if (!product) {
+        return { message: 'PRODUCT_NOT_FOUND' };
+    }
+
+    await productModel.updateFieldProductHotById(id, data.status);
+
+    return { message: 'SUCCESS' };
+}
+
 module.exports = {
     getAllProducts,
     getByIdProduct,
     addNewProduct,
     deleteByIdProduct,
-    updateProductById
+    updateProductById,
+    changeProductHotById
 }

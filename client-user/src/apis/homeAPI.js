@@ -11,6 +11,16 @@ const homeAPI = {
         return axiosClient.get(url);
     },
 
+    getBooksHot: () => {
+        let url = '/home/books-hot';
+        return axiosClient.get(url);
+    },
+
+    getBooksBestSeller: () => {
+        let url = '/home/books-best-seller';
+        return axiosClient.get(url);
+    },
+
     getBanners: () => {
         let url = '/home/banners';
         return axiosClient.get(url);
@@ -36,6 +46,11 @@ const homeAPI = {
 
     getBooksWithPrice: (bookId) => {
         let url = `/home/get-book-with-price/${bookId}`;
+        return axiosClient.get(url);
+    },
+
+    getAllCommentsOfBook: (bookId) => {
+        let url = `/home/get-all-comments-of-book/${bookId}`;
         return axiosClient.get(url);
     }
 }

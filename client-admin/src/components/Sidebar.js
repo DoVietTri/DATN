@@ -145,7 +145,7 @@ const Sidebar = () => {
               </a>
               <ul className="nav nav-treeview">
                 <li className="nav-item">
-                  <NavLink to="" className="nav-link" activeClassName="active">
+                  <NavLink to="/orders" className="nav-link" activeClassName="active">
                     <i className="nav-icon far fa-circle nav-icon"></i>
                     <p>Danh sách</p>
                   </NavLink>

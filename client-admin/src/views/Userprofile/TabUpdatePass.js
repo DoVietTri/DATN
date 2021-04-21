@@ -52,8 +52,10 @@ const TabUpdatePass = () => {
         if (res.data.message === 'USER_NOT_FOUND') {
           hideLoader();
           errorToast("Tài khoản không tồn tại");
-          history.push('/');
         }
+      }).catch(err => {
+        errorToast("Có lỗi xảy ra, vui lòng thử lại sau");
+        hideLoader();
       })
     }
   })

@@ -14,7 +14,7 @@ import useFullPageLoader from './../../hooks/useFullPageLoader';
 
 const ProductAdd = () => {
   const [loader, showLoader, hideLoader] = useFullPageLoader();
-  
+
   const history = useHistory();
   const [fileName, setFileName] = useState('Chọn ảnh');
   const [previewSource, setPreviewSource] = useState('');
@@ -52,6 +52,7 @@ const ProductAdd = () => {
       inputCateName: '',
       inputProductName: '',
       inputProductCode: '',
+      inputProductHot: 'false',
       inputProductPrice: '',
       inputProductQuantity: '',
       inputProductImage: '',
@@ -69,6 +70,7 @@ const ProductAdd = () => {
       inputProductCode: Yup.string()
         .required("Bắt buộc nhập mã sản phẩm !")
         .max(100, "Mã sản phẩm quá dài, nhỏ hơn 100 kí tự"),
+      inputProductHot: Yup.string(),
       inputProductPrice: Yup.number()
         .required("Bắt buộc  nhập giá sản phẩm !")
         .min(0, "Giá tiền lớn hơn 0"),
@@ -99,10 +101,10 @@ const ProductAdd = () => {
         .required("Bắt buộc chọn ngày phát hành !")
     }),
     onSubmit: (values) => {
-      // console.log(values);
       let formData = new FormData();
       formData.append("p_name", values.inputProductName);
       formData.append("p_code", values.inputProductCode);
+      formData.append("p_hot", values.inputProductHot);
       formData.append("p_price", values.inputProductPrice);
       formData.append("p_quantity", values.inputProductQuantity);
       formData.append("p_image_detail", values.inputProductImage);
@@ -307,6 +309,31 @@ const ProductAdd = () => {
                           )}
                         </div>
 
+                        <div className="form-group row">
+                          <label htmlFor="inputProductHot" className="col-sm-2 col-form-label">Nổi bật ?</label>
+
+                          <div className="col-sm-10 mt-2">
+                            <div className="icheck-primary d-inline mr-3">
+                              <input type="radio" id="hot" name="inputProductHot" value="true"
+                                checked={ addProductFormik.values.inputProductHot === "true"}
+                                onChange={ addProductFormik.handleChange }
+                              />
+                              <label htmlFor="hot"> Nổi bật </label>
+                            </div>
+                            <div className="icheck-primary d-inline">
+                              <input type="radio" id="noHot" name="inputProductHot" value="false"
+                                checked={ addProductFormik.values.inputProductHot === "false" }
+                                onChange={ addProductFormik.handleChange }
+                              />
+                              <label htmlFor="noHot"> Không nổi bật </label>
+                            </div>
+                          </div>
+
+                          {addProductFormik.errors.inputProductHot && addProductFormik.touched.inputProductHot && (
+                            <small>{addProductFormik.errors.inputProductHot}</small>
+                          )}
+                        </div>
+
                         <div className="form-group">
                           <label htmlFor="inputFile">Hình ảnh (*)</label>
                           <div className="input-group">
@@ -370,7 +397,7 @@ const ProductAdd = () => {
         </div>
       </section>
 
-      { loader }
+      { loader}
     </div>
   )
 }

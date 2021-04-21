@@ -102,11 +102,11 @@ const Banner = () => {
                             </td>
                             <td>
                               <button className="btn btn-danger" onClick={() => handleDeleteBanner(v._id)}>
-                                <i className="fas fa-trash-alt"></i>
+                                <i className="fas fa-trash-alt mr-1"></i> Xóa
                               </button>
                               <Link to={`/banners/edit/${v._id}`}>
                                 <button className="btn btn-warning">
-                                  <i className="fas fa-edit"></i>
+                                  <i className="fas fa-edit mr-1"></i> Sửa
                                 </button>
                               </Link>
                             </td>

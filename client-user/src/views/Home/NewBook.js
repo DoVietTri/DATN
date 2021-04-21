@@ -20,7 +20,7 @@ const NewBook = () => {
             {/*header */}
             <div className="col-12 d-flex justify-content-between align-items-center pb-2 bg-light">
               <h2 className="header text-uppercase" style={{ fontWeight: 400 }}>SÁCH MỚI NHẤT</h2>
-              <a href="/" className="btn btn-warning btn-sm text-white">Xem tất cả</a>
+              {/* <a href="/" className="btn btn-warning btn-sm text-white">Xem tất cả</a> */}
             </div>
           </div>
 

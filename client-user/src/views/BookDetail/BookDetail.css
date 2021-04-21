@@ -235,8 +235,12 @@
     font-size: 13px;
 }
 
-#nav-danhgia .sao i.fa.fa-star {
+/* #nav-danhgia .sao i.fa.fa-star {
     color: #d1cccc;
+} */
+
+#nav-danhgia .sao .active {
+    color: #F5A623;
 }
 
 #nav-danhgia .diem {
@@ -299,7 +303,7 @@
     display: block;
     font-size: 15px;
     color: #F7A623;
-    top:345px;
+    top:290px;
     opacity: 0;
     transition: 0.2s;
 }
@@ -320,4 +324,26 @@
     position: absolute;
     font-weight: bold;
     left: 140px;
+}
+
+.comment-list {}
+
+.comment-item {
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    padding: 10px 5px;
+}
+
+.comment-list .comment-item img {
+    width: 50px;
+    padding: 5px;
+    border-radius: 25px;
+    background: #a5a5a5;
+}
+
+.comment-item .comment-text {
+    word-wrap: break-word;
+} 
+
+.comment-item .comment-date {
+    padding-top: 15px;
 }

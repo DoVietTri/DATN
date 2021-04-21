@@ -23,7 +23,20 @@ let addNewComment = async (req, res) => {
     }
 }
 
+let rateAverageOfBook = async (req, res) => {
+    try {
+        let bookId = req.params.id;
+
+        let rateAvarage = await commentService.rateAverageOfBook(bookId);
+
+        return res.status(200).json(rateAvarage);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
 module.exports = {
     getAllComments,
-    addNewComment
+    addNewComment,
+    rateAverageOfBook
 }

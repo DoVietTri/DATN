@@ -63,3 +63,42 @@ label.label-select {
     right: 0;
     top: 2px;
 }
+
+.item-filter {
+    padding: 0px 10px 5px;
+}
+
+/* .item-filter h6 {
+    padding-left: 10px;
+} */
+.item-filter span.badge {
+    background: #F5A623;
+    color: rgb(244, 241, 241);
+    padding: 5px;
+    cursor: pointer;
+}
+
+.rating-list i.active::before {
+    color: #F5A623;
+}
+
+.rating-list i {
+    line-height: 15px;
+}
+
+.rating-list a {
+    text-decoration: none;
+    display: flex;
+    padding: 5px 0px;
+}
+
+.rating-list span.text {
+    font-size: 14px;
+    margin-left: 7px;
+    line-height: 15px;
+    color: #aaa;
+}
+
+.pagination-bar ul {
+    float: right;
+}

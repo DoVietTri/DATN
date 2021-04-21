@@ -8,6 +8,9 @@ import BookDetail from './views/BookDetail/BookDetail';
 import Cart from './views/Cart/Cart';
 import CategoryDetail from './views/CategoryDetail/CategoryDetail';
 import Home from './views/Home/Home';
+import Order from './views/Order/Order';
+import OrderDetail from './views/OrderDetail/OrderDetail';
+import TrackingOrder from './views/TrackingOrder/TrackingOrder';
 
 
 const App = () => {
@@ -30,6 +33,9 @@ const App = () => {
         <PublicRoute exact path="/categories" component={CategoryDetail} layout={Client} cntItem={totalItem} />
         <PublicRoute exact path="/categories/:c_slug" component={BookDetail} layout={Client} totalItem={countTotalItem} cntItem={totalItem} />
         <PrivateRoute exact path="/account" component={Account} layout={Client} cntItem={totalItem} />
+        <PrivateRoute exact path="/orders/history" component={Order} layout={Client} cntItem={totalItem} />
+        <PrivateRoute exact path="/orders/view/:code" component={OrderDetail} layout={Client} cntItem={totalItem} />
+        <PrivateRoute exact path="/orders/tracking/:code" component={TrackingOrder} layout={Client} cntItem={totalItem} />
       </Switch>
     </Router>
   )

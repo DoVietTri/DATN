@@ -4,7 +4,7 @@ const CompanySchema = mongoose.Schema({
     c_name: String,
     c_code: String,
     c_info: { type: String, default: null},
-    createdAt: { type: Number, default: Date.now }
+    createdAt: { type: Date, default: new Date() }
 });
 
 CompanySchema.statics = {

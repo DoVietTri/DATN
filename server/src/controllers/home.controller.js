@@ -20,6 +20,26 @@ let getNewBooks = async (req, res) => {
     }
 }
 
+let getBooksHot = async (req, res) => {
+    try {
+        let books = await homeService.getBooksHot();
+
+        return res.status(200).json(books);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
+let getBooksBestSeller = async (req, res) => {
+    try {
+        let books = await homeService.getBooksBestSeller();
+
+        return res.status(200).json(books);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
 let getBanners = async (req, res) => {
     try {
         let banners = await homeService.getBanners();
@@ -85,13 +105,27 @@ let getBooksWithPrice = async (req, res) => {
     }
 }
 
+let getAllCommentsOfBook = async (req, res) => {
+    try {
+        let bookId = req.params.id;
+        let comments = await homeService.getAllCommentsOfBook(bookId);
+
+        return res.status(200).json(comments);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
 module.exports = {
     getAllCategories,
     getNewBooks,
+    getBooksHot,
+    getBooksBestSeller,
     getBanners,
     getCateById,
     getBooksByCateId,
     getBookById,
     getBooksWithAuthor,
-    getBooksWithPrice
+    getBooksWithPrice,
+    getAllCommentsOfBook
 }

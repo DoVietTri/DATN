@@ -39,7 +39,7 @@ a.nav-link:hover {
     padding: 7px 15px 7px 15px;
 }
 
-td, th {
+/* td, th {
     border: 1px solid #dddddd;
     text-align: left;
     padding: 8px;
@@ -48,7 +48,7 @@ td, th {
 table {
     border-collapse: collapse;
     width: 100%;
-}
+} */
 
 .donhang-table table th {
     font-weight: 500;

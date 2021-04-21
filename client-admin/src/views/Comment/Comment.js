@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import commentAPI from '../../apis/commentAPI';
+import './Comment.css';
 
 const Comment = () => {
   const [comments, setComments] = useState([]);
@@ -16,6 +17,18 @@ const Comment = () => {
 
   let handleDeleteComment = (id) => {
     console.log(id);
+  }
+
+  let commentRating = (star) => {
+    let arrStar = [];
+    for (let i = 1; i <= star; i++) {
+      arrStar = [...arrStar, <li key={i} className="active-star"><i className="fa fa-star" /></li>];
+    }
+
+    for (let j = star + 1; j <= 5; j++ ) {
+      arrStar = [...arrStar, <li key={j}><i className="fa fa-star" /></li>]
+    }
+    return arrStar;
   }
 
   return (
@@ -59,6 +72,7 @@ const Comment = () => {
                         <th>Khách hàng</th>
                         <th>Sách</th>
                         <th>Nội dung</th>
+                        <th>Số sao</th>
                         <th>Hành động</th>
                       </tr>
                     </thead>
@@ -67,13 +81,18 @@ const Comment = () => {
                         comments.map((v, i) => {
                           return (
                             <tr key={i}>
-                              <td>{ i }</td>
-                              <td>{ v.user.username }</td>
-                              <td>{ v.book ? v.book.p_name : ''  }</td>
-                              <td>{ v.content }</td>
+                              <td>{i}</td>
+                              <td>{v.user.username}</td>
+                              <td>{v.book ? v.book.p_name : ''}</td>
+                              <td>{v.c_content}</td>
                               <td>
-                              <button className="btn btn-danger" onClick={() => handleDeleteComment(v._id)}>
-                                <i className="fas fa-trash-alt"></i>
+                                <ul className="d-flex" style={{ listStyle: 'none', padding: '0px' }}>
+                                 {commentRating(v.c_rate)}
+                                </ul>
+                              </td>
+                              <td>
+                                <button className="btn btn-danger" onClick={() => handleDeleteComment(v._id)}>
+                                  <i className="fas fa-trash-alt mr-1"></i> Xóa
                               </button>
                               </td>
                             </tr>

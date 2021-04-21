@@ -7,6 +7,7 @@ import useFullPageLoader from './../../hooks/useFullPageLoader';
 const Customer = () => {
   const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [customers, setCustomers] = useState([]);
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     showLoader();
@@ -29,7 +30,7 @@ const Customer = () => {
       }
       if (res.data.message === 'SUCCESS') {
         successToast("Xóa tài khoản người dùng thành công");
-        let newCustomers =  customers.filter(customer => customer._id !== id);
+        let newCustomers = customers.filter(customer => customer._id !== id);
         setCustomers([...newCustomers]);
       }
     }).catch((err) => {
@@ -64,12 +65,21 @@ const Customer = () => {
         <div className="container-fluid">
           <div className="row">
             <div className="col-12">
-              <div className="card card-primary">
+              <div className="card">
 
-                <div className="card-header">
+                <div className="card-header d-flex justify-content-between">
                   <h3 className="card-title">
                     Tất cả khách hàng
                   </h3>
+                  <div>
+                    <form className="form-inline">
+                      <input className="form-control mr-sm-2" type="search" placeholder="Nhập tên cần tìm kiếm...." aria-label="Search"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                      />
+                      <button className="btn btn-outline-primary my-2 my-sm-0 p-1" type="button">Tìm kiếm</button>
+                    </form>
+                  </div>
                 </div>
 
                 <div className="card-body">
@@ -83,27 +93,33 @@ const Customer = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {customers.map((v, i) => {
-                        return (
-                          <tr key={i}>
-                            <td>{i}</td>
-                            <td>{v.username}</td>
-                            <td>
-                              <ul>
-                                <li>Email: {v.email}</li>
-                                <li>Ngày sinh: {v.dateOfBirth} </li>
-                                <li>Giới tính: {v.gender === 'male' ? 'Nam' : 'Nữ' }</li>
-                              </ul>
-                            </td>
+                      {
+                        customers.filter(val => {
+                          if (query === '' || val.username.toLowerCase().indexOf(query.toLowerCase()) > -1
+                            || val.email.toLowerCase().indexOf(query.toLowerCase()) > -1) {
+                            return val;
+                          }
+                        }).map((v, i) => {
+                          return (
+                            <tr key={i}>
+                              <td>{i}</td>
+                              <td>{v.username}</td>
+                              <td>
+                                <ul>
+                                  <li>Email: {v.email}</li>
+                                  <li>Ngày sinh: {v.dateOfBirth} </li>
+                                  <li>Giới tính: {v.gender === 'male' ? 'Nam' : 'Nữ'}</li>
+                                </ul>
+                              </td>
 
-                            <td>
-                              <button className="btn btn-danger" onClick={() => handleDeleteCustomer(v._id)}>
-                                <i className="fas fa-trash-alt"></i>
-                              </button>
-                            </td>
-                          </tr>
-                        )
-                      })}
+                              <td>
+                                <button className="btn btn-danger" onClick={() => handleDeleteCustomer(v._id)}>
+                                  <i className="fas fa-trash-alt mr-1"></i> Xóa
+                                </button>
+                              </td>
+                            </tr>
+                          )
+                        })}
                     </tbody>
                     <tfoot>
                       <tr>
@@ -120,7 +136,7 @@ const Customer = () => {
           </div>
         </div>
       </section>
-      { loader }
+      { loader}
     </div>
   )
 }

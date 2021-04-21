@@ -3,18 +3,29 @@ import { Link } from 'react-router-dom';
 import formatCurrency from 'format-currency';
 import Cart from './../../utils/cart';
 import { successToast } from '../Toasts/Toasts';
+import useFullPageLoader from './../../hooks/useFullPageLoader';
 
-const ItemCart = ({ info, callBackRemoveCart }) => {
+const ItemCart = ({ info, callBackRemoveCart, callBackUpdateCart }) => {
 
-  // useEffect(() => {
-  //   console.log(info);
-  // }, []);
-
+  const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [valueItem, setValueItem] = useState(info.quantity);
 
   let handleIncreaseItem = () => {
     let item = valueItem + 1;
     setValueItem(item);
+
+    let oldCart = JSON.parse(localStorage.getItem('cart'));
+    let newCart = new Cart(oldCart ? oldCart : null);
+    showLoader();
+    newCart.updateCartById(info.productInfo._id, item);
+    localStorage.removeItem('cart');
+    localStorage.setItem('cart', JSON.stringify(newCart));
+    hideLoader();
+
+    let totalPrice = JSON.parse(localStorage.getItem('cart')).totalPrice;
+    let totalQuantity = JSON.parse(localStorage.getItem('cart')).totalQuantity;
+
+    callBackUpdateCart({ totalPrice: totalPrice, totalQuantity: totalQuantity });
   }
 
   let handleDecreaseItem = () => {
@@ -23,6 +34,17 @@ const ItemCart = ({ info, callBackRemoveCart }) => {
     } else {
       let item = valueItem - 1;
       setValueItem(item);
+      let oldCart = JSON.parse(localStorage.getItem('cart'));
+      let newCart = new Cart(oldCart ? oldCart : null);
+      showLoader();
+      newCart.updateCartById(info.productInfo._id, item);
+      localStorage.removeItem('cart');
+      localStorage.setItem('cart', JSON.stringify(newCart));
+      hideLoader();
+      let totalPrice = JSON.parse(localStorage.getItem('cart')).totalPrice;
+      let totalQuantity = JSON.parse(localStorage.getItem('cart')).totalQuantity;
+  
+      callBackUpdateCart({ totalPrice: totalPrice, totalQuantity: totalQuantity });
     }
   }
 
@@ -70,6 +92,7 @@ const ItemCart = ({ info, callBackRemoveCart }) => {
         </div>
       </div>
       <hr />
+      { loader}
     </>
   )
 }

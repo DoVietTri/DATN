@@ -10,5 +10,6 @@ router.post('/', upload.single("p_image_detail"), productController.addNewProduc
 router.get('/:id', productController.getByIdProduct);
 router.put('/:id', upload.single("p_image_detail"), productController.updateProductById);
 router.delete('/:id', productController.deleteByIdProduct);
+router.put('/change-product-hot/:id', productController.changeProductHotById);
 
 module.exports = router;

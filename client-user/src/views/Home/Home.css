@@ -470,7 +470,7 @@ small.tacgia.text-muted {
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     transition: 0.3s;
-    padding: 3px 0px;
+    /* padding: 3px 0px; */
 }
 
 h3.card-title.ten {

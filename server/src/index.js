@@ -19,11 +19,14 @@ const companyRouter = require('./routes/company.route');
 const staffRouter = require('./routes/staff.route');
 const commentRouter = require('./routes/comment.route');
 const bannerRouter = require('./routes/banner.route');
+const dashboardRouter = require('./routes/dashboard.route');
 
 
 //Define router client
 const homeRouter = require('./routes/home.route');
 const cartRouter = require('./routes/cart.route');
+const orderRouter = require('./routes/order.route');
+const filterRouter = require('./routes/filter.route');
 
 const app = express();
 
@@ -48,18 +51,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //Router api admin
 app.use('/api', authRouter);
-app.use('/api/users', authUser.isAdmin, userRouter);
 app.use('/api/categories', authUser.isAdmin, categoryRouter);
 app.use('/api/products', authUser.isAdmin, productRouter);
 app.use('/api/authors', authUser.isAdmin, authorRouter);
 app.use('/api/companies', authUser.isAdmin, companyRouter);
 app.use('/api/staffs', authUser.isAdmin, staffRouter);
 app.use('/api/banners', authUser.isAdmin, bannerRouter);
-app.use('/api/comments',authUser.isLogin, commentRouter);
+app.use('/api/dashboards', authUser.isAdmin, dashboardRouter);
+
+app.use('/api/users', authUser.isLogin, userRouter);
+app.use('/api/comments', commentRouter);
 
 //Router api client
 app.use('/api/home', homeRouter);
+app.use('/api/filters', filterRouter);
 app.use('/api/carts', authUser.isLogin, cartRouter);
+app.use('/api/orders', orderRouter);
 
 //Listen port
 app.listen(process.env.APP_PORT, () => {

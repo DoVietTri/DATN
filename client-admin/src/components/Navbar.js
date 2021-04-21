@@ -1,6 +1,17 @@
 import React from 'react';
+import { successToast } from './Toasts/Toasts';
 
 const Navbar = () => {
+
+  let handleLogout = (e) => {
+    e.preventDefault();
+    document.cookie = 'auth=;expires = Thu, 01 Jan 1970 00:00:00 GMT';
+    document.cookie = 'currentUserId=;expires = Thu, 01 Jan 1970 00:00:00 GMT';
+    successToast("Đăng xuất thành công !");
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
+  }
 
   return (
     <nav className="main-header navbar navbar-expand navbar-white navbar-light">
@@ -119,7 +130,7 @@ const Navbar = () => {
         </li>
 
         <li className="nav-item">
-          <a className="nav-link" href="/">
+          <a className="nav-link" href="# " onClick={handleLogout}>
             <i className="fas fa-sign-out-alt"></i>
           </a>
         </li>

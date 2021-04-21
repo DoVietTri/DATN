@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const AuthorSchema = mongoose.Schema({
     a_name: String,
     a_info: { type: String, default: null },
-    createdAt: { type: Number, default: Date.now }
+    createdAt: { type: Date, default: new Date() }
 });
 
 AuthorSchema.statics = {

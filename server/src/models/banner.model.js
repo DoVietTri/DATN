@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const BannerSchema = mongoose.Schema({
     b_name: String,
     b_image: { public_id: String, url: String },
-    createdAt: { type: Number, default: Date.now }
+    createdAt: { type: Date, default: new Date() }
 });
 
 BannerSchema.statics = {
