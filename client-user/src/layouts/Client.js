@@ -7,6 +7,7 @@ import HeaderBottomWithMenu from '../components/Header/HeaderBottomWithMenu';
 import HeaderTop from '../components/Header/HeaderTop';
 import Login from '../components/Modal/Login';
 import Register from '../components/Modal/Register';
+import MessengerCustomerChat from 'react-messenger-customer-chat';
 
 const Client = (props) => {
   const [isUrl, setIsUrl] = useState("/");
@@ -24,6 +25,10 @@ const Client = (props) => {
       <BackToTop />
       <Login />
       <Register />
+      <MessengerCustomerChat 
+        pageId="107432951513144"
+        appId="317532176245919"
+      />
     </>
   )
 }

@@ -129,7 +129,7 @@ const StaffAdd = () => {
                             onChange={addStaffFormik.handleChange}
                           />
                           {addStaffFormik.errors.inputStaffUsername && addStaffFormik.touched.inputStaffUsername && (
-                            <small>{addStaffFormik.errors.inputStaffUsername}</small>
+                            <small className="active-error" >{addStaffFormik.errors.inputStaffUsername}</small>
                           )}
                         </div>
 
@@ -140,7 +140,7 @@ const StaffAdd = () => {
                             onChange={addStaffFormik.handleChange}
                           />
                           {addStaffFormik.errors.inputStaffEmail && addStaffFormik.touched.inputStaffEmail && (
-                            <small>{addStaffFormik.errors.inputStaffEmail}</small>
+                            <small className="active-error" >{addStaffFormik.errors.inputStaffEmail}</small>
                           )}
                         </div>
 
@@ -151,7 +151,7 @@ const StaffAdd = () => {
                             onChange={addStaffFormik.handleChange}
                           />
                           {addStaffFormik.errors.inputStaffPass && addStaffFormik.touched.inputStaffPass && (
-                            <small>{addStaffFormik.errors.inputStaffPass}</small>
+                            <small className="active-error" >{addStaffFormik.errors.inputStaffPass}</small>
                           )}
                         </div>
 
@@ -162,7 +162,7 @@ const StaffAdd = () => {
                             onChange={addStaffFormik.handleChange}
                           />
                           {addStaffFormik.errors.inputStaffRePass && addStaffFormik.touched.inputStaffRePass && (
-                            <small>{addStaffFormik.errors.inputStaffRePass}</small>
+                            <small className="active-error" >{addStaffFormik.errors.inputStaffRePass}</small>
                           )}
                         </div>
 
@@ -178,7 +178,7 @@ const StaffAdd = () => {
                             onChange={addStaffFormik.handleChange}
                           />
                           {addStaffFormik.errors.inputStaffPhone && addStaffFormik.touched.inputStaffPhone && (
-                            <small>{addStaffFormik.errors.inputStaffPhone}</small>
+                            <small className="active-error" >{addStaffFormik.errors.inputStaffPhone}</small>
                           )}
                         </div>
 
@@ -189,7 +189,7 @@ const StaffAdd = () => {
                             onChange={addStaffFormik.handleChange}
                           />
                           {addStaffFormik.errors.inputStaffAddress && addStaffFormik.touched.inputStaffAddress && (
-                            <small>{addStaffFormik.errors.inputStaffAddress}</small>
+                            <small className="active-error" >{addStaffFormik.errors.inputStaffAddress}</small>
                           )}
                         </div>
 

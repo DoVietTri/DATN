@@ -30,7 +30,7 @@ const TabUpdatePass = () => {
     }),
     onSubmit: (values, { resetForm }) => {
       let data = {
-        id: getCookie('userId'),
+        id: getCookie('currentUserId'),
         newPassword: values.inputNewPassword,
         oldPassword: values.inputOldPassword
       };

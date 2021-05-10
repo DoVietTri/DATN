@@ -62,7 +62,9 @@ const ProductEdit = (props) => {
       inputCateName: productItem.category ? productItem.category._id : '',
       inputProductName: productItem.p_name,
       inputProductCode: productItem.p_code,
+      inputProductHot: productItem.p_hot,
       inputProductPrice: productItem.p_price,
+      inputProductPromotion: productItem.p_promotion,
       inputProductQuantity: productItem.p_quantity,
       inputProductDatePublic: productItem.p_datepublic,
       inputProductImage: '',
@@ -80,6 +82,7 @@ const ProductEdit = (props) => {
       inputProductCode: Yup.string()
         .required("Bắt buộc nhập mã sản phẩm !")
         .max(100, "Mã sản phẩm quá dài, nhỏ hơn 100 kí tự"),
+      inputProductHot: Yup.string(),
       inputProductPrice: Yup.number()
         .required("Bắt buộc  nhập giá sản phẩm !")
         .min(0, "Giá tiền lớn hơn 0"),
@@ -123,6 +126,11 @@ const ProductEdit = (props) => {
         if (res.data.message === 'UPLOAD_FAILED') {
           hideLoader();
           errorToast("Cập nhật ảnh thất bại, kiểm tra đường truyền mạng");
+        }
+
+        if (res.data.message === 'EXISTS_CODE') {
+          hideLoader();
+          errorToast("Mã sản phẩm đã tồn tại");
         }
 
         if (res.data.message === 'SUCCESS') {
@@ -213,6 +221,10 @@ const ProductEdit = (props) => {
                             value={updateProductFormik.values.inputProductName || ''}
                             onChange={updateProductFormik.handleChange}
                           />
+
+                          {updateProductFormik.errors.inputProductName && updateProductFormik.touched.inputProductName && (
+                            <small className="active-error">{updateProductFormik.errors.inputProductName}</small>
+                          )}
                         </div>
 
                         <div className="form-group">
@@ -222,16 +234,34 @@ const ProductEdit = (props) => {
                             onChange={updateProductFormik.handleChange}
                           />
 
+                          {updateProductFormik.errors.inputProductCode && updateProductFormik.touched.inputProductCode && (
+                            <small className="active-error">{updateProductFormik.errors.inputProductCode}</small>
+                          )}
 
                         </div>
 
                         <div className="form-group">
-                          <label htmlFor="inputProductPrice">Giá sản phẩm (*)</label>
-                          <input type="number" className="form-control" name="inputProductPrice" placeholder="Nhập tên sản phẩm...."
+                          <label htmlFor="inputProductPrice">Giá bìa sản phẩm (*)</label>
+                          <input type="number" className="form-control" name="inputProductPrice" placeholder="Nhập giá bìa sản phẩm...."
                             value={updateProductFormik.values.inputProductPrice || ''}
                             onChange={updateProductFormik.handleChange}
                           />
 
+                          {updateProductFormik.errors.inputProductCode && updateProductFormik.touched.inputProductCode && (
+                            <small className="active-error">{updateProductFormik.errors.inputProductCode}</small>
+                          )}
+                        </div>
+
+                        <div className="form-group">
+                          <label htmlFor="inputProductPromotion">Giá khuyến mại (nếu có)</label>
+                          <input type="number" className="form-control" name="inputProductPromotion" placeholder="Nhập giá khuyến mại...."
+                            value={updateProductFormik.values.inputProductPromotion || ''}
+                            onChange={updateProductFormik.handleChange}
+                          />
+
+                          {updateProductFormik.errors.inputProductPromotion && updateProductFormik.touched.inputProductPromotion && (
+                            <small className="active-error">{updateProductFormik.errors.inputProductPromotion}</small>
+                          )}
                         </div>
 
                         <div className="form-group">
@@ -240,7 +270,9 @@ const ProductEdit = (props) => {
                             value={updateProductFormik.values.inputProductQuantity || ''}
                             onChange={updateProductFormik.handleChange}
                           />
-
+                          {updateProductFormik.errors.inputProductQuantity && updateProductFormik.touched.inputProductQuantity && (
+                            <small className="active-error">{updateProductFormik.errors.inputProductQuantity}</small>
+                          )}
                         </div>
 
                         <div className="form-group">
@@ -324,6 +356,29 @@ const ProductEdit = (props) => {
                             }
                           </select>
                         </div>
+
+                        <div className="form-group row">
+                          <label htmlFor="inputProductHot" className="col-sm-2 col-form-label">Nổi bật ?</label>
+
+                          <div className="col-sm-10 mt-2">
+                            <div className="icheck-primary d-inline mr-3">
+                              <input type="radio" id="hot" name="inputProductHot" value="true"
+                                checked={updateProductFormik.values.inputProductHot === "true" || ''}
+                                onChange={updateProductFormik.handleChange}
+                              />
+                              <label htmlFor="hot"> Nổi bật </label>
+                            </div>
+                            <div className="icheck-primary d-inline">
+                              <input type="radio" id="noHot" name="inputProductHot" value="false"
+                              checked={ updateProductFormik.values.inputProductHot === "false" || '' }
+                              onChange={ updateProductFormik.handleChange }
+                              />
+                              <label htmlFor="noHot"> Không nổi bật </label>
+                            </div>
+                          </div>
+
+          
+                        </div>
                       </div>
                     </div>
 
@@ -357,7 +412,7 @@ const ProductEdit = (props) => {
           </div>
         </div>
       </section>
-      
+
       {loader}
     </div>
   )

@@ -6,7 +6,7 @@ import homeAPI from './../../apis/homeAPI';
 import commentAPI from '../../apis/commentAPI';
 import formatDate from './../../utils/formatDate';
 
-const token = getCookie('authUser');
+const token = getCookie('authUserToken');
 
 const TabEvaluate = (props) => {
   const [comments, setComments] = useState([]);
@@ -49,15 +49,6 @@ const TabEvaluate = (props) => {
     }
     return rows;
   }
-
-  // let progressBar = (data) => {
-  //   let rows = [];
-  //   for (let i = 0; i < 5; i++) {
-  //     rows = [...rows,
-
-  //     ]
-  //   }
-  // }
 
   return (
     <div className="tab-pane fade" id="nav-danhgia" role="tabpanel" aria-labelledby="nav-danhgia-tab">

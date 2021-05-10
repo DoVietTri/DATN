@@ -161,7 +161,7 @@ ul.tabs li.active hr {
 /* het css cho header form dangnhap dangky  */
 
 /* css cho formdangnhap dangky*/
-.form-signin {
+/* .form-signin {
     width: 100%;
   }
 
@@ -171,7 +171,7 @@ ul.tabs li.active hr {
     font-weight: bold;
     padding: 1rem;
     transition: all 0.2s;
-}
+} */
 
 .form-label-group {
     position: relative;
@@ -179,13 +179,23 @@ ul.tabs li.active hr {
 }
 
 .btn-google {
-    color: white;
-    background-color: #ea4335;
+    /* color: white;
+    background-color: #ea4335; */
+    font-size: 80%;
+    letter-spacing: .1rem;
+    font-weight: bold;
+    padding: 1rem;
+    transition: all 0.2s;
 }
 
 .btn-facebook {
-    color: white;
-    background-color: #3b5998;
+    /* color: white;
+    background-color: #3b5998; */
+    font-size: 80%;
+    letter-spacing: .1rem;
+    font-weight: bold;
+    padding: 1rem;
+    transition: all 0.2s;
 }
 
 .modal-body hr {

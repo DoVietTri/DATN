@@ -1,3 +1,4 @@
+const commentModel = require('../models/comment.model');
 const productModel = require('./../models/product.model');
 
 let filterPrice = async (cateId, range) => {
@@ -18,6 +19,27 @@ let filterPrice = async (cateId, range) => {
     return { message: 'SUCCESS', data: products };
 }
 
+let filterRating = async (cateId, star) => {
+    let products = [];
+    let data = await productModel.findProductByCateId(cateId);
+
+    data.map (v => {
+        products = [...products, v._id];
+    });
+
+    let commentAvgOfBook = await commentModel.getBookIdWithRateStar(star, products);
+
+    let arrProducts2 = [];
+    commentAvgOfBook.map(v => {
+        arrProducts2 = [...arrProducts2, v._id];
+    });
+
+   let response = await productModel.getManyBookInArray(arrProducts2);
+
+    return { message: 'SUCCESS', data: response };
+}
+
 module.exports = {
-    filterPrice
+    filterPrice,
+    filterRating
 }

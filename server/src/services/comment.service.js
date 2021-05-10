@@ -15,7 +15,8 @@ let addNewComment = async (currUser, data) => {
         c_rate: parseInt(data.star)
     }
     
-    let newComment = await commentModel.addNewComment(comment);
+    let newCommentAdd = await commentModel.addNewComment(comment);
+    let newComment = await commentModel.getCommentById(newCommentAdd._id);
     return { message: 'SUCCESS', data: newComment };
 }
 
@@ -25,7 +26,6 @@ let rateAverageOfBook = async (bookId) => {
 
     //count comment
     let cntComment = await commentModel.countCommentOfBook(bookId);
-
 
     let percentRate = [];
     if (cntComment === 0) {

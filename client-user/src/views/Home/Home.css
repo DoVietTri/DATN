@@ -636,4 +636,8 @@ footer .header {
     }
 }
 
+.active-error {
+    color: red;
+}
+
 

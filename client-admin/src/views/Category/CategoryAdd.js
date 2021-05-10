@@ -118,7 +118,7 @@ const CategoryAdd = () => {
                       </select>
 
                       {cateFormik.errors.inputParentCate && cateFormik.touched.inputParentCate && (
-                        <small>{cateFormik.errors.inputParentCate}</small>
+                        <small className="active-error" >{cateFormik.errors.inputParentCate}</small>
                       )}
                     </div>
                     <div className="form-group">
@@ -128,7 +128,7 @@ const CategoryAdd = () => {
                         onChange={cateFormik.handleChange} />
 
                       {cateFormik.errors.inputCateName && cateFormik.touched.inputCateName && (
-                        <small>{cateFormik.errors.inputCateName}</small>
+                        <small className="active-error" >{cateFormik.errors.inputCateName}</small>
                       )}
                     </div>
 
@@ -144,7 +144,7 @@ const CategoryAdd = () => {
                         }}
                       />
                       {cateFormik.errors.inputCateDescription && cateFormik.touched.inputCateDescription && (
-                        <small>{cateFormik.errors.inputCateDescription}</small>
+                        <small className="active-error" >{cateFormik.errors.inputCateDescription}</small>
                       )}
                     </div>
 

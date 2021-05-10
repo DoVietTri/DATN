@@ -124,7 +124,7 @@ const BannerEdit = (props) => {
                             onChange={updateBannerFormik.handleChange}
                           />
                           {updateBannerFormik.errors.inputBannerName && updateBannerFormik.touched.inputBannerName && (
-                            <small>{updateBannerFormik.errors.inputBannerName}</small>
+                            <small className="active-error" >{updateBannerFormik.errors.inputBannerName}</small>
                           )}
                         </div>
                         <div className="form-group">
@@ -155,7 +155,7 @@ const BannerEdit = (props) => {
                           </div>
 
                           {updateBannerFormik.errors.inputBannerImage && updateBannerFormik.touched.inputBannerImage && (
-                            <small>{updateBannerFormik.errors.inputBannerImage}</small>
+                            <small className="active-error" >{updateBannerFormik.errors.inputBannerImage}</small>
                           )}
                         </div>
 

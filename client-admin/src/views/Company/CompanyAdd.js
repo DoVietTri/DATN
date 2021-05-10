@@ -98,7 +98,7 @@ const CompanyAdd = () => {
                             onChange={addCompanyFormik.handleChange}
                           />
                           {addCompanyFormik.errors.inputCompanyName && addCompanyFormik.touched.inputCompanyName && (
-                            <small>{addCompanyFormik.errors.inputCompanyName}</small>
+                            <small className="active-error" >{addCompanyFormik.errors.inputCompanyName}</small>
                           )}
                         </div>
 
@@ -109,7 +109,7 @@ const CompanyAdd = () => {
                             onChange={addCompanyFormik.handleChange}
                           />
                           {addCompanyFormik.errors.inputCompanyCode && addCompanyFormik.touched.inputCompanyCode && (
-                            <small>{addCompanyFormik.errors.inputCompanyCode}</small>
+                            <small className="active-error" >{addCompanyFormik.errors.inputCompanyCode}</small>
                           )}
                         </div>
 
@@ -127,7 +127,7 @@ const CompanyAdd = () => {
                           />
                           
                           {addCompanyFormik.errors.inputCompanyDescription && addCompanyFormik.touched.inputCompanyDescription && (
-                            <small>{addCompanyFormik.errors.inputCompanyDescription}</small>
+                            <small className="active-error" >{addCompanyFormik.errors.inputCompanyDescription}</small>
                           )}
                         </div>
                       </div>

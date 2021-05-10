@@ -54,6 +54,7 @@ const ProductAdd = () => {
       inputProductCode: '',
       inputProductHot: 'false',
       inputProductPrice: '',
+      inputProductPromotion: '',
       inputProductQuantity: '',
       inputProductImage: '',
       inputAuthorName: [],
@@ -106,6 +107,7 @@ const ProductAdd = () => {
       formData.append("p_code", values.inputProductCode);
       formData.append("p_hot", values.inputProductHot);
       formData.append("p_price", values.inputProductPrice);
+      formData.append("p_promotion", values.inputProductPromotion);
       formData.append("p_quantity", values.inputProductQuantity);
       formData.append("p_image_detail", values.inputProductImage);
       formData.append("p_description", values.inputProductDescription);
@@ -234,14 +236,26 @@ const ProductAdd = () => {
                           )}
                         </div>
                         <div className="form-group">
-                          <label htmlFor="inputProductPrice">Giá sản phẩm (*)</label>
+                          <label htmlFor="inputProductPrice">Giá bìa sản phẩm (*)</label>
                           <input type="number" className="form-control" name="inputProductPrice" placeholder="Nhập tên sản phẩm...."
                             value={addProductFormik.values.inputProductPrice}
                             onChange={addProductFormik.handleChange}
                           />
 
-                          {addProductFormik.errors.inputProductPrice && addProductFormik.touched.inputProductPrice && (
+                          {addProductFormik.errors.inputProduct && addProductFormik.touched.inputProductPrice && (
                             <small>{addProductFormik.errors.inputProductPrice}</small>
+                          )}
+                        </div>
+                      
+                        <div className="form-group">
+                          <label htmlFor="inputProductPromotion">Giá khuyến mại </label>
+                          <input type="number" className="form-control" name="inputProductPromotion" placeholder="Nhập giá khuyến mại (nếu có)...."
+                            value={addProductFormik.values.inputProductPromotion}
+                            onChange={addProductFormik.handleChange}
+                          />
+
+                          {addProductFormik.errors.inputProductPromotion && addProductFormik.touched.inputProductPromotion && (
+                            <small>{addProductFormik.errors.inputProductPromotion}</small>
                           )}
                         </div>
                         <div className="form-group">

@@ -107,11 +107,7 @@ const Category = () => {
                     <tbody>
 
                       {
-                        dataCate.filter(val => {
-                          if (query === '' || val.c_name.toLowerCase().indexOf(query.toLowerCase()) > -1 ) {
-                            return val;
-                          }
-                        })
+                        dataCate.filter(val => query === '' || val.c_name.toLowerCase().indexOf(query.toLowerCase()) > -1 ? val : '')
                         .map((v, i) => {
                           return (
                             <tr key={i}>

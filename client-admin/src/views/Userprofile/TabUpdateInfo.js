@@ -42,7 +42,7 @@ const TabUpdateInfo = ({ userInfo }) => {
         phone: values.inputPhoneNumber,
         dateOfBirth: values.inputDateOfBirth
       }
-      userAPI.updateUserInfo(getCookie('currentUserId'), data).then((res) => {
+      userAPI.updateUserInfo(getCookie('currentAdminId'), data).then((res) => {
         if (res.data.message === 'USER_NOT_FOUND') {
           errorToast("Người dùng không tồn tại, vui lòng thử lại");
         }

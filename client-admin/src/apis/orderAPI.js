@@ -11,6 +11,11 @@ const orderAPI = {
         return axiosClient.get(url);
     },
 
+    getOrderDetailByCode: (code) => {
+        let url = `orders/get-order-detail-by-code/${code}`;
+        return axiosClient.get(url);
+    },
+
     changeStatusOrder: (id, data) => {
         let url = `/orders/change-status-order/${id}`;
         return axiosClient.put(url, data);

@@ -94,12 +94,8 @@ const Customer = () => {
                     </thead>
                     <tbody>
                       {
-                        customers.filter(val => {
-                          if (query === '' || val.username.toLowerCase().indexOf(query.toLowerCase()) > -1
-                            || val.email.toLowerCase().indexOf(query.toLowerCase()) > -1) {
-                            return val;
-                          }
-                        }).map((v, i) => {
+                        customers.filter(val => query === '' || val.username.toLowerCase().indexOf(query.toLowerCase()) > -1
+                        || val.email.toLowerCase().indexOf(query.toLowerCase()) > -1 ? val : '').map((v, i) => {
                           return (
                             <tr key={i}>
                               <td>{i}</td>

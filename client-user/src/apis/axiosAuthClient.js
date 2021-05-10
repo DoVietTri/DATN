@@ -5,7 +5,7 @@ const axiosAuthClient = axios.create({
     baseURL: 'http://localhost:5500/api',
     headers: {
         "Content-Type": "application/json",
-        "Authorization": getCookie('authUser')
+        "Authorization": getCookie('authUserToken')
     },
 })
 

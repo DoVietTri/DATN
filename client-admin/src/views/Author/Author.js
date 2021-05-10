@@ -99,11 +99,8 @@ const Author = () => {
                     <tbody>
 
                       {
-                        dataAuthor.filter((val) => {
-                          if (query === '' || val.a_name.toLowerCase().indexOf(query.toLowerCase()) > -1) {
-                            return val;
-                          }
-                        }).map((value, index) => {
+                        dataAuthor.filter(val => query === '' || val.a_name.toLowerCase().indexOf(query.toLowerCase()) > -1 ? val : ''
+                        ).map((value, index) => {
                           return (
                             <tr key={index}>
                               <td>{index}</td>

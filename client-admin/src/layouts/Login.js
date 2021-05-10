@@ -1,13 +1,14 @@
 import React from 'react';
-// import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { successToast, errorToast } from './../components/Toasts/Toasts';
 import authAPI from './../apis/authAPI';
 import setCookie from './../utils/setCookie';
 import useFullPageLoader from '../hooks/useFullPageLoader';
+import { useHistory } from 'react-router';
 
 const Start = () => {
+  const history = useHistory();
   const [loader, showLoader, hideLoader] = useFullPageLoader();
 
   let formik = useFormik({
@@ -26,19 +27,18 @@ const Start = () => {
     onSubmit: (values) => {
       showLoader();
       authAPI.login(values).then((res) => {
-        console.log(res);
+
         if (res.data.message === 'SUCCESS') {
           successToast("Đăng nhập thành công !");
-          document.cookie = 'auth=;expires = Thu, 01 Jan 1970 00:00:00 GMT';
-          document.cookie = 'currentUserId=;expires = Thu, 01 Jan 1970 00:00:00 GMT';
+          document.cookie = 'authAdminToken=;expires = Thu, 01 Jan 1970 00:00:00 GMT';
+          document.cookie = 'currentAdminId=;expires = Thu, 01 Jan 1970 00:00:00 GMT';
 
-          setCookie("auth", res.data.token, 2, "/");
-          setCookie("currentUserId", res.data.userId, 2, "/");
-
-          setTimeout(() => {
-            window.location.href = '/dashboard';
-            hideLoader();
-          }, 500);
+          setCookie("authAdminToken", res.data.token, 2, "/");
+          setCookie("currentAdminId", res.data.userId, 2, "/");
+          // window.location.href = "/dashboard"
+          showLoader();
+          history.push('/dashboard');
+          hideLoader();
         }
         if (res.data.message === "PASSWORD_IS_WRONG") {
           hideLoader();

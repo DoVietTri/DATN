@@ -3,14 +3,15 @@ import { Link } from 'react-router-dom';
 import userAPI from '../../apis/userAPI';
 import { successToast } from '../Toasts/Toasts';
 import getCookie from './../../utils/getCookie';
+import FormSearch from './FormSearch';
 import './HeaderTop.css';
 
-const token = getCookie('authUser');
+const token = getCookie('authUserToken');
 
 const HeaderTop = (props) => {
   const [user, setUser] = useState({});
   useEffect(() => {
-    let id = getCookie('userId');
+    let id = getCookie('currentUserId');
     if (id) {
       userAPI.getUserById(id).then((res) => {
         setUser(res.data.data);
@@ -19,8 +20,8 @@ const HeaderTop = (props) => {
   }, []);
 
   let handleLogout = () => {
-    document.cookie = 'authUser=;expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-    document.cookie = 'userId=;expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    document.cookie = 'authUserToken=;expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    document.cookie = 'currentUserId=;expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/';
     successToast("Đăng xuất thành công !");
     setTimeout(() => {
       window.location.reload();
@@ -37,16 +38,7 @@ const HeaderTop = (props) => {
         <button className="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation"><span className="navbar-toggler-icon" /></button>
         <div className="collapse navbar-collapse" id="collapsibleNavId">
           {/* form tìm kiếm  */}
-          <form className="form-inline ml-auto my-2 my-lg-0 mr-3">
-            <div className="input-group" style={{ width: '520px' }}>
-              <input type="text" className="form-control" aria-label="Small" placeholder="Nhập sách cần tìm kiếm..." />
-              <div className="input-group-append">
-                <button type="button" className="btn" style={{ backgroundColor: '#CF111A', color: 'white' }}>
-                  <i className="fa fa-search" />
-                </button>
-              </div>
-            </div>
-          </form>
+          <FormSearch />
           {/* ô đăng nhập đăng ký giỏ hàng trên header  */}
           <ul className="navbar-nav mb-1 ml-auto">
 
@@ -55,7 +47,8 @@ const HeaderTop = (props) => {
                 <div className="dropdown">
                   <li className="nav-item account d-flex user-curr" type="button" data-toggle="dropdown">
                     <a href="# " className="btn btn-secondary rounded-circle">
-                      <i className="fa fa-user" />
+                      {/* <i className="fa fa-user" /> */}
+                      <img src={user.avatar} alt="user-avatar" className="img-avatar" />
                     </a>
                     <div className="info-logout">
                       <a href="# " className="nav-link text-dark text-uppercase username">{user.username}</a>

@@ -5,15 +5,21 @@ import avatar from './../assets/img/user2-160x160.jpg';
 import userAPI from './../apis/userAPI';
 import getCookie from '../utils/getCookie';
 import { errorToast } from './Toasts/Toasts';
+import dashboardAPI from '../apis/dashboardAPI';
 
 const Sidebar = () => {
   const [currUser, setCurrUser] = useState({});
+  const [countNewOrder, setCountNewOrder] = useState(0);
 
   useEffect(() => {
-    userAPI.getUserById(getCookie('currentUserId')).then((res) => {
+    userAPI.getUserById(getCookie('currentAdminId')).then((res) => {
       setCurrUser(res.data.data);
     }).catch((err) => {
       errorToast("Có lỗi xảy ra, vui lòng thử lại");
+    });
+
+    dashboardAPI.countNewOrders().then(res => {
+      setCountNewOrder(res.data.data);
     })
   }, []);
 
@@ -22,7 +28,7 @@ const Sidebar = () => {
       {/* Brand Logo  */}
       <Link to="/dashboard" className="brand-link">
         <img src={logo} alt="AdminLTE Logo" className="brand-image img-circle elevation-3" style={{ opacity: '.8' }} />
-        <span className="brand-text font-weight-light">DealBook.xyz</span>
+        <span className="brand-text font-weight-light">TextBook.xyz</span>
       </Link>
 
       {/* Sidebar */}
@@ -37,18 +43,6 @@ const Sidebar = () => {
             <Link to="/profile">
               {currUser.username}
             </Link>
-          </div>
-        </div>
-
-        {/* SidebarSearch Form */}
-        <div className="form-inline">
-          <div className="input-group" data-widget="sidebar-search">
-            <input className="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search" />
-            <div className="input-group-append">
-              <button className="btn btn-sidebar">
-                <i className="fas fa-search fa-fw"></i>
-              </button>
-            </div>
           </div>
         </div>
 
@@ -117,7 +111,7 @@ const Sidebar = () => {
             </li>
 
             <li className="nav-item">
-              <a href="#!" className="nav-link">
+              <a href="# " className="nav-link">
                 <i className="nav-icon fas fa-hands-helping"></i>
                 <p>
                   Đối tác
@@ -136,11 +130,12 @@ const Sidebar = () => {
             </li>
 
             <li className="nav-item">
-              <a href="#!" className="nav-link">
+              <a href="# " className="nav-link">
                 <i className="nav-icon fas fa-shopping-cart"></i>
                 <p>
                   Đơn hàng
                   <i className="right fas fa-angle-left"></i>
+                  { countNewOrder !== 0 ? <span className="badge badge-danger right">{ countNewOrder }</span> : '' }
                 </p>
               </a>
               <ul className="nav nav-treeview">
@@ -148,6 +143,7 @@ const Sidebar = () => {
                   <NavLink to="/orders" className="nav-link" activeClassName="active">
                     <i className="nav-icon far fa-circle nav-icon"></i>
                     <p>Danh sách</p>
+                    { countNewOrder !== 0 ? <span className="badge badge-danger right">{ countNewOrder }</span> : '' }
                   </NavLink>
                 </li>
 

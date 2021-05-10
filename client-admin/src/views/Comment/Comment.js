@@ -82,7 +82,7 @@ const Comment = () => {
                           return (
                             <tr key={i}>
                               <td>{i}</td>
-                              <td>{v.user.username}</td>
+                              <td>{v.user ? v.user.username : ''}</td>
                               <td>{v.book ? v.book.p_name : ''}</td>
                               <td>{v.c_content}</td>
                               <td>

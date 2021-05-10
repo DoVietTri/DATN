@@ -5,6 +5,7 @@ const ProductSchema = mongoose.Schema({
     p_code: String,
     p_slug: String,
     p_price: Number,
+    p_promotion: Number,
     p_hot: { type: String, default: "false" },
     p_quantity: Number,
     p_status: { type: String, default: "Còn hàng" },
@@ -48,6 +49,15 @@ ProductSchema.statics = {
 
     getProductByCode(code) {
         return this.findOne({ p_code: { $regex: new RegExp(code, 'i') } }).exec();
+    },
+
+    getProductByCodeAndCheckExistsCode (id, code) {
+        return this.findOne({ 
+            $and: [
+                { _id: { $ne: id } },
+                { p_code: { $regex: new RegExp(code, 'i') } }
+            ]
+        }).exec();
     },
 
     deleteByIdProduct(productId) {
@@ -110,6 +120,21 @@ ProductSchema.statics = {
             .exec();
     },
 
+    getBooksRelated(price, authors, cateId, currentBookId) {
+        return this.find({
+            $and: [
+                { category: cateId },
+                { $or: [
+                    { p_price: price },
+                    { author: { $in: authors } }
+                ]},
+                { _id: { $ne: currentBookId } }
+            ]
+        }).populate('category')
+        .populate('author')
+        .populate('company').limit(10).exec();
+    },
+
     //filter price
     getBookByPriceMax50(cateId) {
         return this.find({
@@ -147,12 +172,25 @@ ProductSchema.statics = {
         })
             .populate('category')
             .populate('author')
-            .populate('compny')
+            .populate('company')
             .exec();
     },
 
     countAllProducts() {
         return this.find({}).countDocuments();
+    },
+
+    searchBooks(query) {
+        return this.find({
+            $or: [
+                { p_name: { $regex: query, $options: 'i' } },
+                { p_description: { $regex: query, $options: 'i' } }
+            ]
+        })
+            .populate('category')
+            .populate('author')
+            .populate('company')
+            .exec();
     }
 
 }

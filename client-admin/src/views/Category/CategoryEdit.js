@@ -148,7 +148,7 @@ const CategoryEdit = (props) => {
                       </select>
 
                       {updateCateFormik.errors.inputParentCate && updateCateFormik.touched.inputParentCate && (
-                        <small>{updateCateFormik.errors.inputParentCate}</small>
+                        <small className="active-error" >{updateCateFormik.errors.inputParentCate}</small>
                       )}
                     </div>
 
@@ -159,7 +159,7 @@ const CategoryEdit = (props) => {
                         onChange={updateCateFormik.handleChange}
                       />
                       {updateCateFormik.errors.inputCateName && updateCateFormik.touched.inputCateName && (
-                        <small>{updateCateFormik.errors.inputCateName}</small>
+                        <small className="active-error" >{updateCateFormik.errors.inputCateName}</small>
                       )}
                     </div>
 
@@ -175,7 +175,7 @@ const CategoryEdit = (props) => {
                       />
 
                       {updateCateFormik.errors.inputCateDescription && updateCateFormik.touched.inputCateDescription && (
-                        <small>{updateCateFormik.errors.inputCateDescription}</small>
+                        <small className="active-error" >{updateCateFormik.errors.inputCateDescription}</small>
                       )}
                     </div>
                   </div>
@@ -190,6 +190,7 @@ const CategoryEdit = (props) => {
           </div>
         </div>
       </section>
+      { loader }
     </div>
   )
 }

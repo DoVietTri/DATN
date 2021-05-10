@@ -49,8 +49,18 @@ const homeAPI = {
         return axiosClient.get(url);
     },
 
+    getProductsRelated: (bookId) => {
+        let url = `/home/get-books-related/${bookId}`;
+        return axiosClient.get(url);
+    },
+
     getAllCommentsOfBook: (bookId) => {
         let url = `/home/get-all-comments-of-book/${bookId}`;
+        return axiosClient.get(url);
+    },
+
+    searchBooks: (query) => {
+        let url = `/home/search-books?q=${query}`;
         return axiosClient.get(url);
     }
 }

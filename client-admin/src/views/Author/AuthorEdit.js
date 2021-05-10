@@ -85,7 +85,7 @@ const AuthorEdit = (props) => {
                             onChange={updateAuthorFormik.handleChange}
                           />
                           {updateAuthorFormik.errors.inputAuthorName && updateAuthorFormik.touched.inputAuthorName && (
-                            <small>{updateAuthorFormik.errors.inputAuthorName}</small>
+                            <small className="active-error" >{updateAuthorFormik.errors.inputAuthorName}</small>
                           )}
                         </div>
                       </div>
@@ -102,7 +102,7 @@ const AuthorEdit = (props) => {
                             }}
                           />
                           {updateAuthorFormik.errors.inputAuthorInfo && updateAuthorFormik.touched.inputAuthorInfo && (
-                            <small>{updateAuthorFormik.errors.inputAuthorInfo}</small>
+                            <small className="active-error" >{updateAuthorFormik.errors.inputAuthorInfo}</small>
                           )}
                         </div>
                       </div>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './App.css';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import PublicRoute from './components/PublicRoute/PublicRoute';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
@@ -11,6 +12,7 @@ import Home from './views/Home/Home';
 import Order from './views/Order/Order';
 import OrderDetail from './views/OrderDetail/OrderDetail';
 import TrackingOrder from './views/TrackingOrder/TrackingOrder';
+import Search from './views/Search/Search';
 
 
 const App = () => {
@@ -30,6 +32,7 @@ const App = () => {
       <Switch>
         <PublicRoute exact path="/" component={Home} layout={Client} cntItem={totalItem} />
         <PublicRoute exact path="/cart" component={Cart} layout={Client} totalItem={countTotalItem} cntItem={totalItem} />
+        <PublicRoute exact path="/search" component={Search} layout={Client} cntItem={totalItem} />
         <PublicRoute exact path="/categories" component={CategoryDetail} layout={Client} cntItem={totalItem} />
         <PublicRoute exact path="/categories/:c_slug" component={BookDetail} layout={Client} totalItem={countTotalItem} cntItem={totalItem} />
         <PrivateRoute exact path="/account" component={Account} layout={Client} cntItem={totalItem} />

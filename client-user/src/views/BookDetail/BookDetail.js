@@ -8,11 +8,11 @@ import SimpleSlider from '../../components/Slick/SimpleSlider';
 import TabEvaluate from './TabEvaluate';
 import Cart from './../../utils/cart';
 import { successToast } from './../../components/Toasts/Toasts';
+import formatCurrency from 'format-currency';
 
 const BookDetail = (props) => {
   const [book, setBook] = useState({});
-  // const [booksWithAuthor, setBooksWithAuthor] = useState([]);
-  const [booksWithPrice, setBookWithPrice] = useState([]);
+  const [booksRelated, setBooksRelated] = useState([]);
   const [itemCart, setItemCart] = useState(1);
   
   useEffect(() => {
@@ -23,17 +23,9 @@ const BookDetail = (props) => {
       console.log(err);
     });
 
-    // homeAPI.getBooksWithAuthor(bookId).then((res) => {
-
-    // }).catch((err) => {
-    //   console.log(err);
-    // });
-
-    homeAPI.getBooksWithPrice(bookId).then((res) => {
-      setBookWithPrice(res.data.data);
-    }).catch((err) => {
-      console.log(err);
-    });
+    homeAPI.getProductsRelated(bookId).then(res => {
+      setBooksRelated(res.data.data);
+    })
 
     window.scrollTo(0,0);
 
@@ -59,7 +51,6 @@ const BookDetail = (props) => {
   let handleClickBuy = () => {
     let oldCart = JSON.parse(localStorage.getItem('cart'));
     let newCart = new Cart(oldCart ? oldCart : null);
-    // newCart.addCart(book, book._id);
     newCart.addCartWithQuantity(book, book._id, parseInt(itemCart));
     localStorage.removeItem('cart');
     localStorage.setItem('cart', JSON.stringify(newCart));
@@ -94,12 +85,7 @@ const BookDetail = (props) => {
                   <a className="active" href="# " data-fancybox="thumb-img">
                     <img className="product-image" src={book.p_image_detail ? book.p_image_detail.url : ''} alt={book.p_name} style={{ width: '100%' }} />
                   </a>
-                  {/* <a href="# " data-fancybox="thumb-img" /> */}
                 </div>
-                {/* <div className="list-anhchitiet d-flex mb-4" style={{ marginLeft: '2rem' }}>
-                  <img className="thumb-img thumb1 mr-3" src={img1} alt="lap-ke-hoach-kinh-doanh-hieu-qua-mt" />
-                  <img className="thumb-img thumb2" src={img1} alt="lap-ke-hoach-kinh-doanh-hieu-qua-ms" />
-                </div> */}
               </div>
               {/* thông tin sản phẩm: tên, giá bìa giá bán tiết kiệm, các khuyến mãi, nút chọn mua.... */}
               <div className="col-md-7 khoithongtin">
@@ -117,9 +103,9 @@ const BookDetail = (props) => {
                   </div>
                   <div className="col-md-7">
                     <div className="gia">
-                      <div className="giabia">Giá bìa:<span className="giacu ml-2">139.000 ₫</span></div>
-                      <div className="giaban">Giá bán tại TextBook: <span className="giamoi font-weight-bold"> {book.p_price} </span><span className="donvitien">₫</span></div>
-                      <div className="tietkiem">Tiết kiệm: <b>27.800 ₫</b> <span className="sale">-20%</span>
+                      <div className="giabia">Giá bìa:<span className="giacu ml-2">{formatCurrency(book.p_price)} ₫</span></div>
+                      <div className="giaban">Giá bán tại TextBook: <span className="giamoi font-weight-bold"> {formatCurrency(book.p_price)} ₫</span></div>
+                      <div className="tietkiem">Tiết kiệm: <b>0 ₫</b> <span className="sale">0%</span>
                       </div>
                     </div>
                     <div className="uudai my-3">
@@ -206,37 +192,18 @@ const BookDetail = (props) => {
           <div className="noidung bg-white" style={{ width: '100%' }}>
             <div className="row">
               <div className="col-12 d-flex justify-content-between align-items-center pb-2 bg-light">
-                <h5 className="header text-uppercase" style={{ fontWeight: 400 }}>SẢN PHẨM CÙNG GIÁ</h5>
+                <h5 className="header text-uppercase" style={{ fontWeight: 400 }}>SẢN PHẨM LIÊN QUAN</h5>
                 <a href="# " className="btn btn-warning btn-sm text-white">Xem tất cả</a>
               </div>
             </div>
             <div className="khoisanpham">
               <SimpleSlider 
-                books={booksWithPrice}
+                books={booksRelated}
               />
             </div>
           </div>
         </div>
-      </section>
-
-      <section className="_1khoi combohot mt-4">
-        <div className="container">
-          <div className="noidung bg-white" style={{ width: '100%' }}>
-            <div className="row">
-              <div className="col-12 d-flex justify-content-between align-items-center pb-2 bg-light">
-                <h5 className="header text-uppercase" style={{ fontWeight: 400 }}>SẢN PHẨM CÙNG TÁC GIẢ</h5>
-                <a href="# " className="btn btn-warning btn-sm text-white">Xem tất cả</a>
-              </div>
-            </div>
-            <div className="khoisanpham">
-              <SimpleSlider 
-                books={booksWithPrice}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-      
+      </section>      
     </>
   )
 }

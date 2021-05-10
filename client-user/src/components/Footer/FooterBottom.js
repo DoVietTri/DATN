@@ -14,19 +14,19 @@ const FooterBottom = () => {
         <div className="row">
           <div className="col-md-3 col-xs-6">
             <div className="gioithieu">
-              <h3 className="header text-uppercase font-weight-bold">Về DealBook</h3>
-              <a href="/">Giới thiệu về DealBook</a>
+              <h3 className="header text-uppercase font-weight-bold">Về TextBook</h3>
+              <a href="/">Giới thiệu về TextBook</a>
               <a href="/">Tuyển dụng</a>
-              <div className="fb-like" data-href="https://www.facebook.com/DealBook-110745443947730/" data-width="300px" data-layout="button" data-action="like" data-size="small" data-share="true" />
+              <div className="fb-like" data-href="https://www.facebook.com/tri.doviet.3/" data-width="300px" data-layout="button" data-action="like" data-size="small" data-share="true" />
             </div>
           </div>
           <div className="col-md-3 col-xs-6">
             <div className="hotrokh">
               <h3 className="header text-uppercase font-weight-bold">HỖ TRỢ KHÁCH HÀNG</h3>
-              <a href="/">Hướng dẫn đặt hàng</a>
-              <a href="/">Phương thức thanh toán</a>
-              <a href="/">Phương thức vận chuyển</a>
-              <a href="/">Chính sách đổi trả</a>
+              <a href="https://www.facebook.com/tri.doviet.3/">Hướng dẫn đặt hàng</a>
+              <a href="https://www.facebook.com/tri.doviet.3/">Phương thức thanh toán</a>
+              <a href="https://www.facebook.com/tri.doviet.3/">Phương thức vận chuyển</a>
+              <a href="https://www.facebook.com/tri.doviet.3/">Chính sách đổi trả</a>
             </div>
           </div>
           <div className="col-md-3 col-xs-6">

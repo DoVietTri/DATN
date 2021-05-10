@@ -22,6 +22,8 @@ const ItemCart = ({ info, callBackRemoveCart, callBackUpdateCart }) => {
     localStorage.setItem('cart', JSON.stringify(newCart));
     hideLoader();
 
+    successToast("Cập nhật giỏ hàng thành công !");
+
     let totalPrice = JSON.parse(localStorage.getItem('cart')).totalPrice;
     let totalQuantity = JSON.parse(localStorage.getItem('cart')).totalQuantity;
 
@@ -41,6 +43,7 @@ const ItemCart = ({ info, callBackRemoveCart, callBackUpdateCart }) => {
       localStorage.removeItem('cart');
       localStorage.setItem('cart', JSON.stringify(newCart));
       hideLoader();
+      successToast("Cập nhật giỏ hàng thành công !");
       let totalPrice = JSON.parse(localStorage.getItem('cart')).totalPrice;
       let totalQuantity = JSON.parse(localStorage.getItem('cart')).totalQuantity;
   

@@ -3,7 +3,7 @@ import { Redirect, Route } from 'react-router-dom';
 import getCookie from './../../utils/getCookie';
 
 const PrivateRoute = ({ component: Component, layout: Layout, ...rest }) => {
-  const token = getCookie('auth');
+  const token = getCookie('authAdminToken');
 
   return (
     <Route

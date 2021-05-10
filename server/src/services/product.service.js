@@ -72,9 +72,17 @@ let deleteByIdProduct = async (productId) => {
 }
 
 let updateProductById = async (id, data) => {
+    //Kiem tra san pham do co ton tai hay khong (truong hop dang update ma bi xoa trong database)
     let product = await productModel.getByIdProduct(id);
     if (!product) {
         return { message: 'PRODUCT_NOT_FOUND' };
+    }
+
+    //Kiem tra ma san pham co trung voi ma san pham khac hay khong
+    let check = await productModel.getProductByCodeAndCheckExistsCode(id, data.p_code);
+
+    if (check) {
+        return { message: 'EXISTS_CODE' };
     }
 
     if (!data.p_image_detail) {

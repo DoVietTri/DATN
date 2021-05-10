@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import userAPI from '../../apis/userAPI';
 import { errorToast, successToast } from '../Toasts/Toasts';
 import setCookie from './../../utils/setCookie';
+import FacebookLogin from 'react-facebook-login';
+import GoogleLogin from 'react-google-login';
+import ForgotPassword from './ForgotPassword';
 
 const Login = () => {
+
+  const [forgotPass, setForgotPass] = useState(false);
 
   let loginFormik = useFormik({
     initialValues: {
@@ -38,11 +43,11 @@ const Login = () => {
         };
         if (res.data.message === 'SUCCESS') {
           successToast("Đăng nhập thành công !");
-          document.cookie = 'auth=;expires = Thu, 01 Jan 1970 00:00:00 GMT';
+          document.cookie = 'authUserToken=;expires = Thu, 01 Jan 1970 00:00:00 GMT';
           document.cookie = 'currentUserId=;expires = Thu, 01 Jan 1970 00:00:00 GMT';
 
-          setCookie("authUser", res.data.token, 2, "/");
-          setCookie("userId", res.data.userId, 2, "/");
+          setCookie("authUserToken", res.data.token, 2, "/");
+          setCookie("currentUserId", res.data.userId, 2, "/");
 
           setTimeout(() => {
             window.location.reload();
@@ -53,6 +58,57 @@ const Login = () => {
       })
     }
   });
+
+  let responseLoginWithFacebook = (res) => {
+    userAPI.loginWithFacebook({ accessToken: res.accessToken, userId: res.userID }).then(res => {
+      if (res.data.message === 'SUCCESS') {
+        successToast("Đăng nhập thành công !");
+        document.cookie = 'authUserToken=;expires = Thu, 01 Jan 1970 00:00:00 GMT';
+        document.cookie = 'currentUserId=;expires = Thu, 01 Jan 1970 00:00:00 GMT';
+
+        setCookie("authUserToken", res.data.token, 2, "/");
+        setCookie("currentUserId", res.data.userId, 2, "/");
+
+        window.location.reload();
+      }
+    }).catch(err => {
+
+    })
+  }
+
+  let responseLoginWithGoogle = (res) => {
+    userAPI.loginWithGoogle({ tokenId: res.tokenId }).then(res => {
+      if (res.data.message === 'SUCCESS') {
+        successToast("Đăng nhập thành công !");
+        document.cookie = 'authUserToken=;expires = Thu, 01 Jan 1970 00:00:00 GMT';
+        document.cookie = 'currentUserId=;expires = Thu, 01 Jan 1970 00:00:00 GMT';
+
+        setCookie("authUserToken", res.data.token, 2, "/");
+        setCookie("currentUserId", res.data.userId, 2, "/");
+
+        window.location.reload();
+      }
+
+      if (res.data.message === 'FAILED_SEND_EMAIL') {
+        errorToast("Lỗi gửi mail");
+      }
+
+      if (res.data.message === 'SUCCESS_LOGIN_WITH_GOOGLE') {
+        successToast("Đăng nhập thành công ! Vui lòng ghé qua email của bạn để xem mật khẩu đăng nhập cho lần tiếp theo");
+        document.cookie = 'authUserToken=;expires = Thu, 01 Jan 1970 00:00:00 GMT';
+        document.cookie = 'currentUserId=;expires = Thu, 01 Jan 1970 00:00:00 GMT';
+
+        setCookie("authUserToken", res.data.token, 2, "/");
+        setCookie("currentUserId", res.data.userId, 2, "/");
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+      }
+    }).catch(err => {
+      console.log(err);
+    })
+  }
 
   return (
     <div className="modal fade mt-5" id="formdangnhap" data-backdrop="static" tabIndex={-1} aria-labelledby="dangnhap_tieude" aria-hidden="true">
@@ -75,7 +131,6 @@ const Login = () => {
           </div>
           <div className="modal-body">
             <form id="form-signin" className="form-signin mt-2" onSubmit={loginFormik.handleSubmit}>
-
               <div className="mb-3">
                 <div className="form-group">
                   <label htmlFor="inputEmail">Email (*) </label>
@@ -84,7 +139,7 @@ const Login = () => {
                     onChange={loginFormik.handleChange}
                   />
                   {loginFormik.errors.inputEmail && loginFormik.touched.inputEmail && (
-                    <small style={{ color: 'red' }} >{loginFormik.errors.inputEmail}</small>
+                    <small className="active-error" >{loginFormik.errors.inputEmail}</small>
                   )}
                 </div>
               </div>
@@ -97,21 +152,40 @@ const Login = () => {
                     onChange={loginFormik.handleChange}
                   />
                   {loginFormik.errors.inputPassword && loginFormik.touched.inputPassword && (
-                    <small style={{ color: 'red' }} >{loginFormik.errors.inputPassword}</small>
+                    <small className="active-error" >{loginFormik.errors.inputPassword}</small>
                   )}
                 </div>
               </div>
-
-              <div className="custom-control custom-checkbox mb-3">
-                <input type="checkbox" className="custom-control-input" id="customCheck1" />
-                <label className="custom-control-label" htmlFor="customCheck1">Nhớ mật khẩu</label>
-                <a href="/" className="float-right text-decoration-none" style={{ color: '#F5A623' }}>Quên mật khẩu</a>
-              </div>
               <button className="btn btn-lg btn-block btn-signin text-uppercase text-white" type="submit" style={{ background: '#F5A623' }}>Đăng nhập</button>
               <hr className="my-4" />
-              <button className="btn btn-lg btn-google btn-block text-uppercase" type="submit"><i className="fab fa-google mr-2" /> Đăng nhập bằng Google</button>
-              <button className="btn btn-lg btn-facebook btn-block text-uppercase" type="submit"><i className="fab fa-facebook-f mr-2" /> Đăng nhập bằng Facebook</button>
+              <div className="custom-control custom-checkbox mb-3">
+                <a onClick={() => setForgotPass(!forgotPass)} href="# " className="float-right text-decoration-none" style={{ color: '#F5A623' }}>Quên mật khẩu</a>
+              </div>
             </form>
+
+            {forgotPass ? (<ForgotPassword />) : ''}
+
+            <GoogleLogin
+              clientId="699228949747-rta0psud3660opkqgscopttlb8serp3f.apps.googleusercontent.com"
+              render={renderProps => (
+                <>
+                  <button className="btn btn-lg btn-google btn-block text-uppercase mb-2"
+                    onClick={renderProps.onClick} disabled={renderProps.disabled}> <i className="fab fa-google mr-2" />Đăng nhập bằng Google</button></>
+              )}
+              buttonText="Đăng nhập bằng Google"
+              onSuccess={responseLoginWithGoogle}
+              onFailure={responseLoginWithGoogle}
+              cookiePolicy={'single_host_origin'}
+            />
+            <FacebookLogin
+              appId="317532176245919"
+              autoLoad={false}
+              fields="name,email,picture"
+              callback={responseLoginWithFacebook}
+              cssClass="btn btn-lg btn-facebook btn-block text-uppercase"
+              icon="fab fa-facebook-f mr-2"
+              textButton="Đăng nhập bằng facebook"
+            />
           </div>
         </div>
       </div>

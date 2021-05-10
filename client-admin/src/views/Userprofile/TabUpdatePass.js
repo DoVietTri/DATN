@@ -35,7 +35,7 @@ const TabUpdatePass = () => {
     onSubmit: (values, { resetForm }) => {
       values = {
         ...values,
-        id: getCookie('currentUserId')
+        id: getCookie('currentAdminId')
       };
 
       showLoader();

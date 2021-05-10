@@ -28,7 +28,7 @@ BannerSchema.statics = {
     },
 
     getBanners () {
-        return this.find({}).sort({ createdAt: -1 }).limit(3).exec();
+        return this.find({}).sort({ createdAt: -1 }).limit(5).exec();
     }
 }
 

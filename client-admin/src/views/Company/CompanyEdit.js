@@ -117,7 +117,7 @@ const CompanyEdit = (props) => {
                             onChange={updateCompanyFormik.handleChange}
                           />
                           {updateCompanyFormik.errors.inputCompanyName && updateCompanyFormik.touched.inputCompanyName && (
-                            <small>{updateCompanyFormik.errors.inputCompanyName}</small>
+                            <small className="active-error" >{updateCompanyFormik.errors.inputCompanyName}</small>
                           )}
                         </div>
 
@@ -128,7 +128,7 @@ const CompanyEdit = (props) => {
                             onChange={updateCompanyFormik.handleChange}
                           />
                           {updateCompanyFormik.errors.inputCompanyName && updateCompanyFormik.touched.inputCompanyName && (
-                            <small>{updateCompanyFormik.errors.inputCompanyName}</small>
+                            <small className="active-error" >{updateCompanyFormik.errors.inputCompanyName}</small>
                           )}
                         </div>
                       </div>
@@ -146,7 +146,7 @@ const CompanyEdit = (props) => {
                           />
                           
                           {updateCompanyFormik.errors.inputCompanyDescription && updateCompanyFormik.touched.inputCompanyDescription && (
-                            <small>{updateCompanyFormik.errors.inputCompanyDescription}</small>
+                            <small className="active-error" >{updateCompanyFormik.errors.inputCompanyDescription}</small>
                           )}
                         </div>
                       </div>

@@ -85,7 +85,7 @@ const Register = () => {
                     onChange={registerFormik.handleChange}
                   />
                   {registerFormik.errors.inputUsername && registerFormik.touched.inputUsername && (
-                    <small style={{ color: 'red' }}>{registerFormik.errors.inputUsername}</small>
+                    <small className="active-error" >{registerFormik.errors.inputUsername}</small>
                   )}
                 </div>
               </div>
@@ -98,7 +98,7 @@ const Register = () => {
                     onChange={registerFormik.handleChange}
                   />
                   {registerFormik.errors.inputEmail && registerFormik.touched.inputEmail && (
-                    <small style={{ color: 'red' }}>{registerFormik.errors.inputEmail}</small>
+                    <small className="active-error" >{registerFormik.errors.inputEmail}</small>
                   )}
                 </div>
               </div>
@@ -111,7 +111,7 @@ const Register = () => {
                     onChange={registerFormik.handleChange}
                   />
                   {registerFormik.errors.inputPassword && registerFormik.touched.inputPassword && (
-                    <small style={{ color: 'red' }} >{registerFormik.errors.inputPassword}</small>
+                    <small className="active-error" >{registerFormik.errors.inputPassword}</small>
                   )}
                 </div>
               </div>
@@ -124,7 +124,7 @@ const Register = () => {
                     onChange={registerFormik.handleChange}
                   />
                   {registerFormik.errors.inputRePassword && registerFormik.touched.inputRePassword && (
-                    <small style={{ color: 'red' }} >{registerFormik.errors.inputRePassword}</small>
+                    <small className="active-error" >{registerFormik.errors.inputRePassword}</small>
                   )}
                 </div>
               </div>
@@ -133,7 +133,7 @@ const Register = () => {
               <hr className="mt-3 mb-2" />
               <div className="custom-control custom-checkbox">
                 <p className="text-center">Bằng việc đăng ký, bạn đã đồng ý với TextBook về</p>
-                <a href="/" className="text-decoration-none text-center" style={{ color: '#F5A623' }}>Điều khoản dịch
+                <a href="# " className="text-decoration-none text-center" style={{ color: '#F5A623' }}>Điều khoản dịch
                     vụ &amp; Chính sách bảo mật</a>
               </div>
             </form>

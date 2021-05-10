@@ -105,12 +105,34 @@ let getBooksWithPrice = async (req, res) => {
     }
 }
 
+let getBooksRelated = async (req,res) => {
+    try {
+        let bookId = req.params.id;
+        let books = await homeService.getBooksRelated(bookId);
+
+        return res.status(200).json(books);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
 let getAllCommentsOfBook = async (req, res) => {
     try {
         let bookId = req.params.id;
         let comments = await homeService.getAllCommentsOfBook(bookId);
 
         return res.status(200).json(comments);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
+let searchBooks = async (req, res) => {
+    try {
+        let query = req.query.q;
+        let books = await homeService.searchBooks(query);
+
+        return res.status(200).json(books);
     } catch (error) {
         return res.status(500).json(error);
     }
@@ -127,5 +149,7 @@ module.exports = {
     getBookById,
     getBooksWithAuthor,
     getBooksWithPrice,
-    getAllCommentsOfBook
+    getBooksRelated,
+    getAllCommentsOfBook,
+    searchBooks
 }

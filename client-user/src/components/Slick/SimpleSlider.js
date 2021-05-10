@@ -10,6 +10,8 @@ const SimpleSlider = ({ books }) => {
     speed: 300,
     slidesToShow: 5,
     slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
     responsive: [
       {
         breakpoint: 1400,

@@ -99,12 +99,8 @@ const Company = () => {
                     </thead>
                     <tbody>
                       {
-                        dataCompany.filter(val => {
-                          if (query === '' || val.c_name.toLowerCase().indexOf(query.toLowerCase()) > -1
-                            || val.c_code.toLowerCase().indexOf(query.toLowerCase()) > -1) {
-                            return val;
-                          }
-                        })
+                        dataCompany.filter(val => query === '' || val.c_name.toLowerCase().indexOf(query.toLowerCase()) > -1
+                        || val.c_code.toLowerCase().indexOf(query.toLowerCase()) > -1 ? val : '' )
                           .map((value, index) => {
                             return (
                               <tr key={index}>

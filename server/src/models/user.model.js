@@ -6,7 +6,8 @@ const UserSchema = mongoose.Schema({
     gender: { type: String, default: 'male' },
     email: String,
     isActive: { type: Boolean, default: false },
-    verifyToken: String,
+    verifyToken: { type: String, default: null },
+    avatar: { type: String, default: 'avatar.png' },
     password: String,
     role: { type: String, default: 'user' },
     address: { type: String, default: null },
@@ -34,6 +35,10 @@ UserSchema.statics = {
 
     updatePasswordById(id, password) {
         return this.findByIdAndUpdate(id, { password: password }).exec();
+    },
+
+    updatePasswordByEmail(email, password) {
+        return this.findOneAndUpdate({ email: email }, { password: password }).exec();
     },
 
     //user

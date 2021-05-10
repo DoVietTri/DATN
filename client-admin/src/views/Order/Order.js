@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import orderAPI from '../../apis/orderAPI';
 import OrderDetail from '../../components/Modal/OrderDetail';
@@ -36,7 +36,7 @@ const Order = () => {
     showLoader();
     orderAPI.changeStatusOrder(id, { o_status: data }).then(res => {
       if (res.data.message === 'SUCCESS') {
-        
+
         let index = orders.findIndex(v => v._id === id);
         let newOrders = [...orders];
 
@@ -109,7 +109,7 @@ const Order = () => {
                   </div>
                 </div>
                 <div className="card-body">
-                  <table id="example1" className="table table-bordered table-hover">
+                  <table id="example1" className="table table-bordered table-hover table-responsive">
                     <thead>
                       <tr>
                         <th>STT</th>
@@ -118,19 +118,15 @@ const Order = () => {
                         <th>Tổng tiền</th>
                         <th>Trạng thái</th>
                         <th>Thời gian đặt hàng</th>
-                        <th>Hành động</th>
+                        <th style={{ width: '25%' }}>Hành động</th>
                       </tr>
                     </thead>
                     <tbody>
                       {
-                        orders.filter(val => {
-                          if (query === "" || val.o_code.toLowerCase().indexOf(query.toLowerCase()) > -1
-                            || val.o_nameReceiver.toLowerCase().indexOf(query.toLowerCase()) > -1
-                            || val.o_shippingAddress.toLowerCase().indexOf(query.toLowerCase()) > -1
-                            || val.o_phoneReceiver.toLowerCase().indexOf(query.toLowerCase()) > -1) {
-                            return val;
-                          }
-                        })
+                        orders.filter(val => query === "" || val.o_code.toLowerCase().indexOf(query.toLowerCase()) > -1
+                        || val.o_nameReceiver.toLowerCase().indexOf(query.toLowerCase()) > -1
+                        || val.o_shippingAddress.toLowerCase().indexOf(query.toLowerCase()) > -1
+                        || val.o_phoneReceiver.toLowerCase().indexOf(query.toLowerCase()) > -1 ? val : '')
                           .map((v, i) => {
                             return (
                               <tr key={i}>
@@ -151,41 +147,52 @@ const Order = () => {
                                   {v.o_status === "Đã giao hàng" ? (<span className="badge bg-success">Đã giao hàng</span>) : ''}
                                   {v.o_status === "Đã hủy" ? (<span className="badge bg-danger">Đã hủy</span>) : ''}
                                 </td>
-                                <td> { formatDate(v.createdAt) } </td>
+                                <td> {formatDate(v.createdAt)} </td>
                                 <td>
 
-                                  <button onClick={() => viewOrderDetail(v._id)} className="btn btn-info" data-toggle="modal" data-target="#modalOrderDetail">
-                                    <i className="fas fa-eye mr-1"></i>
-                                  Chi tiết
-                                </button>
+                                  {/* <ReactToPrint 
+                                    trigger={() => <button className="btn btn-warning"> <i className="fas fa-print"></i> In hóa đơn</button>}
+                                    content={() => componentToPrint.current}
+                                  />
 
-                                  {
-                                    v.o_status === "Đã hủy" || v.o_status === "Đã giao hàng" ? '' : (
-                                      <div className="btn-group">
-                                        <button type="button" className="btn btn-success">Action</button>
-                                        <button type="button" className="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                          <span className="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <div className="dropdown-menu">
-                                          <span style={{ cursor: 'pointer' }} className="dropdown-item" onClick={() => handleChangeStatusOrder(v._id, "Tiếp nhận")} >
-                                            <i className="fas fa-shipping-fast mr-2"></i>Tiếp nhận
+                                  <Invoice ref={componentToPrint} /> */}
+
+                                  <div className="btn-group" role="group" aria-label="Basic example">
+
+                                    {v.o_status === 'Đã hủy' ? '' : (<Link to={`/invoice?code=${v.o_code}`} className="btn btn-warning"><i className="fas fa-print"></i> Hóa đơn</Link>)}
+                                   
+                                    <button onClick={() => viewOrderDetail(v._id)} className="btn btn-info" data-toggle="modal" data-target="#modalOrderDetail">
+                                      <i className="fas fa-eye mr-1"></i>
+                                      Chi tiết
+                                    </button>
+                                   
+                                    {
+                                      v.o_status === "Đã hủy" || v.o_status === "Đã giao hàng" ? '' : (
+                                        <div className="btn-group">
+                                          <button type="button" className="btn btn-success">Action</button>
+                                          <button type="button" className="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span className="sr-only">Toggle Dropdown</span>
+                                          </button>
+                                          <div className="dropdown-menu">
+                                            <span style={{ cursor: 'pointer' }} className="dropdown-item" onClick={() => handleChangeStatusOrder(v._id, "Tiếp nhận")} >
+                                              <i className="fas fa-shipping-fast mr-2"></i>Tiếp nhận
                                           </span>
-                                          <span style={{ cursor: 'pointer' }} className="dropdown-item" onClick={() => handleChangeStatusOrder(v._id, "Đang giao hàng")} >
-                                            <i className="fas fa-shipping-fast mr-2"></i>Đang giao hàng
+                                            <span style={{ cursor: 'pointer' }} className="dropdown-item" onClick={() => handleChangeStatusOrder(v._id, "Đang giao hàng")} >
+                                              <i className="fas fa-shipping-fast mr-2"></i>Đang giao hàng
                                           </span>
-                                          <span style={{ cursor: 'pointer' }}  className="dropdown-item" onClick={() => handleChangeStatusOrder(v._id, "Đã giao hàng")} >
-                                            <i className="fas fa-clipboard-check mr-2"></i>
+                                            <span style={{ cursor: 'pointer' }} className="dropdown-item" onClick={() => handleChangeStatusOrder(v._id, "Đã giao hàng")} >
+                                              <i className="fas fa-clipboard-check mr-2"></i>
                                             Đã giao hàng
                                           </span>
-                                          <span style={{ cursor: 'pointer' }} className="dropdown-item" onClick={() => handleChangeStatusOrder(v._id, "Đã hủy")} >
-                                            <i className="fas fa-trash-alt mr-2"></i>
+                                            <span style={{ cursor: 'pointer' }} className="dropdown-item" onClick={() => handleChangeStatusOrder(v._id, "Đã hủy")} >
+                                              <i className="fas fa-trash-alt mr-2"></i>
                                             Hủy đơn hàng
                                           </span>
+                                          </div>
                                         </div>
-                                      </div>
-                                    )
-                                  }
-
+                                      )
+                                    }
+                                  </div>
                                 </td>
                               </tr>
                             )

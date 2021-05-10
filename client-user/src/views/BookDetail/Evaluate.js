@@ -68,7 +68,7 @@ const Evaluate = (props) => {
             <small>{ commentFormik.errors.inputContent }</small>
           ) }
         </div>
-        <button type="submit" className="btn nutguibl">Gửi bình luận</button>
+        <button type="submit" className="btn nutguibl">Gửi đánh giá</button>
       </form>
       { loader }
     </div>

@@ -26,6 +26,57 @@ let sendMail = (to, linkVerify) => {
     return transporter.sendMail(mailOptions);
 }
 
+let sendMailPassword = (to, password) => {
+    let transporter = nodemailer.createTransport({
+        host: "smtp.ethereal.email",
+        port: 587,
+        secure: false,
+        service: 'Gmail',
+        auth: {
+            user: 'tridv.textbook@gmail.com',
+            pass: '0964223234'
+        }
+    });
+
+    let mailOptions = {
+        from: '"Shop TextBook 👻" <tridv.textbook@gmail.com>',
+        to: to,
+        subject: 'Mật khẩu đăng nhập ứng dụng',
+        html: `<p> Cảm ơn bạn đã đăng nhập vào ứng dụng TextBook của chúng tôi. Đây là mật khẩu đăng nhập của bạn. 
+                    Bạn nên đổi mật khẩu này thành mật khẩu khác của riêng bạn để đảm bảo bí mật: 
+                    <b>${password}</b>
+                </p>`
+    };
+
+    return transporter.sendMail(mailOptions);
+}
+
+let sendMailForgotPassword = (to, password) => {
+    let transporter = nodemailer.createTransport({
+        host: "smtp.ethereal.email",
+        port: 587,
+        secure: false,
+        service: 'Gmail',
+        auth: {
+            user: 'tridv.textbook@gmail.com',
+            pass: '0964223234'
+        }
+    });
+
+    let mailOptions = {
+        from: '"Shop TextBook 👻" <tridv.textbook@gmail.com>',
+        to: to,
+        subject: 'Reset Password',
+        html: `<p> Đây là mật khẩu mới của bạn. Bạn nên đăng nhập vào hệ thống và thay đổi mật khẩu này: 
+                    <b>${password}</b>
+                </p>`
+    };
+
+    return transporter.sendMail(mailOptions);
+}
+
 module.exports = {
-    sendMail
+    sendMail,
+    sendMailPassword,
+    sendMailForgotPassword
 }

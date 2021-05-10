@@ -11,10 +11,10 @@ const TabUpdateAvatar = ({ dataUser }) => {
     <div className="card card-primary card-outline">
       <div className="card-body box-profile">
         <div className="text-center">
-          <img className="profile-user-img img-fluid img-circle" src={user4} alt="User" />
+          <img className="profile-user-img img-fluid img-circle" src={dataUser.avatar} alt="User" />
         </div>
         <h3 className="profile-username text-center">{dataUser.username}</h3>
-        <p className="text-muted text-center">Software Engineer</p>
+        <p className="text-muted text-center">Developer</p>
         <span className="btn btn-success col fileinput-button">
           <i className="fas fa-plus"></i>
           <span>Add files</span>

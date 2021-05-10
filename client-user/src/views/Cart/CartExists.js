@@ -12,29 +12,30 @@ import useFullPageLoader from '../../hooks/useFullPageLoader';
 import orderAPI from '../../apis/orderAPI';
 import { errorToast, successToast } from '../../components/Toasts/Toasts';
 
-const token = getCookie('authUser');
+const token = getCookie('authUserToken');
 
 const CartExists = (props) => {
   const [loader, showLoader, hideLoader] = useFullPageLoader();
 
   const [totalPrice, setTotalPrice] = useState(0);
-  const [totalQuantity, setTotalQuantity] = useState(0);
   const [items, setItems] = useState([]);
   const [shippingFee, setShippingFee] = useState(15000);
   const [user, setUser] = useState({});
 
   useEffect(() => {
     setTotalPrice(JSON.parse(localStorage.getItem('cart')).totalPrice);
-    setTotalQuantity(JSON.parse(localStorage.getItem('cart')).totalQuantity);
 
     setItems(Object.values(JSON.parse(localStorage.getItem('cart')).products));
 
     //api get user
-    userAPI.getUserById(getCookie('userId')).then((res) => {
-      setUser(res.data.data);
-    }).catch(err => {
-      console.log(err);
-    });
+
+    if (getCookie('currentUserId')) {
+      userAPI.getUserById(getCookie('currentUserId')).then((res) => {
+        setUser(res.data.data);
+      }).catch(err => {
+        console.log(err);
+      });
+    }
 
   }, []);
 
@@ -43,7 +44,6 @@ const CartExists = (props) => {
     props.callBackUpdateCart(childData);
 
     setTotalPrice(JSON.parse(localStorage.getItem('cart')).totalPrice);
-    setTotalQuantity(JSON.parse(localStorage.getItem('cart')).totalQuantity);
 
     let newItem = items.filter(v => v.productInfo._id !== id);
     setItems([...newItem]);
@@ -121,7 +121,7 @@ const CartExists = (props) => {
     <>
       <div className="col-md-8 cart">
         <div className="cart-content py-3 pl-3">
-          <h4 className="header-gio-hang">GIỎ HÀNG CỦA BẠN <span>( {totalQuantity} sản phẩm)</span></h4>
+          <h4 className="header-gio-hang">GIỎ HÀNG CỦA BẠN <span>( {JSON.parse(localStorage.getItem('cart')).totalQuantity} sản phẩm)</span></h4>
 
           <div className="cart-list-items">
             {
@@ -205,7 +205,7 @@ const CartExists = (props) => {
                           onChange={orderFormik.handleChange}
                         />
                         { orderFormik.errors.inputUsername && orderFormik.touched.inputUsername && (
-                          <small>{ orderFormik.errors.inputUsername }</small>
+                          <small className="active-error" >{ orderFormik.errors.inputUsername }</small>
                         ) }
                       </div>
                       <div className="form-group">
@@ -215,7 +215,7 @@ const CartExists = (props) => {
                           onChange={orderFormik.handleChange}
                         />
                          { orderFormik.errors.inputAddress && orderFormik.touched.inputAddress && (
-                          <small>{ orderFormik.errors.inputAddress }</small>
+                          <small className="active-error" >{ orderFormik.errors.inputAddress }</small>
                         ) }
                       </div>
 
@@ -226,7 +226,7 @@ const CartExists = (props) => {
                           onChange={orderFormik.handleChange} 
                         />
                           { orderFormik.errors.inputPhoneNumber && orderFormik.touched.inputPhoneNumber && (
-                          <small>{ orderFormik.errors.inputPhoneNumber }</small>
+                          <small className="active-error" >{ orderFormik.errors.inputPhoneNumber }</small>
                         ) }
                       </div>
                     </div>
@@ -290,7 +290,7 @@ const CartExists = (props) => {
                         />
                         <label className="form-check-label" htmlFor="payATM">
                           <img src={iconPayATM} alt="payment-atm" className="payment" />
-                        Thẻ ATM nội địa/Internet Banking (Miễn phí thanh toán)
+                        Thẻ ATM nội địa/Internet Banking (Miễn phí thanh toán) (<b>Định hướng phát triển</b>)
                       </label>
                       </div>
 

@@ -16,7 +16,7 @@ const Userprofile = () => {
 
   useEffect(() => {
 
-    userAPI.getUserById(getCookie('currentUserId')).then((res) => {
+    userAPI.getUserById(getCookie('currentAdminId')).then((res) => {
       setUserInfo(res.data.data);
     }).catch((err) => {
       console.log(`Error: ${err}`);

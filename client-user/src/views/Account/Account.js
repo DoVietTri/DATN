@@ -9,7 +9,7 @@ import TabUpdatePass from './TabUpdatePass';
 const Account = () => {
   const [userInfo, setUserInfo] = useState({});
   useEffect(() => {
-    userAPI.getUserById(getCookie('userId')).then((res) => {
+    userAPI.getUserById(getCookie('currentUserId')).then((res) => {
       setUserInfo(res.data.data);
     }).catch(err => {
       console.log(err);

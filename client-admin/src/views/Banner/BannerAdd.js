@@ -122,7 +122,7 @@ const BannerAdd = () => {
                             onChange={addBannerFormik.handleChange}
                           />
                           {addBannerFormik.errors.inputBannerName && addBannerFormik.touched.inputBannerName && (
-                            <small>{addBannerFormik.errors.inputBannerName}</small>
+                            <small className="active-error" >{addBannerFormik.errors.inputBannerName}</small>
                           )}
                         </div>
                       </div>
@@ -147,7 +147,7 @@ const BannerAdd = () => {
                           </div>
 
                           {addBannerFormik.errors.inputBannerImage && addBannerFormik.touched.inputBannerImage && (
-                            <small>{addBannerFormik.errors.inputBannerImage}</small>
+                            <small className="active-error" >{addBannerFormik.errors.inputBannerImage}</small>
                           )}
                         </div>
 

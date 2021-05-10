@@ -11,7 +11,7 @@ const BookHot = () => {
     }).catch(err => {
       console.log(err);
     })
-  });
+  }, []);
   return (
     <section className="_1khoi sachmoi mt-4">
       <div className="container">

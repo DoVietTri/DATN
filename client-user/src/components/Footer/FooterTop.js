@@ -14,7 +14,7 @@ const FooterTop = () => {
               <img src={iconBook} alt="Book" />
               <div className="noidung">
                 <h3 className="tieude font-weight-bold">HƠN 14.000 TỰA SÁCH HAY</h3>
-                <p className="detail">Tuyển chọn bởi DealBooks</p>
+                <p className="detail">Tuyển chọn bởi TextBook</p>
               </div>
             </div>
           </div>
@@ -23,8 +23,8 @@ const FooterTop = () => {
               <img src={iconShip} alt="Ship" />
               <div className="noidung">
                 <h3 className="tieude font-weight-bold">MIỄN PHÍ GIAO HÀNG</h3>
-                <p className="detail">Từ 150.000đ ở TP.HCM</p>
-                <p className="detail">Từ 300.000đ ở tỉnh thành khác</p>
+                <p className="detail">Từ 15.000 đ ở TP.Hà Nội</p>
+                <p className="detail">Từ 30.000 đ ở tỉnh thành khác</p>
               </div>
             </div>
           </div>

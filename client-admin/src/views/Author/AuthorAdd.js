@@ -97,7 +97,7 @@ const AuthorAdd = () => {
                             onChange={authorFormik.handleChange}
                           />
                           {authorFormik.errors.inputAuthorName && authorFormik.touched.inputAuthorName && (
-                            <small>{authorFormik.errors.inputAuthorName}</small>
+                            <small className="active-error" >{authorFormik.errors.inputAuthorName}</small>
                           )}
                         </div>
 
@@ -116,7 +116,7 @@ const AuthorAdd = () => {
                             }}
                           />
                           {authorFormik.errors.inputAuthorInfo && authorFormik.touched.inputAuthorInfo && (
-                            <small>{authorFormik.errors.inputAuthorInfo}</small>
+                            <small  className="active-error" >{authorFormik.errors.inputAuthorInfo}</small>
                           )}
                         </div>
                       </div>

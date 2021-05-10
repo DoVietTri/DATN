@@ -19,6 +19,16 @@ CommentSchema.statics = {
             .exec();
     },
 
+    getCommentById(id) {
+        return this.findById(id)
+        .populate('user')
+        .populate('book')
+        .sort({
+            createdAt: -1
+        })
+        .exec();
+    },
+
     addNewComment(data) {
         return this.create(data);
     },
@@ -35,12 +45,19 @@ CommentSchema.statics = {
 
     rateAverageOfBook(bookId) {
         return this.aggregate([
-            { $match: { book: mongoose.Types.ObjectId(bookId) }},
-            { $group: { _id: '$book', average: { $avg: '$c_rate' }}}
+            { $match: { book: mongoose.Types.ObjectId(bookId) } },
+            { $group: { _id: '$book', average: { $avg: '$c_rate' } } }
         ]);
     },
 
-    countCommentOfBook (bookId) {
+    getBookIdWithRateStar(star, products) {
+        return this.aggregate([
+            { $group: { _id: '$book', average: { $avg: '$c_rate' } } },
+            { $match: { average: { $gte: star }, '_id': { $in: products } } }
+        ]).exec();
+    },
+
+    countCommentOfBook(bookId) {
         return this.find({ book: bookId }).countDocuments();
     },
 

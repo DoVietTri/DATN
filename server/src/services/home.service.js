@@ -99,10 +99,38 @@ let getBooksWithPrice = async (bookId) => {
     return { message: 'SUCCESS', data: newBooks };
 }
 
+let getBooksRelated = async (bookId) => {
+    let book = await productModel.getByIdProduct(bookId);
+    let authors = [];
+
+    book.author.map(v => {
+        authors = [...authors, v._id];
+    });
+
+    // let data = {
+    //     p_price: book.p_price,
+    //     category: book.category._id
+    // }
+
+    let books = await productModel.getBooksRelated(book.p_price, authors, book.category._id, book._id);
+
+    return { message: 'SUCCESS', data: books };
+}
+
 let getAllCommentsOfBook = async (bookId) => {
     let comments = await commentModel.getAllCommentsOfBook(bookId);
 
     return { message: 'SUCCESS', data: comments };
+}
+
+let searchBooks = async (query) => {
+    let books = await productModel.searchBooks(query);
+
+    if (!books) {
+        return { message:  'NOT_FOUND' };
+    }
+
+    return { message: 'SUCCESS', data: books };
 }
 
 module.exports = {
@@ -116,5 +144,8 @@ module.exports = {
     getBookById,
     getBooksWithAuthor,
     getBooksWithPrice,
-    getAllCommentsOfBook
+    getBooksRelated,
+    getAllCommentsOfBook,
+
+    searchBooks
 }

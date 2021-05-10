@@ -154,45 +154,41 @@ const Product = () => {
 
                     <tbody>
 
-                      {allProducts.filter(val => {
-                        if (query === "" || val.p_name.toLowerCase().indexOf(query.toLowerCase()) > -1
-                          || val.category.c_name.toLowerCase().indexOf(query.toLowerCase()) > -1) {
-                          return val;
-                        }
-                      }).map((v, i) => {
-                        return (
-                          <tr key={i}>
-                            <td>{i}</td>
-                            <td>{v.p_name}</td>
-                            <td>
-                              <img src={v.p_image_detail.url} alt="Product" className="img-thumbnail" style={{ height: '100px' }} />
-                            </td>
-                            <td>{v.p_code}</td>
-                            <td>{v.p_price} VND</td>
-                            <td>
-                              {
-                                v.p_hot === "true" ? (<button className="badge rounded-pill bg-primary" onClick={() => handleChangeProductHot(v._id, "false")} >Hot</button>) : ''
-                              }
-                              {
-                                v.p_hot === "false" ? ((<button className="badge rounded-pill bg-secondary" onClick={() => handleChangeProductHot(v._id, "true")} >No Hot</button>)) : ''
-                              }
-                            </td>
-                            <td>
-                              <span className="badge badge-info">{v.category.c_name}</span>
-                            </td>
-                            <td className="d-flex border-left-0 border-right-0 border-bottom-0">
-                              <button className="btn btn-danger" onClick={() => handleDeleteProduct(v._id)}>
-                                <i className="fas fa-trash-alt"></i>
-                              </button>
-                              <Link to={`/products/edit/${v._id}`} >
-                                <button className="btn btn-warning">
-                                  <i className="fas fa-edit"></i>
+                      {allProducts.filter(val => query === "" || val.p_name.toLowerCase().indexOf(query.toLowerCase()) > -1
+                        || val.category.c_name.toLowerCase().indexOf(query.toLowerCase()) > -1 ? val : '').map((v, i) => {
+                          return (
+                            <tr key={i}>
+                              <td>{i}</td>
+                              <td>{v.p_name}</td>
+                              <td>
+                                <img src={v.p_image_detail.url} alt="Product" className="img-thumbnail" style={{ height: '100px' }} />
+                              </td>
+                              <td>{v.p_code}</td>
+                              <td>{v.p_price} VND</td>
+                              <td>
+                                {
+                                  v.p_hot === "true" ? (<button className="badge rounded-pill bg-primary" onClick={() => handleChangeProductHot(v._id, "false")} >Hot</button>) : ''
+                                }
+                                {
+                                  v.p_hot === "false" ? ((<button className="badge rounded-pill bg-secondary" onClick={() => handleChangeProductHot(v._id, "true")} >No Hot</button>)) : ''
+                                }
+                              </td>
+                              <td>
+                                <span className="badge badge-info">{v.category.c_name}</span>
+                              </td>
+                              <td className="d-flex border-left-0 border-right-0 border-bottom-0">
+                                <button className="btn btn-danger" onClick={() => handleDeleteProduct(v._id)}>
+                                  <i className="fas fa-trash-alt"></i>
                                 </button>
-                              </Link>
-                            </td>
-                          </tr>
-                        )
-                      })
+                                <Link to={`/products/edit/${v._id}`} >
+                                  <button className="btn btn-warning">
+                                    <i className="fas fa-edit"></i>
+                                  </button>
+                                </Link>
+                              </td>
+                            </tr>
+                          )
+                        })
                       }
 
                     </tbody>

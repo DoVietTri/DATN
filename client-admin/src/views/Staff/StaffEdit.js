@@ -125,7 +125,7 @@ const StaffEdit = (props) => {
                             onChange={updateStaffFormik.handleChange}
                           />
                           {updateStaffFormik.errors.inputStaffUsername && updateStaffFormik.touched.inputStaffUsername && (
-                            <small>{updateStaffFormik.errors.inputStaffUsername}</small>
+                            <small className="active-error" >{updateStaffFormik.errors.inputStaffUsername}</small>
                           )}
                         </div>
 
@@ -136,7 +136,7 @@ const StaffEdit = (props) => {
                             onChange={updateStaffFormik.handleChange}
                           />
                           {updateStaffFormik.errors.inputStaffEmail && updateStaffFormik.touched.inputStaffEmail && (
-                            <small>{updateStaffFormik.errors.inputStaffEmail}</small>
+                            <small className="active-error" >{updateStaffFormik.errors.inputStaffEmail}</small>
                           )}
                         </div>
 
@@ -151,7 +151,7 @@ const StaffEdit = (props) => {
                             onChange={updateStaffFormik.handleChange}
                           />
                           {updateStaffFormik.errors.inputStaffPhone && updateStaffFormik.touched.inputStaffPhone && (
-                            <small>{updateStaffFormik.errors.inputStaffPhone}</small>
+                            <small className="active-error" >{updateStaffFormik.errors.inputStaffPhone}</small>
                           )}
                         </div>
 
@@ -162,7 +162,7 @@ const StaffEdit = (props) => {
                             onChange={updateStaffFormik.handleChange}
                           />
                           {updateStaffFormik.errors.inputStaffAddress && updateStaffFormik.touched.inputStaffAddress && (
-                            <small>{updateStaffFormik.errors.inputStaffAddress}</small>
+                            <small className="active-error" >{updateStaffFormik.errors.inputStaffAddress}</small>
                           )}
                         </div>
 

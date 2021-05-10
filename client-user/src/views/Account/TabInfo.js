@@ -36,7 +36,7 @@ const TabInfo = ({ userInfo }) => {
         dateOfBirth: values.inputDateOfBirth
       }
 
-      userAPI.updateUserById(getCookie('userId'), data).then((res) => {
+      userAPI.updateUserById(getCookie('currentUserId'), data).then((res) => {
         if (res.data.message === 'USER_NOT_FOUND') {
           errorToast("Tài khoản không tồn tại !");
         }

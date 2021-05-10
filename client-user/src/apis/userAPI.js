@@ -1,5 +1,5 @@
 import axiosAuthClient from './axiosAuthClient';
-
+import axiosClient from './axiosClient';
 const userAPI = {
     verifyEmail: (email) => {
         let url = '/verify-email-register';
@@ -14,6 +14,21 @@ const userAPI = {
     login: (data) => {
         let url = '/user-login';
         return axiosAuthClient.post(url, data);
+    },
+
+    loginWithFacebook: (data) => {
+        let url = '/user-login-with-facebook';
+        return axiosClient.post(url, data);
+    },
+
+    loginWithGoogle: (data) => {
+        let url = '/user-login-with-google';
+        return axiosClient.post(url, data);
+    },
+
+    forgotPassword: (data) => {
+        let url = '/forgot-password';
+        return axiosClient.post(url, data);
     },
 
     getUserById: (id) => {
