@@ -26,8 +26,9 @@ const ItemCart = ({ info, callBackRemoveCart, callBackUpdateCart }) => {
 
     let totalPrice = JSON.parse(localStorage.getItem('cart')).totalPrice;
     let totalQuantity = JSON.parse(localStorage.getItem('cart')).totalQuantity;
+    let totalPriceDiscount = JSON.parse(localStorage.getItem('cart')).totalPriceDiscount;
 
-    callBackUpdateCart({ totalPrice: totalPrice, totalQuantity: totalQuantity });
+    callBackUpdateCart({ totalPrice: totalPrice, totalQuantity: totalQuantity, totalPriceDiscount: totalPriceDiscount });
   }
 
   let handleDecreaseItem = () => {
@@ -46,8 +47,9 @@ const ItemCart = ({ info, callBackRemoveCart, callBackUpdateCart }) => {
       successToast("Cập nhật giỏ hàng thành công !");
       let totalPrice = JSON.parse(localStorage.getItem('cart')).totalPrice;
       let totalQuantity = JSON.parse(localStorage.getItem('cart')).totalQuantity;
+      let totalPriceDiscount = JSON.parse(localStorage.getItem('cart')).totalPriceDiscount;
   
-      callBackUpdateCart({ totalPrice: totalPrice, totalQuantity: totalQuantity });
+      callBackUpdateCart({ totalPrice: totalPrice, totalQuantity: totalQuantity, totalPriceDiscount: totalPriceDiscount });
     }
   }
 
@@ -88,8 +90,8 @@ const ItemCart = ({ info, callBackRemoveCart, callBackUpdateCart }) => {
             </div>
           </div>
           <div className="item-price ml-auto d-flex flex-column align-items-end">
-            <div className="giamoi">{formatCurrency(info.productInfo.p_price)} ₫</div>
-            {/* <div className="giacu">139.000 ₫</div> */}
+          <div className="giamoi">{ formatCurrency(info.productInfo.p_promotion) } ₫</div>
+            <div className="giacu">{formatCurrency(info.productInfo.p_price)} ₫</div>            
             <span className="remove mt-auto"><i className="far fa-trash-alt" onClick={removeItemFromCart} /></span>
           </div>
         </div>

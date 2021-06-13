@@ -40,9 +40,8 @@ const ItemBook = ({ info }) => {
             }) }
           </small>
           <div className="gia d-flex align-items-baseline">
-            <div className="giamoi">{formatCurrency(info.p_price) } ₫</div>
-            {/* <div className="giacu text-muted">139.000 ₫</div> */}
-            {/* <div className="sale">0%</div> */}
+            <div className="giamoi">{ formatCurrency(info.p_promotion) } ₫</div>
+            <div className="giacu text-muted">{ formatCurrency(info.p_price) } ₫</div>
           </div>
           <div className="danhgia">
             <ul className="d-flex" style={{ listStyle: 'none' }}>

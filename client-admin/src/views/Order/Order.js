@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+/* eslint-disable */
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import orderAPI from '../../apis/orderAPI';
 import OrderDetail from '../../components/Modal/OrderDetail';

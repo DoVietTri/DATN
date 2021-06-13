@@ -14,7 +14,7 @@ const BookDetail = (props) => {
   const [book, setBook] = useState({});
   const [booksRelated, setBooksRelated] = useState([]);
   const [itemCart, setItemCart] = useState(1);
-  
+
   useEffect(() => {
     let bookId = queryString.parse(props.location.search).pid;
     homeAPI.getBookById(bookId).then((res) => {
@@ -27,7 +27,7 @@ const BookDetail = (props) => {
       setBooksRelated(res.data.data);
     })
 
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
 
   }, [props.location.search]);
 
@@ -55,7 +55,7 @@ const BookDetail = (props) => {
     localStorage.removeItem('cart');
     localStorage.setItem('cart', JSON.stringify(newCart));
     successToast("Thêm sản phẩm vào giỏ hàng thành công !");
-    let total = JSON.parse( localStorage.getItem('cart')).totalQuantity;
+    let total = JSON.parse(localStorage.getItem('cart')).totalQuantity;
     props.totalItem(total);
     setItemCart(1);
   }
@@ -104,8 +104,8 @@ const BookDetail = (props) => {
                   <div className="col-md-7">
                     <div className="gia">
                       <div className="giabia">Giá bìa:<span className="giacu ml-2">{formatCurrency(book.p_price)} ₫</span></div>
-                      <div className="giaban">Giá bán tại TextBook: <span className="giamoi font-weight-bold"> {formatCurrency(book.p_price)} ₫</span></div>
-                      <div className="tietkiem">Tiết kiệm: <b>0 ₫</b> <span className="sale">0%</span>
+                      <div className="giaban">Giá bán tại TextBook: <span className="giamoi font-weight-bold"> {formatCurrency(book.p_promotion)} ₫</span></div>
+                      <div className="tietkiem">Tiết kiệm: <b>{formatCurrency(book.p_price - book.p_promotion)} ₫</b>
                       </div>
                     </div>
                     <div className="uudai my-3">
@@ -179,7 +179,7 @@ const BookDetail = (props) => {
                   </div>
 
                   <TabEvaluate book={book._id} />
-                  
+
                 </div>
               </div>
             </div>
@@ -197,13 +197,13 @@ const BookDetail = (props) => {
               </div>
             </div>
             <div className="khoisanpham">
-              <SimpleSlider 
+              <SimpleSlider
                 books={booksRelated}
               />
             </div>
           </div>
         </div>
-      </section>      
+      </section>
     </>
   )
 }

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import user4 from './../../assets/img/user4-128x128.jpg';
 
 const TabUpdateAvatar = ({ dataUser }) => {
 

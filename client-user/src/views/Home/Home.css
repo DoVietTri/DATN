@@ -449,6 +449,7 @@ li.active .fa-star {
 .giacu.text-muted {
     font-size: 13px;
     color: #919191!important;
+    text-decoration: line-through;
 }
 
 .gia .giamoi {

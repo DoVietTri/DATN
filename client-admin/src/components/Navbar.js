@@ -1,16 +1,20 @@
 import React from 'react';
+import { useHistory } from 'react-router';
 import { successToast } from './Toasts/Toasts';
 
 const Navbar = () => {
+
+  const history = useHistory();
 
   let handleLogout = (e) => {
     e.preventDefault();
     document.cookie = 'authAdminToken=;expires = Thu, 01 Jan 1970 00:00:00 GMT';
     document.cookie = 'currentAdminId=;expires = Thu, 01 Jan 1970 00:00:00 GMT';
     successToast("Đăng xuất thành công !");
-    setTimeout(() => {
-      window.location.reload();
-    }, 500);
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 500);
+    history.push('/');
   }
 
   return (

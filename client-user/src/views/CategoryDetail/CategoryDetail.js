@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import queryString from 'query-string';
@@ -88,7 +89,7 @@ const CategoryDetail = (props) => {
 
       <section className="banner">
         <div className="container">
-          <a href="# "><img src={skt} alt="banner-sach-ktkn" className="img-fluid" /></a>
+          {/* <a href="# "><img src={skt} alt="banner-sach-ktkn" className="img-fluid" /></a> */}
         </div>
       </section>
 

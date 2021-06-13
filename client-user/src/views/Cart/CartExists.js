@@ -18,15 +18,15 @@ const CartExists = (props) => {
   const [loader, showLoader, hideLoader] = useFullPageLoader();
 
   const [totalPrice, setTotalPrice] = useState(0);
+  const [totalPriceDiscount, setTotalPriceDiscount] = useState(0);
   const [items, setItems] = useState([]);
   const [shippingFee, setShippingFee] = useState(15000);
   const [user, setUser] = useState({});
 
   useEffect(() => {
     setTotalPrice(JSON.parse(localStorage.getItem('cart')).totalPrice);
-
     setItems(Object.values(JSON.parse(localStorage.getItem('cart')).products));
-
+    setTotalPriceDiscount(JSON.parse(localStorage.getItem('cart')).totalPriceDiscount);
     //api get user
 
     if (getCookie('currentUserId')) {
@@ -44,6 +44,7 @@ const CartExists = (props) => {
     props.callBackUpdateCart(childData);
 
     setTotalPrice(JSON.parse(localStorage.getItem('cart')).totalPrice);
+    setTotalPriceDiscount(JSON.parse(localStorage.getItem('cart')).totalPriceDiscount);
 
     let newItem = items.filter(v => v.productInfo._id !== id);
     setItems([...newItem]);
@@ -55,6 +56,7 @@ const CartExists = (props) => {
 
   let updateCart = (childData) => {
     setTotalPrice(childData.totalPrice);
+    setTotalPriceDiscount(childData.totalPriceDiscount);
     props.callBackUpdateCart(childData.totalQuantity);
   }
 
@@ -151,15 +153,11 @@ const CartExists = (props) => {
                 </div>
                 <div className="group d-flex justify-content-between">
                   <p className="label">Giảm giá:</p>
-                  <p className="giamgia">0 ₫</p>
+                  <p className="giamgia">{ formatCurrency(totalPriceDiscount) } ₫</p>
                 </div>
                 <div className="group d-flex justify-content-between">
                   <p className="label">Phí vận chuyển:</p>
                   <p className="phivanchuyen">{formatCurrency(shippingFee)} ₫</p>
-                </div>
-                <div className="group d-flex justify-content-between">
-                  <p className="label">Phí dịch vụ:</p>
-                  <p className="phidicvu">0 ₫</p>
                 </div>
                 <div className="group d-flex justify-content-between align-items-center">
                   <strong className="text-uppercase">Tổng cộng:</strong>

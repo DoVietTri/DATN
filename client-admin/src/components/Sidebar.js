@@ -7,7 +7,7 @@ import getCookie from '../utils/getCookie';
 import { errorToast } from './Toasts/Toasts';
 import dashboardAPI from '../apis/dashboardAPI';
 
-const Sidebar = () => {
+const Sidebar = (props) => {
   const [currUser, setCurrUser] = useState({});
   const [countNewOrder, setCountNewOrder] = useState(0);
 
@@ -60,41 +60,42 @@ const Sidebar = () => {
             </li>
 
             <li className="nav-item">
-              <a href="#!" className="nav-link">
+              <NavLink to="/categories" className="nav-link" activeClassName="active">
+                <i className="nav-icon fas fa-database"></i>
+                <p>Danh mục</p>
+              </NavLink>
+            </li>
+
+            <li className="nav-item">
+              <NavLink to="/products" className="nav-link" activeClassName="active">
                 <i className="nav-icon fab fa-product-hunt"></i>
-                <p>
-                  Quản lý sản phẩm
-                  <i className="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul className="nav nav-treeview">
-                <li className="nav-item">
-                  <NavLink to="/categories" className="nav-link" activeClassName="active">
-                    <i className="far fa-circle nav-icon"></i>
-                    <p>Danh mục</p>
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink to="/products" className="nav-link" activeClassName="active">
-                    <i className="far fa-circle nav-icon"></i>
-                    <p>Sản phẩm</p>
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink to="/comments" className="nav-link" activeClassName="active">
-                    <i className="far fa-circle nav-icon"></i>
-                    <p>Bình luận</p>
-                  </NavLink>
-                </li>
-              </ul>
+                <p>Sản phẩm</p>
+              </NavLink>
+            </li>
+
+            <li className="nav-item">
+              <NavLink to="/comments" className="nav-link" activeClassName="active">
+                <i className="nav-icon fas fa-star-half-alt"></i>
+                <p>Đánh giá</p>
+              </NavLink>
             </li>
 
             <li className="nav-item">
               <NavLink to="/banners" className="nav-link" activeClassName="active">
-                <i className="nav-icon fas fa-database"></i>
+                <i className="nav-icon fas fa-sliders-h"></i>
                 <p>Banner</p>
               </NavLink>
             </li>
+
+            <li className="nav-item">
+              <NavLink to="/orders" className="nav-link" activeClassName="active">
+                <i className="nav-icon fas fa-shipping-fast"></i>
+                <p>Đơn hàng</p>
+                {countNewOrder !== 0 ? <span className="badge badge-danger right">{countNewOrder}</span> : ''}
+              </NavLink>
+            </li>
+
+            <li className="nav-header">Đối tác</li>
 
             <li className="nav-item">
               <NavLink to="/authors" className="nav-link" activeClassName="active">
@@ -111,43 +112,10 @@ const Sidebar = () => {
             </li>
 
             <li className="nav-item">
-              <a href="# " className="nav-link">
-                <i className="nav-icon fas fa-hands-helping"></i>
-                <p>
-                  Đối tác
-                  <i className="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul className="nav nav-treeview">
-                <li className="nav-item">
-                  <NavLink to="/customers" className="nav-link" activeClassName="active">
-                    <i className="nav-icon far fa-circle nav-icon"></i>
-                    <p>Khách hàng</p>
-                  </NavLink>
-                </li>
-
-              </ul>
-            </li>
-
-            <li className="nav-item">
-              <a href="# " className="nav-link">
-                <i className="nav-icon fas fa-shopping-cart"></i>
-                <p>
-                  Đơn hàng
-                  <i className="right fas fa-angle-left"></i>
-                  { countNewOrder !== 0 ? <span className="badge badge-danger right">{ countNewOrder }</span> : '' }
-                </p>
-              </a>
-              <ul className="nav nav-treeview">
-                <li className="nav-item">
-                  <NavLink to="/orders" className="nav-link" activeClassName="active">
-                    <i className="nav-icon far fa-circle nav-icon"></i>
-                    <p>Danh sách</p>
-                    { countNewOrder !== 0 ? <span className="badge badge-danger right">{ countNewOrder }</span> : '' }
-                  </NavLink>
-                </li>
-
-              </ul>
+              <NavLink to="/customers" className="nav-link" activeClassName="active">
+                <i className="nav-icon far fa-circle nav-icon"></i>
+                <p>Khách hàng</p>
+              </NavLink>
             </li>
 
             <li className="nav-header">Hệ thống</li>

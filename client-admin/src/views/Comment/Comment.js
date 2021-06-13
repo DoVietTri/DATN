@@ -106,6 +106,7 @@ const Comment = () => {
                         <th>Khách hàng</th>
                         <th>Sách</th>
                         <th>Nội dung</th>
+                        <th>Số sao</th>
                         <th>Hành động</th>
                       </tr>
                     </tfoot>

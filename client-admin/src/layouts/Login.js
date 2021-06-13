@@ -96,29 +96,11 @@ const Start = () => {
                 </div>
 
                 <div className="row">
-                  <div className="col-7">
-                    <div className="icheck-primary">
-                      <input type="checkbox" id="remember" />
-                      <label htmlFor="remember">
-                        Remember Me
-                    </label>
-                    </div>
-                  </div>
-                  {/* /.col */}
-                  <div className="col-5">
+                  <div className="col-12">
                     <button type="submit" className="btn btn-primary btn-block">Đăng nhập</button>
                   </div>
-                  {/* /.col */}
                 </div>
               </form>
-              <div className="social-auth-links text-center mt-2 mb-3">
-                <a href="/" className="btn btn-block btn-primary">
-                  <i className="fab fa-facebook mr-2" /> Sign in using Facebook
-              </a>
-                <a href="/" className="btn btn-block btn-danger">
-                  <i className="fab fa-google-plus mr-2" /> Sign in using Google+
-              </a>
-              </div>
             </div>
           </div>
         </div>
