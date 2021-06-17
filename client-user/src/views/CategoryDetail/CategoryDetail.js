@@ -136,7 +136,7 @@ const CategoryDetail = (props) => {
 
                     {books.map((v, i) => {
                       return (
-                        <div className="col-lg-3 col-md-4 col-xs-6 item DeanGraziosi" key={i}>
+                        <div className="col-lg-4 col-md-3 col-xs-6 item DeanGraziosi" key={i}>
                           <ItemBook info={v} />
                         </div>
                       )

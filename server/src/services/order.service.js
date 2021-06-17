@@ -11,7 +11,7 @@ let shippingFee = (method) => {
 
 let addNewOrder = async (data, user) => {
 
-    let productDetail = [... data.products];
+    let productDetail = [...data.products];
     let products = [];
     productDetail.map(v => {
         products = [...products, { product: v.productInfo._id, quantity: v.quantity, price: v.price }];
@@ -43,7 +43,7 @@ let addNewOrder = async (data, user) => {
 
 let getOrderByUserId = async (userId) => {
     let order = await orderModel.getAllOrderOfUser(userId);
-    
+
     return { message: 'SUCCESS', data: order };
 }
 
@@ -75,7 +75,7 @@ let getAllOrders = async () => {
     return { message: 'SUCCESS', data: orders };
 }
 
-let getOrderDetailByOrder =  async (orderId) => {
+let getOrderDetailByOrder = async (orderId) => {
     let orderdetail = await orderDetailModel.getOrderDetailByOrder(orderId);
 
     return { message: 'SUCCESS', data: orderdetail };
@@ -92,6 +92,15 @@ let changeStatusOrder = async (id, data) => {
     return { message: 'SUCCESS' };
 }
 
+let filterByStatus = async (status) => {
+    if (status === '') {
+        let orders = await orderModel.getAllOrders();
+        return { message: 'SUCCESS', data: orders };
+    }
+    let order = await orderModel.getOrderByStatus(status);
+    return { message: 'SUCCESS', data: order };
+}
+
 module.exports = {
     //Customer
     addNewOrder,
@@ -103,5 +112,6 @@ module.exports = {
     //Admin
     getAllOrders,
     getOrderDetailByOrder,
-    changeStatusOrder
+    changeStatusOrder,
+    filterByStatus
 }

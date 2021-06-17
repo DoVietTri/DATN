@@ -58,6 +58,24 @@ const Order = () => {
     });
   }
 
+  const filterOrder = (orders) => {
+    return orders.filter(val => query === "" || val.o_code.toLowerCase().indexOf(query.toLowerCase()) > -1
+      || val.o_nameReceiver.toLowerCase().indexOf(query.toLowerCase()) > -1
+      || val.o_shippingAddress.toLowerCase().indexOf(query.toLowerCase()) > -1
+      || val.o_phoneReceiver.toLowerCase().indexOf(query.toLowerCase()) > -1 ? val : '')
+  }
+
+  const filterByStatus = (e) => {
+    setStatus(e.target.value);
+    showLoader();
+    orderAPI.filterByStatus(e.target.value).then(res => {
+      setOrders(res.data.data);
+      hideLoader();
+    }).catch(err => {
+
+    });
+  }
+
   return (
     <div className="content-wrapper">
       <section className="content-header">
@@ -95,8 +113,9 @@ const Order = () => {
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                       />
-                      <select className="form-control" value={status} onChange={(e) => setStatus(e.target.value)} >
-                        <option value="">Tình trạng đơn hàng</option>
+                      <select className="form-control" value={status} onChange={filterByStatus} >
+                        <option value="" >Tình trạng đơn hàng...</option>
+                        <option value="Đặt hàng thành công">Đặt hàng thành công</option>
                         <option value="Tiếp nhận">Tiếp nhận</option>
                         <option value="Đang giao hàng">Đang giao hàng</option>
                         <option value="Đã giao hàng">Đã giao hàng</option>
@@ -124,80 +143,69 @@ const Order = () => {
                     </thead>
                     <tbody>
                       {
-                        orders.filter(val => query === "" || val.o_code.toLowerCase().indexOf(query.toLowerCase()) > -1
-                        || val.o_nameReceiver.toLowerCase().indexOf(query.toLowerCase()) > -1
-                        || val.o_shippingAddress.toLowerCase().indexOf(query.toLowerCase()) > -1
-                        || val.o_phoneReceiver.toLowerCase().indexOf(query.toLowerCase()) > -1 ? val : '')
-                          .map((v, i) => {
-                            return (
-                              <tr key={i}>
-                                <td>{i}</td>
-                                <td>{v.o_code}</td>
-                                <td>
-                                  <ul>
-                                    <li>Người nhận: {v.o_nameReceiver}</li>
-                                    <li>Số điện thoại: {v.o_phoneReceiver}</li>
-                                    <li>Địa chỉ: {v.o_shippingAddress}</li>
-                                  </ul>
-                                </td>
-                                <td> {v.o_totalPrice} VNĐ </td>
-                                <td>
-                                  {v.o_status === "Đặt hàng thành công" ? (<span className="badge bg-light">Đặt hàng thành công</span>) : ''}
-                                  {v.o_status === "Tiếp nhận" ? (<span className="badge bg-secondary">Tiếp nhận</span>) : ''}
-                                  {v.o_status === "Đang giao hàng" ? (<span className="badge bg-info">Đang giao hàng</span>) : ''}
-                                  {v.o_status === "Đã giao hàng" ? (<span className="badge bg-success">Đã giao hàng</span>) : ''}
-                                  {v.o_status === "Đã hủy" ? (<span className="badge bg-danger">Đã hủy</span>) : ''}
-                                </td>
-                                <td> {formatDate(v.createdAt)} </td>
-                                <td>
+                        filterOrder(orders).map((v, i) => {
+                        return (
+                          <tr key={i}>
+                            <td>{i}</td>
+                            <td>{v.o_code}</td>
+                            <td>
+                              <ul>
+                                <li>Người nhận: {v.o_nameReceiver}</li>
+                                <li>Số điện thoại: {v.o_phoneReceiver}</li>
+                                <li>Địa chỉ: {v.o_shippingAddress}</li>
+                              </ul>
+                            </td>
+                            <td> {v.o_totalPrice} VNĐ </td>
+                            <td>
+                              {v.o_status === "Đặt hàng thành công" ? (<span className="badge bg-light">Đặt hàng thành công</span>) : ''}
+                              {v.o_status === "Tiếp nhận" ? (<span className="badge bg-secondary">Tiếp nhận</span>) : ''}
+                              {v.o_status === "Đang giao hàng" ? (<span className="badge bg-info">Đang giao hàng</span>) : ''}
+                              {v.o_status === "Đã giao hàng" ? (<span className="badge bg-success">Đã giao hàng</span>) : ''}
+                              {v.o_status === "Đã hủy" ? (<span className="badge bg-danger">Đã hủy</span>) : ''}
+                            </td>
+                            <td> {formatDate(v.createdAt)} </td>
+                            <td>
 
-                                  {/* <ReactToPrint 
-                                    trigger={() => <button className="btn btn-warning"> <i className="fas fa-print"></i> In hóa đơn</button>}
-                                    content={() => componentToPrint.current}
-                                  />
+                              <div className="btn-group" role="group" aria-label="Basic example">
 
-                                  <Invoice ref={componentToPrint} /> */}
+                                {v.o_status === 'Đã hủy' ? '' : (<Link to={`/invoice?code=${v.o_code}`} className="btn btn-warning"><i className="fas fa-print"></i> Hóa đơn</Link>)}
 
-                                  <div className="btn-group" role="group" aria-label="Basic example">
+                                <button onClick={() => viewOrderDetail(v._id)} className="btn btn-info" data-toggle="modal" data-target="#modalOrderDetail">
+                                  <i className="fas fa-eye mr-1"></i>
+                                  Chi tiết
+                                </button>
 
-                                    {v.o_status === 'Đã hủy' ? '' : (<Link to={`/invoice?code=${v.o_code}`} className="btn btn-warning"><i className="fas fa-print"></i> Hóa đơn</Link>)}
-                                   
-                                    <button onClick={() => viewOrderDetail(v._id)} className="btn btn-info" data-toggle="modal" data-target="#modalOrderDetail">
-                                      <i className="fas fa-eye mr-1"></i>
-                                      Chi tiết
-                                    </button>
-                                   
-                                    {
-                                      v.o_status === "Đã hủy" || v.o_status === "Đã giao hàng" ? '' : (
-                                        <div className="btn-group">
-                                          <button type="button" className="btn btn-success">Action</button>
-                                          <button type="button" className="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <span className="sr-only">Toggle Dropdown</span>
-                                          </button>
-                                          <div className="dropdown-menu">
-                                            <span style={{ cursor: 'pointer' }} className="dropdown-item" onClick={() => handleChangeStatusOrder(v._id, "Tiếp nhận")} >
-                                              <i className="fas fa-shipping-fast mr-2"></i>Tiếp nhận
-                                          </span>
-                                            <span style={{ cursor: 'pointer' }} className="dropdown-item" onClick={() => handleChangeStatusOrder(v._id, "Đang giao hàng")} >
-                                              <i className="fas fa-shipping-fast mr-2"></i>Đang giao hàng
-                                          </span>
-                                            <span style={{ cursor: 'pointer' }} className="dropdown-item" onClick={() => handleChangeStatusOrder(v._id, "Đã giao hàng")} >
-                                              <i className="fas fa-clipboard-check mr-2"></i>
-                                            Đã giao hàng
-                                          </span>
-                                            <span style={{ cursor: 'pointer' }} className="dropdown-item" onClick={() => handleChangeStatusOrder(v._id, "Đã hủy")} >
-                                              <i className="fas fa-trash-alt mr-2"></i>
-                                            Hủy đơn hàng
-                                          </span>
-                                          </div>
-                                        </div>
-                                      )
-                                    }
-                                  </div>
-                                </td>
-                              </tr>
-                            )
-                          })
+                                {
+                                  v.o_status === "Đã hủy" || v.o_status === "Đã giao hàng" ? '' : (
+                                    <div className="btn-group">
+                                      <button type="button" className="btn btn-success">Action</button>
+                                      <button type="button" className="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span className="sr-only">Toggle Dropdown</span>
+                                      </button>
+                                      <div className="dropdown-menu">
+                                        <span style={{ cursor: 'pointer' }} className="dropdown-item" onClick={() => handleChangeStatusOrder(v._id, "Tiếp nhận")} >
+                                          <i className="fas fa-shipping-fast mr-2"></i>Tiếp nhận
+                                        </span>
+                                        <span style={{ cursor: 'pointer' }} className="dropdown-item" onClick={() => handleChangeStatusOrder(v._id, "Đang giao hàng")} >
+                                          <i className="fas fa-shipping-fast mr-2"></i>Đang giao hàng
+                                        </span>
+                                        <span style={{ cursor: 'pointer' }} className="dropdown-item" onClick={() => handleChangeStatusOrder(v._id, "Đã giao hàng")} >
+                                          <i className="fas fa-clipboard-check mr-2"></i>
+                                          Đã giao hàng
+                                        </span>
+                                        <span style={{ cursor: 'pointer' }} className="dropdown-item" onClick={() => handleChangeStatusOrder(v._id, "Đã hủy")} >
+                                          <i className="fas fa-trash-alt mr-2"></i>
+                                          Hủy đơn hàng
+                                        </span>
+                                      </div>
+                                    </div>
+                                  )
+                                }
+                              </div>
+                            </td>
+                          </tr>
+                        )
+                      })
                       }
                     </tbody>
                     <tfoot>
@@ -220,7 +228,7 @@ const Order = () => {
       </section>
 
       <OrderDetail data={orderDetail} />
-      { loader}
+      {loader}
     </div>
   )
 }

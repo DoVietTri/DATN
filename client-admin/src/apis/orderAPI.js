@@ -19,6 +19,11 @@ const orderAPI = {
     changeStatusOrder: (id, data) => {
         let url = `/orders/change-status-order/${id}`;
         return axiosClient.put(url, data);
+    },
+
+    filterByStatus: (status) => {
+        let url = `/orders/filter-by-status?status=${status}`;
+        return axiosClient.get(url);
     }
 }
 

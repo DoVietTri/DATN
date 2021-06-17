@@ -90,6 +90,17 @@ let changeStatusOrder = async (req, res) => {
     }
 }
 
+let filterByStatus = async (req, res) => {
+    try {
+        let query = req.query.status;
+        let data = await orderService.filterByStatus(query);
+
+        return res.status(200).json(data);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
 module.exports = {
     //Customer
     destroyOrder,
@@ -101,5 +112,6 @@ module.exports = {
     //Admin
     getAllOrders,
     getOrderDetailByOrder,
-    changeStatusOrder
+    changeStatusOrder,
+    filterByStatus
 }

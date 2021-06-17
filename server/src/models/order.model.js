@@ -35,6 +35,10 @@ OrderSchema.statics = {
         return this.find({}).sort({ createdAt: -1 }).exec();
     },
 
+    getOrderByStatus(status) {
+        return this.find({ o_status: status }).exec();
+    },
+
     changeStatusOrder(id, o_status) {
         return this.findByIdAndUpdate(id, { o_status: o_status, updatedAt: new Date() }).exec();
     },

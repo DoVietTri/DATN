@@ -248,8 +248,8 @@ const ProductEdit = (props) => {
                             onChange={updateProductFormik.handleChange}
                           />
 
-                          {updateProductFormik.errors.inputProductCode && updateProductFormik.touched.inputProductCode && (
-                            <small className="active-error">{updateProductFormik.errors.inputProductCode}</small>
+                          {updateProductFormik.errors.inputProductPrice && updateProductFormik.touched.inputProductPrice && (
+                            <small className="active-error">{updateProductFormik.errors.inputProductPrice}</small>
                           )}
                         </div>
 
